@@ -52,7 +52,7 @@ function HomePage() {
           
           {/* Left Content */}
           <div className="flex-1 text-center lg:text-left">
-            {/* Brand Name */}
+            {/* Brand Name with Authenura */}
             <motion.h1 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -62,6 +62,18 @@ function HomePage() {
               <span className="text-blue-600">Laundry</span>wala –
               <span className="block"> Premium Laundry &amp; Dry Cleaning Services</span>
             </motion.h1>
+            
+            {/* Authenura Badge/Text */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="mt-2 inline-block"
+            >
+              <span className="text-sm sm:text-base md:text-lg font-semibold text-blue-600 bg-white/50 px-4 py-1 rounded-full backdrop-blur-sm">
+                ✦ Authenura
+              </span>
+            </motion.div>
             
             {/* Animated "Near You" with Framer Motion */}
             <div className="mt-4">
@@ -155,7 +167,7 @@ function HomePage() {
                     scale: 1.05,
                     transition: { duration: 0.2 }
                   }}
-                  className="flex flex-col items-center justify-center p-4 transition-all duration-300 cursor-pointer group"
+                  className="flex flex-col items-center justify-center p-4 transition-all duration-300 cursor-pointer group relative"
                 >
                   {/* Icon */}
                   <div className="w-14 h-14 flex items-center justify-center mb-2 transition-transform duration-300 group-hover:scale-110">
