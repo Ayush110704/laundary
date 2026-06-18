@@ -30,17 +30,17 @@ function Footer() {
                 <FaFacebookF className="text-[#1877F2] group-hover:text-white" />
               </div>
 
-              {/* <div className="group w-10 h-10 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-[#0A66C2]">
+              <div className="group w-10 h-10 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-[#0A66C2]">
                 <FaLinkedinIn className="text-[#0A66C2] group-hover:text-white text-lg" />
-              </div> */}
+              </div>
 
               <div className="group w-10 h-10 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:scale-110 hover:bg-gradient-to-tr hover:from-[#feda75] hover:via-[#d62976] hover:to-[#4f5bd5]">
                 <FaInstagram className="text-[#E4405F] group-hover:text-white text-lg" />
               </div>
 
-              {/* <div className="group w-10 h-10 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-red-500">
+              <div className="group w-10 h-10 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-red-500">
                 <FaYoutube className="text-[#FF0000] group-hover:text-white" />
-              </div> */}
+              </div>
             </div>
 
             <p className="mt-5 text-gray-500 text-sm leading-7 max-w-[250px]">

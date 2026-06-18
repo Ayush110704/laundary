@@ -654,7 +654,7 @@ function HomePage() {
           >
             <p className="text-lg sm:text-xl font-semibold text-gray-700">
               Trusted by Nearly <span className="text-blue-600 font-bold">4 Lakhs</span> Happy Customers – 
-              <span className="block sm:inline"> Choose Laundrywala for Exceptional Care.</span>
+              <span className="block sm:inline"> Choose us for Exceptional Care.</span>
             </p>
           </motion.div>
         </div>
