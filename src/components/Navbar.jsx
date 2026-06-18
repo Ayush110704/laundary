@@ -16,6 +16,7 @@ const Navbar = () => {
     { id: "Contact", label: "Contact" ,path:"/contact" },
   ]; 
   
+  
 
   return (
     <div className="fixed top-0 left-0 w-full z-50">
