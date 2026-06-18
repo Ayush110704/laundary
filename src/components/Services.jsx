@@ -90,7 +90,7 @@ const Services = () => {
 
           <div className="absolute inset-0 md:mt-12 bg-black/30 z-10 min-h-screen"></div>
 
-          <div className="relative z-20 min-h-screen flex  items-center text-center">
+          <div className="relative z-20 min-h-screen flex  items-center md:text-center">
 
             <div className="w-full max-w-3xl px-6 sm:px-10 lg:px-20  md:mt-0">
 
