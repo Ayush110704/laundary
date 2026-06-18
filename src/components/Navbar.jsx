@@ -88,7 +88,7 @@ const Navbar = () => {
     { id: "Contact", label: "Contact" ,path:"/contact" },
   ]; 
   
-  
+
 
   return (
     <div className="fixed top-0 left-0 w-full z-50">
@@ -123,7 +123,7 @@ const Navbar = () => {
         </div>
            <button 
           onClick={()=>setUserLogin(!userlogin)}
-          className="py-1 px-4 bg-blue-600 rounded-3xl text-white cursor-pointer mr-15 hover:bg-blue-700">
+          className="hidden md:flex py-1 px-4 bg-blue-600 rounded-3xl text-white cursor-pointer mr-15 hover:bg-blue-700">
           {userlogin ?"Profile" :"Login"}
         </button>
         
@@ -154,9 +154,11 @@ const Navbar = () => {
                 </li>
               ))}
             </ul>
+            <div className="w-full flex justify-center mb-5">
               <button className="py-1 px-3 bg-blue-600 rounded-3xl text-white cursor-pointer hover:bg-blue-700">
           Login
         </button>
+        </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -59,7 +59,7 @@ function HomePage() {
               transition={{ duration: 0.6 }}
               className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-800 leading-tight"
             >
-              <span className="text-blue-600">Laundry</span>wala –
+              <span className="text-blue-600">Laundry</span>
               <span className="block"> Premium Laundry &amp; Dry Cleaning Services</span>
             </motion.h1>
             
