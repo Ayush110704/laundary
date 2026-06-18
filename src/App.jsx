@@ -1,4 +1,5 @@
 import './App.css'
+import About from './components/About'
 import HomePage from './components/Home'
 import Navbar from './components/Navbar'
 import Services from './components/Services'
@@ -7,6 +8,10 @@ import {  Routes, Route } from 'react-router-dom';
 function App() {
   return (
     <> 
+ 
+      <HomePage />
+      <About/>
+ 
     <Navbar/>
     <Routes>
 
@@ -17,6 +22,7 @@ function App() {
 
       
       </Routes>
+ 
     </>
   )
 }
