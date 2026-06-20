@@ -11,10 +11,7 @@ import DryCleaning from "./components/DryCleaning";
 import CurtainCleaning from "./components/CurtainCleaning";
 import ShoeCleaning from "./components/ShoeCleaning";
 import CarpetCleaning from "./components/CarpetCleaning";
-import Ironing from "./components/Ironing";
-
-
- 
+import Ironing from "./components/Ironing"; 
  
 import AdminDashboard from "./components/Admin/AdminDashboard";  
  
