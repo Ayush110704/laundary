@@ -1,79 +1,24 @@
 @import "tailwindcss";
 
+/* .footer{
+  position: relative;
+  overflow: hidden;
+  background: #e4de2b;
+} */
+
+
 .footer{
   position: relative;
   overflow: hidden;
-  background: #f3f4f6;
-}
+ 
 
-.bubble{
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(59,130,246,.2);
-  backdrop-filter: blur(5px);
-  animation: up 8s linear infinite;
-}
-.bubble{
-  box-shadow:
-    inset 0 0 20px rgba(255,255,255,.5),
-    0 0 20px rgba(59,130,246,.2);
-}
-
-.bubble::after{
-  content: "";
-  position: absolute;
-  inset: 4px;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,.8);
-}
-
-.b1{
-  width: 100px;
-  height: 100px;
-  left: 5%;
-  bottom: -100px;
-  animation-delay: 0s;
-}
-
-.b2{
-  width: 70px;
-  height: 70px;
-  left: 25%;
-  bottom: -120px;
-  animation-delay: 2s;
-}
-
-.b3{
-  width: 120px;
-  height: 120px;
-  left: 50%;
-  bottom: -140px;
-  animation-delay: 4s;
-}
-
-.b4{
-  width: 80px;
-  height: 80px;
-  left: 75%;
-  bottom: -100px;
-  animation-delay: 1s;
-}
-
-.b5{
-  width: 60px;
-  height: 60px;
-  left: 90%;
-  bottom: -80px;
-  animation-delay: 3s;
-}
-.footer{
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(
-    to bottom,
-    #f8fbff,
-    #eef4ff
+      background: linear-gradient(
+    180deg,
+    #e5e7eb 0%,
+    #dde3ea 100%
   );
+
+  
 }
 
 .icon{
