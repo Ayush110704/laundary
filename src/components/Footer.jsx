@@ -12,7 +12,7 @@ import {
 
 function Footer() {
   return (
-    <footer className="footer bg-gray-50 border-t border-gray-200">
+    <footer className="footer border-t border-gray-200 bg-gray-50">
       {/* Bubbles */}
       <span className="bubble b1"></span>
       <span className="bubble b2"></span>
@@ -20,27 +20,27 @@ function Footer() {
       <span className="bubble b4"></span>
       <span className="bubble b5"></span>
 
-      <div className="max-w-7xl mx-auto px-6 py-10 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 py-10 relative z-10 ">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <h2 className="text-4xl font-bold text-[#0f3d7a]">ATHENURA.</h2>
+            <h2 className="text-4xl font-bold text-blue-950">ATHENURA.</h2>
 
             <div className="flex gap-3 mt-5">
               <div className="group w-10 h-10 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-[#1877F2]">
                 <FaFacebookF className="text-[#1877F2] group-hover:text-white" />
               </div>
 
-              {/* <div className="group w-10 h-10 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-[#0A66C2]">
+              <div className="group w-10 h-10 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-[#0A66C2]">
                 <FaLinkedinIn className="text-[#0A66C2] group-hover:text-white text-lg" />
-              </div> */}
+              </div>
 
               <div className="group w-10 h-10 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:scale-110 hover:bg-gradient-to-tr hover:from-[#feda75] hover:via-[#d62976] hover:to-[#4f5bd5]">
                 <FaInstagram className="text-[#E4405F] group-hover:text-white text-lg" />
               </div>
 
-              {/* <div className="group w-10 h-10 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-red-500">
+              <div className="group w-10 h-10 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-red-500">
                 <FaYoutube className="text-[#FF0000] group-hover:text-white" />
-              </div> */}
+              </div>
             </div>
 
             <p className="mt-5 text-gray-500 text-sm leading-7 max-w-[250px]">
@@ -81,13 +81,13 @@ function Footer() {
             </h3>
 
             <ul className="space-y-3 text-gray-600 text-sm">
-              <li className="hover:text-blue-600 cursor-pointer">About Us</li>
-              <li className="hover:text-blue-600 cursor-pointer">Stores</li>
-              <li className="hover:text-blue-600 cursor-pointer">Franchise</li>
-              <li className="hover:text-blue-600 cursor-pointer">Careers</li>
-              <li className="hover:text-blue-600 cursor-pointer">
+             <li><Link className="hover:text-blue-600 cursor-pointer" to='/about'>About Us</Link></li> 
+             <li> <Link className="hover:text-blue-600 cursor-pointer" to='/services'>Services</Link></li>
+             <li> <Link className="hover:text-blue-600 cursor-pointer" to='/'>Franchise</Link></li>
+              <li><Link className="hover:text-blue-600 cursor-pointer" to='/'>Careers</Link></li>
+              <li><Link className="hover:text-blue-600 cursor-pointer">
                 Privacy Policy
-              </li>
+              </Link></li>
               <li className="hover:text-blue-600 cursor-pointer">FAQs</li>
             </ul>
           </div>

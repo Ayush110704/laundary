@@ -1,17 +1,37 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown, ChevronUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "../assets/Athenura.png";
 
 const Navbar = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [userlogin, setUserLogin] = useState(false);
+  const [hover, setHover] = useState(false);
+  const [showServices, setShowServices] = useState(false);
 
   const menu = [
     { id: "Home", label: "Home", path: "/" },
     { id: "About", label: "About", path: "/about" },
-    { id: "Services", label: "Services", path: "/services" },
+    {
+      id: "Services", label: "Services", path: "/services",
+
+      dropdown: [
+        { label: "Laundry Service", path: "/services/laundry-service" },
+
+        { label: "Dry Cleaning", path: "/services/dry-cleaning" },
+
+        { label: "Ironing", path: "/services/ironing" },
+
+        { label: "Carpet Cleaning", path: "/services/carpet-cleaning" },
+
+        { label: "Shoe Cleaning", path: "/services/shoe-cleaning" },
+
+        { label: "Curtain Cleaning", path: "/services/curtain-cleaning" },
+
+      ],
+
+    },
     { id: "Contact", label: "Contact", path: "/contact" },
   ];
 
@@ -37,13 +57,33 @@ const Navbar = () => {
         <div className="hidden md:flex font-semibold text-lg gap-10 items-center">
           <ul className="flex gap-6">
             {menu.map((item) => (
-              <li key={item.id}>
-                <Link
-                  to={item.path}
-                  className="cursor-pointer transition-all hover:scale-105 hover:text-blue-600"
-                >
-                  {item.label}
-                </Link>
+              <li key={item.id} className=" group">
+                {item.dropdown ? (
+                  <>
+                    <Link to={item.path} className="flex items-center  gap-1 hover:text-blue-600"
+
+                    >
+                      {item.label}
+                      <span className="text-xs flex items-center"> <ChevronDown size={20} className="mt-1 transition-transform duration-600 group-hover:rotate-180" /></span>
+                    </Link>
+
+                    <div className="absolute top-12 left-170 mt-3 w-48 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden">
+                      {item.dropdown.map((service) => (
+                        <Link
+                          key={service.path}
+                          to={service.path}
+                          className="block px-5 py-2 text-[15px] hover:bg-blue-50 hover:text-blue-600"
+                        >
+                          {service.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <Link to={item.path} className="hover:text-blue-600">
+                    {item.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
@@ -78,14 +118,46 @@ const Navbar = () => {
           >
             <ul className="flex flex-col items-center gap-5 py-6">
               {menu.map((item) => (
-                <li key={item.id}>
-                  <Link
-                    to={item.path}
-                    onClick={() => setMobileMenu(false)}
-                    className="cursor-pointer transition-all hover:text-blue-700"
-                  >
-                    {item.label}
-                  </Link>
+                <li key={item.id} className="w-full text-center">
+                  {item.dropdown ? (
+                    <>
+                      <button
+                        onClick={() => setShowServices(!showServices)}
+                        className="flex items-center justify-center gap-2 w-full hover:text-blue-600"
+                      >
+                        {item.label}
+                        <ChevronDown
+                          size={18}
+                          className={`transition-transform duration-300 ${showServices ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                      {showServices && (
+                        <div className="mt-3 flex flex-col rounded-2xl bg-gray-100 ">
+                          {item.dropdown.map((service) => (
+                            <Link
+                              key={service.path}
+                              to={service.path}
+                              onClick={() => {
+                                setMobileMenu(false);
+                                setShowServices(false);
+                              }}
+                              className="py-3 hover:bg-blue-50 hover:text-blue-600"
+                            >
+                              {service.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <Link
+                      to={item.path}
+                      onClick={() => setMobileMenu(false)}
+                      className="hover:text-blue-600"
+                    >
+                      {item.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
