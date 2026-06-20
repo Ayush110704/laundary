@@ -193,7 +193,7 @@ function Contact() {
 
                   <div className="text-sm text-gray-700">
                     RDC Raj Nagar <br />
-                    Ghaziabad <br />
+                    Ghaziabad 
                     Uttar Pradesh
                   </div>
                 </div>
