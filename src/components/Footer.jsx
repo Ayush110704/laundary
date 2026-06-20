@@ -142,15 +142,15 @@ function Footer() {
         </div>
 
         {/* City Listings - Commented out but kept for reference */}
-        {/* 
+        
         <div className="text-center mt-10">
           <h1 className="text-3xl text-blue-950 font-bold">Now Serving in</h1>
           <p>Ayodhya | Badlapur | Baleswar | Balewadi Pune | Baloda Bazar | Bathinda | Dhanbad | Dighi | Dombivli | Electronic City | Gandhinagar | Gorakhpur | Gwalior | Howrah | Indirapuram | Jehanabad | Jhansi | Karnal | Kharar | Khargone | Korba | KPHB | Kurla | Mangaluru | Manyata Tech Park | Moradabad | Noida 141 | Phalodi | Randesan | Ratlam | Ravet | Sehore | Solapur | Surat | Thane | Undri | Varanasi | Wakad</p>
           
-          <h2 className="text-center mt-10 text-3xl text-blue-950 font-bold">Stores Coming Soon</h2>
+          <h2 className="text-center mt-10 text-3xl text-blue-950 font-bold">Coming Soon</h2>
           <p>Aau | Agarpara | Ahmedabad | Amritsar | Aurangabad | Ballari | Baner | Baraut | Baripada | Bhavani Peth | Bhopal | Bolpur | Bulandshahr | Chandigarh | Chennai | Dehradun | Deoria | Dibrugarh | Durgapur | Goa | HSR Layout | Hisar | Hyderabad | Indore | Jagiroad | Jaipur | Jammu | Katra | Kolkata | Lucknow | Manipur | Mumbai | Namsai | Nashik | Patna | Prayagraj | Puducherry | Rajkot | Rewa | Sahibganj | Salt Lake | Sawai Madhopur | Siliguri | Tirupati | Udaipur | Vadodara | Vellore | Vrindavan | Yelahanka</p>
         </div> 
-        */}
+       
 
         {/* Copyright */}
         <div className="border-t border-blue-100 mt-8 pt-4 text-center text-sm text-gray-500">
