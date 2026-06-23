@@ -7,12 +7,12 @@ import Navbar from "./components/Navbar";
 import About from "./Pages/About";
 import Services from "./Pages/Services";
  
-import Dashboard from "./Pages/Dashboard";
+import Dashboard from "./Pages/dashboard";
 
  
 import AdminDashboard from "./components/Admin/AdminDashboard";  
  
-import TermsConndition from "./Pages/TermsCondition";
+import TermsCondition from "./Pages/TermsCondition";
 import FAQ from "./Pages/FAQ"; 
 
 function App() {
@@ -29,12 +29,12 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/services" element={<Services />} />
 
-        <Route path="/Dashboard" element={<Dashboard}/>
+        <Route path="/Dashboard" element={<Dashboard />} />
 
  
         <Route path="/dashboard" element={<AdminDashboard />} />  
  
-        <Route path="/TermsCondition" element={<TermsConndition />} />
+        <Route path="/terms-condition" element={<TermsCondition />} />
         <Route path="/FAQ" element={<FAQ />}/>
 
       </Routes>
