@@ -81,7 +81,7 @@ const CTA =( { type, headingtop, headingbottom,subHeading,})=> {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, }}
-            className="mt-8 md:flex items-center gap-5"
+            className="mt-8 md:flex items-center gap-5  mb-5"
           >
 
             {/* Primary */}

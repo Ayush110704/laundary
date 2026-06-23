@@ -58,8 +58,8 @@ const ServicePage = () => {
             backgroundRepeat: "no-repeat",
           }}
         >
-          <div className=" h-100 w-full flex justify-center items-center ">
-            <div className='h-75 min-w-xl'>
+          <div className="  w-full flex justify-center  ">
+            <div className='h-75 min-w-xl '>
               <motion.h3
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -87,7 +87,7 @@ const ServicePage = () => {
                     hidden: { opacity: 0, y: 30 },
                     visible: { opacity: 1, y: 0, transition: { duration: 0.7 } },
                   }}
-                  className="text-4xl md:text-5xl lg:text-6xl mt-5 font-bold text-blue-950" >
+                  className="text-4xl md:text-5xl lg:text-6xl mt-5 font-bold text-blue-950 font-serif w-lg" >
                   {Hero.HeroTitle}
                 </motion.h1>
 
@@ -96,8 +96,8 @@ const ServicePage = () => {
                     hidden: { opacity: 0, y: 30 },
                     visible: { opacity: 1, y: 0, transition: { duration: 0.7 } },
                   }}
-                  className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-950 mt-2" >
-                  Service Near You
+                  className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-600 mt-5 font-serif" >
+                  {Hero.HeroSub}
                 </motion.h2>
 
                 <motion.p
