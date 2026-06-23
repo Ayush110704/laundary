@@ -117,9 +117,10 @@ const Services = () => {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className="absolute inset-0 md:mt-12 bg-black/20 z-10 min-h-screen"></div>
+        <div className="flex md:hidden absolute inset-0 md:mt-12 bg-black/70 z-10 min-h-screen"></div>
+        <div className="md:flex hidden absolute inset-0 md:mt-12 bg-black/30 z-10 min-h-screen"></div>
 
-        <div className="relative z-20 min-h-screen flex items-center text-center md:text-left">
+        <div className="relative z-20 min-h-screen flex items-center  text-center md:text-left">
           <div className="w-full max-w-3xl px-6 sm:px-10 lg:px-20 md:mt-0">
             <motion.h3
               initial={{ opacity: 0, scale: 0.8 }}
@@ -135,51 +136,65 @@ const Services = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
 
-              className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-bold text-blue-900 leading-15">
-              Expert Laundry <span className="text-4xl text-[#130a99]">&</span>
+              className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-bold text-white md:text-blue-800 leading-15">
+              Expert Laundry <span className=" text-xl md:text-4xl text-[#f1f1fa]">,</span>
               <br />
-              <motion.span className='text-5xl'> Dry Cleaning Services</motion.span>
+              
             </motion.h1>
+            <motion.div
+            initial={{ opacity: 0, scale: 1, y: 40 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+            className=' text-2xl md:text-5xl leading-tight font-bold text-blue-800'> Dry Cleaning Services</motion.div>
 
             <motion.p
               initial={{ opacity: 0, scale: 1, }}
               animate={{ opacity: 1, scale: 1, }}
-              transition={{ duration: 1, delay: 0.9 }}
-              className="mt-6 text-sm sm:text-base md:text-lg text-gray-800 leading-5 max-w-xl">
+              transition={{ duration: 1, delay: 0.7 }}
+              className="mt-6 text-sm sm:text-base md:text-lg text-gray-400 font-semibold  md:text-blue-950 leading-5 max-w-xl">
               Preserving the integrity of your most delicate fabrics
               with eco-friendly solvents and expert craftsmanship.
             </motion.p>
 
-            <button className="group mt-8 md:mt-10 py-3 md:py-5 px-6 md:px-8 rounded-xl bg-blue-900 text-white font-semibold text-base md:text-xl">
+            <motion.button
+             initial={{ opacity: 0, y: 10, scale: 1, }}
+              animate={{ opacity: 1, y: 0, scale: 1, }}
+              transition={{ duration: 1, delay: 1 }}
+            
+            className="group mt-8 md:mt-10 py-3 md:py-5 px-6 md:px-8 rounded-xl bg-blue-900 text-white font-semibold text-base md:text-xl">
               <span className="flex items-center gap-2 transition-transform duration-300 group-hover:scale-105">
                 Book this Service
                 <MoveRight className="h-5 w-5 mt-1 transition-transform duration-300 group-hover:translate-x-1" />
               </span>
-            </button>
+            </motion.button>
 
             {/* STATS */}
 
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mt-5 ">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4  mt-8 md:mt-5 ">
 
               <Stat
                 value="5000+"
                 title="Orders"
+                delay={1}
               />
 
               <Stat
 
                 value="4.9★"
                 title="Rating"
+                delay={1.2}
               />
 
               <Stat
                 value="30 Min"
                 title="Pickup"
+                delay={1.4}
               />
 
               <Stat
                 value="24/7"
                 title="Support"
+                delay={1.6}
               />
 
             </div>
@@ -192,18 +207,21 @@ const Services = () => {
           icon={<Truck />}
           text='Same Day  Delivery'
           className="top-60 right-34"
+          delay={0}
         />
 
         <FloatingCard
           icon={<ShieldCheck />}
           text="Eco Friendly"
           className="bottom-44 right-72"
+          delay={0.3}
         />
 
         <FloatingCard
           icon={<Clock3 />}
           text="30 Min Pickup"
           className="bottom-20 right-28"
+          delay={0.6}
         />
 
       </div>
