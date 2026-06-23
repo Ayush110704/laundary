@@ -59,26 +59,10 @@ const whoWeAreCards = [
 ];
 
 const teamMembers = [
-  {
-    img: team1,
-    name: "Sarah Chen",
-    role: "Operations Director",
-  },
-  {
-    img: team2,
-    name: "Marcus Miller",
-    role: "Master Textile Specialist",
-  },
-  {
-    img: team3,
-    name: "Elena Rodriguez",
-    role: "Customer Success Lead",
-  },
-  {
-    img: team4,
-    name: "David Park",
-    role: "Logistics Coordinator",
-  },
+  { img: team1, name: "Sarah Chen", role: "Operations Director" },
+  { img: team2, name: "Marcus Miller", role: "Master Textile Specialist" },
+  { img: team3, name: "Elena Rodriguez", role: "Customer Success Lead" },
+  { img: team4, name: "David Park", role: "Logistics Coordinator" },
 ];
 
 const fadeUp = {
@@ -97,7 +81,7 @@ const About = () => {
           className="w-full h-full object-cover"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0b4ea2]/35 via-[#0b4ea2]/10 to-black/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0b4ea2]/35 via-[#0b4ea2]/10 to-black/30" />
 
         <div className="absolute inset-0 flex items-center justify-center px-6">
           <div className="text-center max-w-4xl text-white">
@@ -143,11 +127,10 @@ const About = () => {
 
               <p className="text-gray-700 leading-8 text-lg mb-6">
                 Founded in 2024, Athenura started with a simple observation:
-                the modern professional deserves more than just “clean”
-                laundry. They deserve precision. We combined high-tech logistics
-                with artisanal garment care to create a seamless experience for
-                those who value convenience, hygiene, and quality in every
-                detail.
+                the modern professional deserves more than just “clean” laundry.
+                They deserve precision. We combined high-tech logistics with
+                artisanal garment care to create a seamless experience for those
+                who value convenience, hygiene, and quality in every detail.
               </p>
 
               <p className="text-gray-700 leading-8 text-lg">
@@ -179,12 +162,11 @@ const About = () => {
 
       {/* WHO WE ARE */}
       <section className="relative bg-gradient-to-br from-[#EEF4FB] via-white to-[#F7FBFF] py-20 md:py-24 overflow-hidden">
-        <div className="absolute -top-10 -left-10 w-52 h-52 bg-[#0B4EA2]/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#00A6A6]/10 rounded-full blur-3xl"></div>
+        <div className="absolute -top-10 -left-10 w-52 h-52 bg-[#0B4EA2]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#00A6A6]/10 rounded-full blur-3xl" />
 
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid lg:grid-cols-2 gap-14 items-center">
-            {/* LEFT CONTENT */}
             <motion.div
               variants={fadeUp}
               initial="hidden"
@@ -237,7 +219,6 @@ const About = () => {
               </div>
             </motion.div>
 
-            {/* RIGHT IMAGE ONLY */}
             <motion.div
               className="relative"
               variants={fadeUp}
@@ -252,7 +233,7 @@ const About = () => {
                   alt="Who We Are"
                   className="w-full h-[650px] object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0B4EA2]/20 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B4EA2]/20 via-transparent to-transparent" />
               </div>
             </motion.div>
           </div>

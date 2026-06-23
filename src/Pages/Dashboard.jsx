@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FaHome,
   FaBoxOpen,
@@ -7,7 +7,6 @@ import {
   FaCog,
   FaSignOutAlt,
   FaBell,
-  FaUserCircle,
   FaTshirt,
   FaClipboardList,
   FaTruck,
@@ -16,10 +15,31 @@ import {
 } from "react-icons/fa";
 
 const Dashboard = () => {
+  const [activeMenu, setActiveMenu] = useState("Overview");
+
+  const menuItems = [
+    { label: "Overview", icon: <FaHome /> },
+    { label: "My Orders", icon: <FaBoxOpen /> },
+    { label: "Services", icon: <FaTshirt /> },
+    { label: "Addresses", icon: <FaMapMarkerAlt /> },
+    { label: "Payments", icon: <FaCreditCard /> },
+    { label: "Subscriptions", icon: <FaClipboardList /> },
+    { label: "Tracking", icon: <FaTruck /> },
+    { label: "Settings", icon: <FaCog /> },
+  ];
+
   const stats = [
     { title: "Total Orders", value: "48", sub: "2 orders this month" },
-    { title: "Active Bookings", value: "02", sub: "Next delivery: Tomorrow, 2PM" },
-    { title: "Loyalty Points", value: "2,450", sub: "550 points until next reward" },
+    {
+      title: "Active Bookings",
+      value: "02",
+      sub: "Next delivery: Tomorrow, 2PM",
+    },
+    {
+      title: "Loyalty Points",
+      value: "2,450",
+      sub: "550 points until next reward",
+    },
   ];
 
   const recentOrders = [
@@ -50,8 +70,8 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#f4f7fb] flex font-sans">
-      {/* ================= SIDEBAR ================= */}
-      <aside className="w-[260px] bg-white border-r border-slate-200 hidden lg:flex flex-col justify-between shadow-sm">
+      {/* Sidebar */}
+      <aside className="hidden lg:flex w-[260px] bg-white border-r border-slate-200 shadow-sm flex-col justify-between">
         <div>
           <div className="px-8 py-7 border-b border-slate-100">
             <h1 className="text-2xl font-extrabold tracking-wide text-[#0d4ea6]">
@@ -61,14 +81,15 @@ const Dashboard = () => {
           </div>
 
           <nav className="px-4 py-6 space-y-2">
-            <SidebarItem icon={<FaHome />} label="Overview" active />
-            <SidebarItem icon={<FaBoxOpen />} label="My Orders" />
-            <SidebarItem icon={<FaTshirt />} label="Services" />
-            <SidebarItem icon={<FaMapMarkerAlt />} label="Addresses" />
-            <SidebarItem icon={<FaCreditCard />} label="Payments" />
-            <SidebarItem icon={<FaClipboardList />} label="Subscriptions" />
-            <SidebarItem icon={<FaTruck />} label="Tracking" />
-            <SidebarItem icon={<FaCog />} label="Settings" />
+            {menuItems.map((item) => (
+              <SidebarItem
+                key={item.label}
+                icon={item.icon}
+                label={item.label}
+                active={activeMenu === item.label}
+                onClick={() => setActiveMenu(item.label)}
+              />
+            ))}
           </nav>
         </div>
 
@@ -80,13 +101,13 @@ const Dashboard = () => {
         </div>
       </aside>
 
-      {/* ================= MAIN ================= */}
+      {/* Main */}
       <main className="flex-1">
         {/* Topbar */}
-        <header className="bg-white border-b border-slate-200 px-6 md:px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+        <header className="sticky top-0 z-10 bg-white border-b border-slate-200 px-6 md:px-8 py-4 flex items-center justify-between">
           <div>
             <h2 className="text-xl md:text-2xl font-bold text-slate-800">
-              User Dashboard
+              {activeMenu}
             </h2>
             <p className="text-sm text-slate-500">
               Welcome back to your laundry account
@@ -96,14 +117,20 @@ const Dashboard = () => {
           <div className="flex items-center gap-4">
             <button className="relative w-11 h-11 rounded-full border border-slate-200 bg-white flex items-center justify-center hover:bg-slate-50">
               <FaBell className="text-slate-600" />
-              <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+              <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-blue-600" />
             </button>
 
-            <div className="flex items-center gap-3 bg-white border border-slate-200 rounded-full px-3 py-2 shadow-sm">
-              <FaUserCircle className="text-3xl text-slate-500" />
-              <div className="hidden sm:block">
-                <p className="text-sm font-semibold text-slate-800">Alex Johnson</p>
-                <p className="text-xs text-slate-500">Premium Member</p>
+            <div className="flex items-center gap-6 bg-white border border-slate-200 rounded-2xl px-5 py-3 shadow-sm">
+              <div>
+                <p className="text-xs text-slate-500">First Name</p>
+                <p className="text-sm font-semibold text-slate-800">Alex</p>
+              </div>
+
+              <div className="w-px h-10 bg-slate-200" />
+
+              <div>
+                <p className="text-xs text-slate-500">Last Name</p>
+                <p className="text-sm font-semibold text-slate-800">Johnson</p>
               </div>
             </div>
           </div>
@@ -113,69 +140,69 @@ const Dashboard = () => {
         <div className="p-5 md:p-8">
           {/* Welcome Card */}
           <section className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 md:p-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div className="flex items-center gap-4">
-              <img
-                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop"
-                alt="profile"
-                className="w-16 h-16 rounded-2xl object-cover"
-              />
-              <div>
-                <h3 className="text-2xl md:text-3xl font-bold text-[#0d4ea6]">
-                  Welcome back, Alex
-                </h3>
-                <p className="text-slate-500 mt-1">
-                  Member since Jan 2026 • Professional Plan
-                </p>
-              </div>
+            <div>
+              <h3 className="text-2xl md:text-3xl font-bold text-[#0d4ea6]">
+                Welcome back, Alex
+              </h3>
+              <p className="text-slate-500 mt-1">
+                Member since Jan 2026 • Professional Plan
+              </p>
             </div>
 
-            <button className="bg-[#0d4ea6] hover:bg-[#0a428d] text-white font-semibold px-6 py-4 rounded-2xl shadow-md transition w-full sm:w-fit">
+            <button className="bg-[#0d4ea6] text-white hover:bg-[#0b438d] font-semibold px-6 py-4 rounded-2xl shadow-md transition w-full sm:w-fit">
               Schedule Pickup
             </button>
           </section>
 
           {/* Stats */}
           <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
-            {stats.map((item, idx) => (
+            {stats.map((item) => (
               <div
-                key={idx}
+                key={item.title}
                 className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm"
               >
                 <p className="text-sm text-slate-500 mb-3">{item.title}</p>
-                <h4 className="text-3xl font-bold text-slate-800">{item.value}</h4>
+                <h4 className="text-3xl font-bold text-slate-800">
+                  {item.value}
+                </h4>
                 <p className="text-sm text-slate-400 mt-2">{item.sub}</p>
               </div>
             ))}
           </section>
 
-          {/* Main grid */}
+          {/* Main Grid */}
           <section className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
-            {/* LEFT SECTION */}
+            {/* Left */}
             <div className="xl:col-span-2 space-y-6">
               {/* Recent Orders */}
               <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
                 <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-xl font-bold text-slate-800">Recent Orders</h3>
+                  <h3 className="text-xl font-bold text-slate-800">
+                    Recent Orders
+                  </h3>
                   <button className="text-[#0d4ea6] text-sm font-semibold hover:underline">
                     View All
                   </button>
                 </div>
 
                 <div className="space-y-4">
-                  {recentOrders.map((order, index) => (
+                  {recentOrders.map((order) => (
                     <div
-                      key={index}
+                      key={order.id}
                       className="border border-slate-200 rounded-2xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 hover:shadow-sm transition"
                     >
                       <div className="flex items-start gap-4">
                         <div className="w-12 h-12 rounded-xl bg-blue-50 text-[#0d4ea6] flex items-center justify-center">
                           <FaBoxOpen />
                         </div>
+
                         <div>
                           <h4 className="font-semibold text-slate-800">
                             Order #{order.id}
                           </h4>
-                          <p className="text-slate-500 text-sm mt-1">{order.service}</p>
+                          <p className="text-slate-500 text-sm mt-1">
+                            {order.service}
+                          </p>
                         </div>
                       </div>
 
@@ -185,7 +212,7 @@ const Dashboard = () => {
                           className={`px-3 py-1 rounded-full text-xs font-semibold ${
                             order.status === "Active"
                               ? "bg-green-100 text-green-700"
-                              : "bg-slate-100 text-slate-600"
+                              : "bg-slate-100 text-slate-700"
                           }`}
                         >
                           {order.status}
@@ -203,40 +230,51 @@ const Dashboard = () => {
                 </h3>
 
                 <div className="relative">
-                  {/* Line */}
                   <div className="absolute top-5 left-0 right-0 h-1 bg-slate-200 rounded-full">
-                    <div className="w-[58%] h-1 bg-[#0d4ea6] rounded-full"></div>
+                    <div className="w-[58%] h-1 bg-[#0d4ea6] rounded-full" />
                   </div>
 
                   <div className="relative grid grid-cols-4 gap-4 text-center">
                     <ProgressStep
                       icon={<FaClipboardList />}
                       label="Picked Up"
-                      active
+                      active={true}
                     />
-                    <ProgressStep icon={<FaTshirt />} label="Washing" active />
-                    <ProgressStep icon={<FaTruck />} label="Out for Delivery" />
-                    <ProgressStep icon={<FaCheckCircle />} label="Delivered" />
+                    <ProgressStep
+                      icon={<FaTshirt />}
+                      label="Washing"
+                      active={true}
+                    />
+                    <ProgressStep
+                      icon={<FaTruck />}
+                      label="Out for Delivery"
+                    />
+                    <ProgressStep
+                      icon={<FaCheckCircle />}
+                      label="Delivered"
+                    />
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* RIGHT SECTION */}
+            {/* Right */}
             <div className="space-y-6">
               {/* Addresses */}
               <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
                 <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-xl font-bold text-slate-800">Addresses</h3>
+                  <h3 className="text-xl font-bold text-slate-800">
+                    Addresses
+                  </h3>
                   <button className="text-[#0d4ea6]">
                     <FaPlus />
                   </button>
                 </div>
 
                 <div className="space-y-4">
-                  {addresses.map((item, idx) => (
+                  {addresses.map((item) => (
                     <div
-                      key={idx}
+                      key={item.title}
                       className="border border-slate-200 rounded-2xl p-4"
                     >
                       <div className="flex gap-3">
@@ -244,7 +282,9 @@ const Dashboard = () => {
                           <FaMapMarkerAlt />
                         </div>
                         <div>
-                          <h4 className="font-semibold text-slate-800">{item.title}</h4>
+                          <h4 className="font-semibold text-slate-800">
+                            {item.title}
+                          </h4>
                           <p className="text-sm text-slate-500 whitespace-pre-line mt-1">
                             {item.address}
                           </p>
@@ -258,7 +298,9 @@ const Dashboard = () => {
               {/* Payments */}
               <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
                 <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-xl font-bold text-slate-800">Payments</h3>
+                  <h3 className="text-xl font-bold text-slate-800">
+                    Payments
+                  </h3>
                   <button className="text-[#0d4ea6]">
                     <FaPlus />
                   </button>
@@ -269,10 +311,15 @@ const Dashboard = () => {
                     <div className="flex items-center gap-3">
                       <FaCreditCard className="text-slate-500" />
                       <div>
-                        <p className="font-semibold text-slate-800">•••• 4412</p>
-                        <p className="text-sm text-slate-500">Visa ending in 4412</p>
+                        <p className="font-semibold text-slate-800">
+                          •••• 4412
+                        </p>
+                        <p className="text-sm text-slate-500">
+                          Visa ending in 4412
+                        </p>
                       </div>
                     </div>
+
                     <span className="text-xs font-semibold bg-blue-50 text-[#0d4ea6] px-3 py-1 rounded-full">
                       Default
                     </span>
@@ -282,25 +329,15 @@ const Dashboard = () => {
                     <FaCreditCard className="text-slate-500" />
                     <div>
                       <p className="font-semibold text-slate-800">Apple Pay</p>
-                      <p className="text-sm text-slate-500">Connected wallet</p>
+                      <p className="text-sm text-slate-500">
+                        Connected wallet
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Quick Settings */}
-              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
-                <h3 className="text-xl font-bold text-slate-800 mb-4">
-                  Quick Settings
-                </h3>
-
-                <div className="space-y-3">
-                  <QuickLink label="Notification Preferences" />
-                  <QuickLink label="Privacy & Security" />
-                  <QuickLink label="Billing Settings" />
-                  <QuickLink label="Sign Out" danger />
-                </div>
-              </div>
+              {/* Quick Settings removed */}
             </div>
           </section>
         </div>
@@ -309,9 +346,10 @@ const Dashboard = () => {
   );
 };
 
-const SidebarItem = ({ icon, label, active }) => {
+const SidebarItem = ({ icon, label, active, onClick }) => {
   return (
     <button
+      onClick={onClick}
       className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition font-medium ${
         active
           ? "bg-[#0d4ea6] text-white shadow-md"
@@ -324,7 +362,7 @@ const SidebarItem = ({ icon, label, active }) => {
   );
 };
 
-const ProgressStep = ({ icon, label, active }) => {
+const ProgressStep = ({ icon, label, active = false }) => {
   return (
     <div className="flex flex-col items-center relative z-10">
       <div
@@ -336,6 +374,7 @@ const ProgressStep = ({ icon, label, active }) => {
       >
         {icon}
       </div>
+
       <p
         className={`text-sm mt-3 font-medium ${
           active ? "text-slate-800" : "text-slate-400"
@@ -344,20 +383,6 @@ const ProgressStep = ({ icon, label, active }) => {
         {label}
       </p>
     </div>
-  );
-};
-
-const QuickLink = ({ label, danger }) => {
-  return (
-    <button
-      className={`w-full text-left px-4 py-3 rounded-xl border transition ${
-        danger
-          ? "border-red-100 text-red-500 hover:bg-red-50"
-          : "border-slate-200 text-slate-700 hover:bg-slate-50"
-      }`}
-    >
-      {label}
-    </button>
   );
 };
 
