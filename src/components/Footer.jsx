@@ -1,5 +1,4 @@
 import React from "react";
-import AthenuraLogo from "../assets/Athenura.png";
 import { Link } from "react-router-dom";
 import {
   FaFacebookF,
@@ -21,20 +20,11 @@ function Footer() {
       <span className="bubble b4"></span>
       <span className="bubble b5"></span>
 
-      <div className="max-w-7xl mx-auto px-6 py-10 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 py-10 relative z-10 ">
         <div className="grid md:grid-cols-4 gap-8">
-          {/* Logo & Brand */}
           <div>
-            <img
-              src={AthenuraLogo}
-              alt="Athenura Logo"
-              className="w-56 h-auto"
-            />
-            <p className="mt-5 text-gray-500 text-sm leading-7 max-w-[250px]">
-              Your trusted laundry and dry cleaning partner. Premium garment
-              care with free pickup and fast doorstep delivery.
-            </p>
-            
+            <h2 className="text-4xl font-bold text-blue-950">ATHENURA.</h2>
+
             <div className="flex gap-3 mt-5">
               <div className="group w-10 h-10 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:bg-[#1877F2]">
                 <FaFacebookF className="text-[#1877F2] group-hover:text-white" />
@@ -52,6 +42,11 @@ function Footer() {
                 <FaYoutube className="text-[#FF0000] group-hover:text-white" />
               </div>
             </div>
+
+            <p className="mt-5 text-gray-500 text-sm leading-7 max-w-[250px]">
+              Your trusted laundry and dry cleaning partner. Premium garment
+              care with free pickup and fast doorstep delivery.
+            </p>
           </div>
 
           {/* Services */}
@@ -84,6 +79,16 @@ function Footer() {
               Company
             </h3>
             <ul className="space-y-3 text-gray-600 text-sm">
+
+             <li><Link className="hover:text-blue-600 cursor-pointer" to='/about'>About Us</Link></li> 
+             <li> <Link className="hover:text-blue-600 cursor-pointer" to='/services'>Services</Link></li>
+             <li> <Link className="hover:text-blue-600 cursor-pointer" to='/'>Franchise</Link></li>
+              <li><Link className="hover:text-blue-600 cursor-pointer" to='/'>Careers</Link></li>
+              <li><Link className="hover:text-blue-600 cursor-pointer">
+                Privacy Policy
+              </Link></li>
+              <li className="hover:text-blue-600 cursor-pointer">FAQs</li>
+
               <li>
                 <Link to="/about" className="hover:text-blue-600 cursor-pointer">
                   About Us
@@ -114,6 +119,7 @@ function Footer() {
                   FAQs
                 </Link>
               </li>
+
             </ul>
           </div>
 
@@ -130,6 +136,11 @@ function Footer() {
 
               <div className="flex gap-3 items-start">
                 <FaPhoneAlt className="text-green-600 mt-1" />
+                <span>+91 98765 43210</span>
+              </div>
+
+              <div className="flex gap-3 items-start">
+                <FaPhoneAlt className="text-green-600 mt-1" />
                 <span>+91 87654 32109</span>
               </div>
 
@@ -140,6 +151,7 @@ function Footer() {
             </div>
           </div>
         </div>
+
 
         {/* City Listings - Commented out but kept for reference */}
         
@@ -153,6 +165,7 @@ function Footer() {
        
 
         {/* Copyright */}
+
         <div className="border-t border-blue-100 mt-8 pt-4 text-center text-sm text-gray-500">
           © 2026 ATHENURA. All Rights Reserved.
         </div>

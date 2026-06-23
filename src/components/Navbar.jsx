@@ -17,17 +17,17 @@ const Navbar = () => {
       id: "Services", label: "Services", path: "/services",
 
       dropdown: [
-        { label: "Laundry Service", path: "/services/laundry-service" },
+        { label: "Laundry Service", path: "/services/Laundry-service" },
 
-        { label: "Dry Cleaning", path: "/services/dry-cleaning" },
+        { label: "Dry Cleaning", path: "/services/DryClean-service" },
 
-        { label: "Ironing", path: "/services/ironing" },
+        { label: "Ironing", path: "/services/Ironing-service" },
 
-        { label: "Carpet Cleaning", path: "/services/carpet-cleaning" },
+        { label: "Carpet Cleaning", path: "/services/CarpetCleaning-service" },
 
-        { label: "Shoe Cleaning", path: "/services/shoe-cleaning" },
+        { label: "Shoe Cleaning", path: "/services/ShoeCleaning-service" },
 
-        { label: "Curtain Cleaning", path: "/services/curtain-cleaning" },
+        { label: "Curtain Cleaning", path: "/services/CurtainCleaning-service" },
 
       ],
 
@@ -91,10 +91,10 @@ const Navbar = () => {
 
         {/* Login/Profile Button */}
         <button
-          onClick={() => setUserLogin(!userlogin)}
+         
           className="hidden md:flex py-1 px-4 bg-blue-600 rounded-3xl text-white cursor-pointer mr-15 hover:bg-blue-700"
         >
-          {userlogin ? "Profile" : "Login"}
+         <Link to="/login">Login</Link>
         </button>
 
         {/* Mobile Icon */}

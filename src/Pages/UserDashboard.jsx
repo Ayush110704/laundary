@@ -16,7 +16,7 @@ import {
   FaPlus,
 } from "react-icons/fa";
 
-const Dashboard = () => {
+const UserDashboard = () => {
   const stats = [
     { title: "Total Orders", value: "48", sub: "2 orders this month" },
     { title: "Active Bookings", value: "02", sub: "Next delivery: Tomorrow, 2PM" },
@@ -368,4 +368,4 @@ const QuickLink = ({ label, danger }) => {
   );
 };
 
-export default Dashboard;
+export default UserDashboard;

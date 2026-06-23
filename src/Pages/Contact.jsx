@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 function Contact() {
   return (
-    <div className="pt-16 md:pt-20">
+    <div className="pt-16 md:pt-15">
       {/* Banner - Desktop */}
       <div className="relative hidden md:block">
         <img

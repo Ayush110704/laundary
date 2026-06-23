@@ -9,6 +9,17 @@ import Footer from "./components/Footer";
 import HomePage from "./Pages/Home";
 import Navbar from "./components/Navbar";
 import About from "./Pages/About";
+
+import Services from "./Pages/Services";
+import ServicePage from "./components/ServicePage"
+import Dashboard from "./Pages/UserDashboard";
+import AdminDashboard from "./components/Admin/AdminDashboard";
+import TermsConndition from "./Pages/TermsCondition";
+import FAQ from "./Pages/FAQ";
+import Login from './Pages/Login'
+import SignUp from './Pages/SignUp'
+
+
 import Services from "./Pages/Services"; 
 import LaundryService from "./components/LaundryService";
 import DryCleaning from "./components/DryCleaning";
@@ -27,17 +38,31 @@ import FAQ from "./Pages/FAQ";
   
 import FAQ from "./Pages/FAQ";  
 
+
 function App() {
   const location = useLocation();
-  const isDashboard = location.pathname === "/dashboard";
+  const hideLayoutRoutes = ["/dashboard","/login","/signup"]
+  const hideLayout = hideLayoutRoutes.includes(location.pathname);
 
   return (
     <>
-      {!isDashboard && <Navbar />}
+      {!hideLayout && <Navbar />}
 
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<About />} />
+
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/services" element={<Services />} />
+        <Route path="/services/:service"element={<ServicePage key={location.pathname} />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/dashboard" element={<AdminDashboard />} />
+        <Route path="/TermsCondition" element={<TermsConndition />} />
+        <Route path="/FAQ" element={<FAQ />} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<SignUp/>} />
+
+
         <Route path="/contact" element={<Contact />} /> 
         <Route path="/services" element={<Services />} /> 
          <Route path="/services/laundry-service" element={<LaundryService />} />
@@ -58,9 +83,10 @@ function App() {
         <Route path="/FAQ" element={<FAQ />}/>  
         <Route path="/FAQ" element={<FAQ />}/>
         <Route path="/subscription" element={<Subscription />} /> 
+
       </Routes>
 
-      {!isDashboard && <Footer />}
+      {!hideLayout && <Footer />}
     </>
   );
 }
