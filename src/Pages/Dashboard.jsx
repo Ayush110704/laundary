@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   FaHome,
   FaBoxOpen,
@@ -15,7 +16,7 @@ import {
   FaPlus,
 } from "react-icons/fa";
 
-const Dashboard = () => {
+const UserDashboard = () => {
   const stats = [
     { title: "Total Orders", value: "48", sub: "2 orders this month" },
     { title: "Active Bookings", value: "02", sub: "Next delivery: Tomorrow, 2PM" },
@@ -66,7 +67,13 @@ const Dashboard = () => {
             <SidebarItem icon={<FaTshirt />} label="Services" />
             <SidebarItem icon={<FaMapMarkerAlt />} label="Addresses" />
             <SidebarItem icon={<FaCreditCard />} label="Payments" />
-            <SidebarItem icon={<FaClipboardList />} label="Subscriptions" />
+<Link
+  to="/subscription"
+  className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50"
+>
+  <FaClipboardList />
+  <span>Subscriptions</span>
+</Link>
             <SidebarItem icon={<FaTruck />} label="Tracking" />
             <SidebarItem icon={<FaCog />} label="Settings" />
           </nav>
@@ -361,4 +368,4 @@ const QuickLink = ({ label, danger }) => {
   );
 };
 
-export default Dashboard;
+export default UserDashboard;

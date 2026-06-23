@@ -2,10 +2,11 @@ import React from "react";
 import laundryContact from "../assets/laundryContact.png";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import hero from "../assets/hero.webp";
+import { motion } from "framer-motion";
 
 function Contact() {
   return (
-    <div className="pt-16 md:pt-20">
+    <div className="pt-16 md:pt-15">
       {/* Banner - Desktop */}
       <div className="relative hidden md:block">
         <img
@@ -18,47 +19,98 @@ function Contact() {
 
         <div className="absolute inset-0 flex items-center">
           <div className="ml-8 md:ml-20 max-w-lg">
-            <h1 className="text-4xl md:text-6xl font-bold text-white">
+            <motion.h1
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-4xl md:text-6xl font-bold text-white"
+            >
               We're Here To Help You
-            </h1>
+            </motion.h1>
 
-            <p className="mt-4 text-base md:text-xl text-white/90 leading-relaxed">
+            <motion.p
+              initial={{ opacity: 0, y: 60 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
+              className="mt-4 text-base md:text-xl text-white/90 leading-relaxed"
+            >
               Whether you have a question about our eco-friendly processes, need
               help with an order, or just want to say hello, our team is ready
               to assist you with clinical precision.
-            </p>
+            </motion.p>
           </div>
         </div>
       </div>
 
-      {/* Mobile Banner */}
-      <div className="md:hidden relative overflow-hidden h-[300px]">
-        {/* Background Image */}
-        <img
-          src={hero}
-          alt="Laundry"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+ {/* Mobile Banner */}
+<div className="md:hidden relative overflow-hidden min-h-[500px] bg-gradient-to-br from-[#0f3d7a] via-[#1d4ed8] to-[#60a5fa] rounded-b-[40px]">
 
-        {/* Blue Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0f3d7a]/90 to-[#2563eb]/80"></div>
+  {/* Animated Glow */}
+  <div className="absolute -top-20 -left-20 w-60 h-60 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
 
-        {/* Content */}
-        <div className="relative z-10 px-6 py-12 h-full flex flex-col justify-center">
-          <h1 className="text-4xl font-bold text-white">
-            Contact Us
-          </h1>
+  <div className="absolute top-40 right-0 w-40 h-40 bg-cyan-300/10 rounded-full blur-3xl animate-pulse"></div>
 
-          <p className="mt-4 text-white/90 text-base leading-relaxed max-w-xs">
-            Questions about pickup, delivery or laundry care?
-            Our team is ready to help.
-          </p>
+  {/* Animated Wave */}
+  <div className="absolute bottom-32 left-0 w-full overflow-hidden opacity-30">
+    <div className="h-[2px] bg-white animate-pulse"></div>
+    <div className="h-[2px] bg-white mt-3 animate-pulse"></div>
+    <div className="h-[2px] bg-white mt-3 animate-pulse"></div>
+    <div className="h-[2px] bg-white mt-3 animate-pulse"></div>
+  </div>
 
-          <button className="mt-6 bg-white text-[#0f3d7a] px-6 py-3 rounded-xl font-semibold hover:scale-105 transition duration-300 w-fit">
-            Get In Touch
-          </button>
-        </div>
-      </div>
+  {/* Floating Circles */}
+  <div className="absolute top-24 right-12 w-4 h-4 border-2 border-white rounded-full animate-bounce"></div>
+
+  <div className="absolute top-40 right-24 w-3 h-3 border border-white rounded-full animate-ping"></div>
+
+  <div className="absolute bottom-48 right-10 w-5 h-5 border-2 border-cyan-200 rounded-full animate-bounce"></div>
+
+  {/* Content */}
+  <div className="relative z-10 px-6 pt-14">
+
+    {/* Badge */}
+    <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-5 py-3 rounded-full">
+
+      <span className="text-2xl">🎧</span>
+
+      <span className="text-white font-semibold">
+        Customer Support
+      </span>
+
+    </div>
+
+    {/* Heading */}
+    <h1 className="mt-8 text-6xl font-extrabold text-white leading-none">
+      Contact Us
+    </h1>
+
+    {/* Description */}
+    <p className="mt-6 text-white/90 text-xl leading-relaxed max-w-xs">
+      Questions about pickup, delivery or laundry care?
+      Our support team is always ready to help.
+    </p>
+
+    {/* CTA Card */}
+    <div className="mt-12 bg-white rounded-3xl p-6 shadow-2xl">
+
+      <h3 className="text-[#0f3d7a] text-3xl font-bold">
+        Get In Touch
+      </h3>
+
+      <p className="text-gray-500 mt-3">
+        Need help with your order?
+        Contact our team anytime.
+      </p>
+
+      <button className="mt-5 w-full py-4 rounded-2xl bg-gradient-to-r from-[#0f3d7a] to-[#2563eb] text-white font-bold text-lg hover:scale-105 transition-all duration-300">
+        Contact Support →
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 
       {/* Contact Section */}
       <section className="bg-[#f7f9fc] py-14">
@@ -193,8 +245,7 @@ function Contact() {
 
                   <div className="text-sm text-gray-700">
                     RDC Raj Nagar <br />
-                    Ghaziabad 
-                    Uttar Pradesh
+                    Ghaziabad Uttar Pradesh
                   </div>
                 </div>
 
