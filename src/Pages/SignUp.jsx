@@ -213,7 +213,7 @@ const SignUp = () => {
                 <Phone className="text-gray-400 w-5" />
 
                 <input
-                  type="number"
+                  type="tel"
                   name="number"
                   placeholder="+91 9876543210"
                   className="w-full px-3 outline-none"
@@ -245,7 +245,7 @@ const SignUp = () => {
                   onChange={handleChange}
                 />
 
-                <button onClick={() => setShowPassword(!showPassword)}  >
+                <button onClick={() => setShowPassword(!showPassword)} type='button' >
                   {showPassword ? <Eye /> : <EyeOff />}
                 </button>
 
@@ -293,9 +293,11 @@ const SignUp = () => {
             {/* Button */}
 
             <motion.button
+            type="submit"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="w-full h-14 rounded-xl bg-blue-900 text-white text-lg font-semibold mt-8"
+              
             > Sign Up</motion.button>
           </form>
 
@@ -319,62 +321,7 @@ const SignUp = () => {
 
       {/* Bottom cards */}
 
-      <div className="max-w-5xl mx-auto mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
-
-        {[
-          {
-            icon: Shield,
-            title: "Secure Signup",
-            subtitle: "100% protected",
-            bg: "bg-blue-100",
-            color: "text-blue-600",
-          },
-
-          {
-            icon: Star,
-            title: "Fast Access",
-            subtitle: "Join instantly",
-            bg: "bg-green-100",
-            color: "text-green-600",
-          },
-
-          {
-            icon: Star,
-            title: "24/7 Support",
-            subtitle: "Always available",
-            bg: "bg-purple-100",
-            color: "text-purple-600",
-          },
-
-        ].map((item, index) => {
-
-          const Icon = item.icon;
-
-          return (
-
-            <motion.div
-              key={index}
-              whileHover={{ y: -5 }}
-              className="bg-white p-5 rounded-2xl shadow flex items-center gap-4"
-            >
-              <div className={`${item.bg} w-14 h-14 rounded-xl flex justify-center items-center`}>
-                <Icon className={`${item.color}`} />
-              </div>
-
-              <div>
-                <h3 className="font-bold text-blue-950">
-                  {item.title}
-                </h3>
-
-                <p className="text-gray-500 text-sm">
-                  {item.subtitle}
-                </p>
-              </div>
-            </motion.div>
-          );
-        })}
-
-      </div>
+    
     </div>
   );
 };
