@@ -5,6 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
 import logo from '../assets/Athenura.png'
 import {Link} from 'react-router-dom'
+import Image from '../assets/LoginImage.jpeg'
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -32,7 +33,7 @@ const Login = () => {
     }
 
     return (
-        <div className="w-full min-h-screen bg-slate-100 pt-24 pb-10 overflow-x-hidden">
+        <div className="w-full min-h-screen bg-slate-100 py-7 overflow-x-hidden">
 
             {/* Main Container */}
             <motion.div
@@ -45,7 +46,7 @@ const Login = () => {
                     <div className="hidden lg:flex relative bg-blue-950 p-14 text-white flex-col justify-between overflow-hidden"
                     >
                         <img
-                            src="https://images.unsplash.com/photo-1582735689369-4fe89db7114c"
+                            src={Image}
                             className="absolute inset-0 w-full h-full object-cover opacity-20"
                             alt=""
                         />
@@ -223,32 +224,7 @@ const Login = () => {
                     </div>
                 </div>
 
-                {/* Bottom Cards */}
-
-                <motion.div
-                    initial={{ y: 60, opacity: 0 }}
-                    whileInView={{ y: 0, opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    className="max-w-5xl mx-auto mt-10 grid grid-cols-1 md:grid-cols-3 gap-5"
-                >
-                    {features.map((item) => {
-                        const Icon = item.logo;
-                        return (
-                            <div key={item.id} className="bg-white rounded-2xl p-4 md:p-6 shadow flex items-center gap-4">
-                                <div className={`w-14 h-14 rounded-xl flex items-center justify-center ${item.bg}`}>
-                                    <Icon className={`w-7 h-7 ${item.color}`} />
-                                </div>
-
-                                <div>
-                                    <h3 className="font-bold text-blue-950">{item.title}</h3>
-                                    <p className="text-gray-500 text-sm">{item.subtitle}</p>
-                                </div>
-                            </div>
-                        );
-                    })}
-
-                </motion.div>
+              
             </motion.div>
         </div>
     );

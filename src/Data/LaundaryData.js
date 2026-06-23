@@ -29,7 +29,7 @@ import woolen from '../assets/Laundry-Service/woolen.webp'
 
 // DryClean-Service Page Images
 
-import DryHeroBackground from '../assets/DryClean/DryHeroBackground.png'
+import DryHeroBackground from '../assets/DryClean/DryHeroBackground2.png'
 import DryHeroVector from '../assets/DryClean/DryHeroVector.png'
 import bags from '../assets/DryClean/bags.webp'
 import Step from '../assets/DryClean/steps.webp'
@@ -368,6 +368,9 @@ export const serviceFaqs = [
 
 ];
 
+
+
+
 export const ServicesData = {
 
   "Laundry-service": {
@@ -376,6 +379,7 @@ export const ServicesData = {
       HeroVector: LaundryHeroVector,
       HeroBadge: " ✦ EXPERT CARE",
       HeroTitle: "Professional Laundry",
+      HeroSub:"Perfect Every Time",
 
       HeroPara: "  Trusted care for every garment — pickup, clean & deliver.",
 
@@ -418,7 +422,8 @@ export const ServicesData = {
       HeroBackground: DryHeroBackground,
       HeroVector: DryHeroVector,
       HeroBadge: " ✦ EXPERT CARE",
-      HeroTitle: "Dry Cleaning",
+      HeroTitle: "Professional Dry Cleaning,",
+      HeroSub:"Delivered With Care",
 
       HeroPara: "  Trusted care for every garment — pickup, clean & deliver.",
 
