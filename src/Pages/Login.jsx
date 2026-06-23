@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, Shield, Headphones, Zap, ShoppingBasket, } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
@@ -11,10 +11,10 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [userdata,setUserdata]=useState({
         email:"",
-        
-       
         password:""
     })
+
+
 
     const features = [
         { id: 1, logo: Shield, title: "Secure Login", subtitle: "100% protected", color: "text-blue-600", bg: "bg-blue-100" },
@@ -27,10 +27,19 @@ const Login = () => {
        setUserdata({...userdata,[e.target.name]:e.target.value})
     }
 
+    useEffect(()=>{
+
+        const data= JSON.parse(localStorage.getItem("Users"));
+        console.log(data);
+
+    },[])
+
+    
     const handleLogin=(e)=>{
          e.preventDefault();
          console.log(userdata);
     }
+
 
     return (
         <div className="w-full min-h-screen bg-slate-100 py-7 overflow-x-hidden">
@@ -157,7 +166,7 @@ const Login = () => {
                                     />
 
                                     <button
-                                        onClick={() => setShowPassword(!showPassword)} >
+                                        onClick={() => setShowPassword(!showPassword)} type="button" >
                                         {showPassword ? (<EyeOff />) : (<Eye />)}
                                     </button>
 
@@ -184,7 +193,8 @@ const Login = () => {
                                 whileHover={{ scale: 1.02, }}
                                 whileTap={{ scale: 0.98, }}
                                 className="w-full  h-10 md:h-14 bg-blue-900 text-white rounded-2xl mt-5  text-lg md:text-xl font-semibold"
-                            >
+                          type="submit"
+                          >
                                 Login
                             </motion.button>
 
