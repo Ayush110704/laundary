@@ -1,7 +1,4 @@
 
-
-
-
 // Import service background images
 import laundryBg from '../assets/laundry.webp';
 import dryCleanBg from '../assets/dryclean.webp';
@@ -10,6 +7,7 @@ import ironingBg from '../assets/ironing.webp';
 import supportIcon from '../assets/customersupport.webp';
 import deliveryIcon from '../assets/fastdelivery.webp';
 import ecoIcon from '../assets/freshandechofriendly.webp';
+
 
 
 // Laundry-Service Page Images
@@ -90,6 +88,7 @@ import silkCarpet from '../assets/CarpetClean/silk.webp'
 import steamCarpet from '../assets/CarpetClean/steam.webp'
 import turkish from '../assets/CarpetClean/turkish.webp'
 import wool from '../assets/CarpetClean/wool.webp'
+
 
 
 
@@ -222,22 +221,30 @@ export const colors = {
   navy: '#1A1A4E'
 };
 
+ 
+
+
 export const faqData = [
   {
     id: 1,
     category: "Booking",
     question: "Why is Laundrywala the best laundry and dry cleaner?",
-    answer:
-      "Laundrywala offers premium laundry and dry cleaning services with doorstep pickup and delivery, quality care, affordable pricing, and eco-friendly cleaning methods."
+    answer: "Laundrywala offers premium laundry and dry cleaning services with doorstep pickup and delivery, quality care, affordable pricing, and eco-friendly cleaning methods."
+
+     
   },
   {
     id: 2,
     category: "Booking",
     question: "How do I place an order?",
     answer:
+
       "You can schedule a pickup through our website, mobile app, or by contacting customer support."
   },
+
+  
   {
+
     id: 3,
     category: "Booking",
     question: "Can I schedule pickup for a specific time?",
@@ -358,6 +365,7 @@ export const serviceFaqs = [
     answer:
       "Yes, we provide hemming, resizing, fitting adjustments, zipper replacement, and other tailoring services."
   }
+
 ];
 
 export const ServicesData = {
@@ -626,3 +634,39 @@ Servicetitle:"",
 
 
 };
+
+
+
+export const subscriptionHistory = [
+  {
+    id: 1,
+    plan: "Monthly Care",
+    duration: "1 Month",
+    amount: "₹299",
+    startDate: "01 June 2026",
+    expiryDate: "01 July 2026",
+    status: "Active",
+    invoiceId: "INV-2026-001",
+  },
+  {
+    id: 2,
+    plan: "Quarterly",
+    duration: "3 Months",
+    amount: "₹799",
+    startDate: "01 January 2026",
+    expiryDate: "01 April 2026",
+    status: "Expired",
+    invoiceId: "INV-2026-002",
+  },
+  {
+    id: 3,
+    plan: "Half Yearly",
+    duration: "6 Months",
+    amount: "₹1499",
+    startDate: "01 July 2025",
+    expiryDate: "01 January 2026",
+    status: "Expired",
+    invoiceId: "INV-2026-003",
+  },
+];
+

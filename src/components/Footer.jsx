@@ -54,7 +54,6 @@ function Footer() {
             <h3 className="text-xl font-semibold text-[#0f3d7a] mb-4">
               Services
             </h3>
-
             <ul className="space-y-3 text-gray-600 text-sm">
               <li className="hover:text-blue-600 cursor-pointer duration-300">
                 Wash & Fold
@@ -79,8 +78,8 @@ function Footer() {
             <h3 className="text-xl font-semibold text-[#0f3d7a] mb-4">
               Company
             </h3>
-
             <ul className="space-y-3 text-gray-600 text-sm">
+
              <li><Link className="hover:text-blue-600 cursor-pointer" to='/about'>About Us</Link></li> 
              <li> <Link className="hover:text-blue-600 cursor-pointer" to='/services'>Services</Link></li>
              <li> <Link className="hover:text-blue-600 cursor-pointer" to='/'>Franchise</Link></li>
@@ -89,6 +88,38 @@ function Footer() {
                 Privacy Policy
               </Link></li>
               <li className="hover:text-blue-600 cursor-pointer">FAQs</li>
+
+              <li>
+                <Link to="/about" className="hover:text-blue-600 cursor-pointer">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/services" className="hover:text-blue-600 cursor-pointer">
+                  Services
+                </Link>
+              </li>
+              <li>
+                <Link to="/franchise" className="hover:text-blue-600 cursor-pointer">
+                  Franchise
+                </Link>
+              </li>
+              <li>
+                <Link to="/careers" className="hover:text-blue-600 cursor-pointer">
+                  Careers
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy-policy" className="hover:text-blue-600 cursor-pointer">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/faq" className="hover:text-blue-600 cursor-pointer">
+                  FAQs
+                </Link>
+              </li>
+
             </ul>
           </div>
 
@@ -97,7 +128,6 @@ function Footer() {
             <h3 className="text-xl font-semibold text-[#0f3d7a] mb-4">
               Contact Us
             </h3>
-
             <div className="space-y-4 text-gray-600 text-sm">
               <div className="flex gap-3 items-start">
                 <FaEnvelope className="text-blue-600 mt-1" />
@@ -121,6 +151,20 @@ function Footer() {
             </div>
           </div>
         </div>
+
+
+        {/* City Listings - Commented out but kept for reference */}
+        
+        {/* <div className="text-center mt-10">
+          <h1 className="text-3xl text-blue-950 font-bold">Now Serving in</h1>
+          <p>Ayodhya | Badlapur | Baleswar | Balewadi Pune | Baloda Bazar | Bathinda | Dhanbad | Dighi | Dombivli | Electronic City | Gandhinagar | Gorakhpur | Gwalior | Howrah | Indirapuram | Jehanabad | Jhansi | Karnal | Kharar | Khargone | Korba | KPHB | Kurla | Mangaluru | Manyata Tech Park | Moradabad | Noida 141 | Phalodi | Randesan | Ratlam | Ravet | Sehore | Solapur | Surat | Thane | Undri | Varanasi | Wakad</p>
+          
+          <h2 className="text-center mt-10 text-3xl text-blue-950 font-bold">Coming Soon</h2>
+          <p>Aau | Agarpara | Ahmedabad | Amritsar | Aurangabad | Ballari | Baner | Baraut | Baripada | Bhavani Peth | Bhopal | Bolpur | Bulandshahr | Chandigarh | Chennai | Dehradun | Deoria | Dibrugarh | Durgapur | Goa | HSR Layout | Hisar | Hyderabad | Indore | Jagiroad | Jaipur | Jammu | Katra | Kolkata | Lucknow | Manipur | Mumbai | Namsai | Nashik | Patna | Prayagraj | Puducherry | Rajkot | Rewa | Sahibganj | Salt Lake | Sawai Madhopur | Siliguri | Tirupati | Udaipur | Vadodara | Vellore | Vrindavan | Yelahanka</p>
+        </div>  */}
+       
+
+        {/* Copyright */}
 
         <div className="border-t border-blue-100 mt-8 pt-4 text-center text-sm text-gray-500">
           © 2026 ATHENURA. All Rights Reserved.
