@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
+import Subscription from "./Pages/Subscription";
 import Contact from "./Pages/Contact";
 import Footer from "./components/Footer";
 import HomePage from "./Pages/Home";
@@ -7,7 +8,7 @@ import Navbar from "./components/Navbar";
 import About from "./Pages/About";
 import Services from "./Pages/Services";
  
-import Dashboard from "./Pages/Dashboard";
+import UserDashboard from "./Pages/UserDashboard";
 
  
 import AdminDashboard from "./components/Admin/AdminDashboard";  
@@ -29,13 +30,14 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/services" element={<Services />} />
 
-        <Route path="/Dashboard" element={<Dashboard}/>
+        <Route path="/Dashboard" element={<UserDashboard />}/>
 
  
         <Route path="/dashboard" element={<AdminDashboard />} />  
  
         <Route path="/TermsCondition" element={<TermsConndition />} />
         <Route path="/FAQ" element={<FAQ />}/>
+        <Route path="/subscription" element={<Subscription />} />
 
       </Routes>
 
