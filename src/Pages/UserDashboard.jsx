@@ -1,371 +1,477 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  FaHome,
-  FaBoxOpen,
-  FaMapMarkerAlt,
-  FaCreditCard,
-  FaCog,
-  FaSignOutAlt,
-  FaBell,
-  FaUserCircle,
-  FaTshirt,
-  FaClipboardList,
-  FaTruck,
-  FaCheckCircle,
-  FaPlus,
-} from "react-icons/fa";
+  Home,
+  Package,
+  CreditCard,
+  Settings,
+  LogOut,
+  Shirt,
+  Truck,
+  ChevronRight,
+  CheckCircle2,
+} from "lucide-react";
 
-const UserDashboard = () => {
-  const stats = [
-    { title: "Total Orders", value: "48", sub: "2 orders this month" },
-    { title: "Active Bookings", value: "02", sub: "Next delivery: Tomorrow, 2PM" },
-    { title: "Loyalty Points", value: "2,450", sub: "550 points until next reward" },
+const Dashboard = () => {
+  const [activeTab, setActiveTab] = useState("orders");
+
+  const [orders, setOrders] = useState([
+    {
+      id: "ORD-1001",
+      customer: "Rahul Sharma",
+      service: "Wash & Fold",
+      progress: 1,
+      status: "Pickup Pending",
+    },
+    {
+      id: "ORD-1002",
+      customer: "Priya Verma",
+      service: "Dry Cleaning",
+      progress: 2,
+      status: "Processing",
+    },
+    {
+      id: "ORD-1003",
+      customer: "Aman Gupta",
+      service: "Premium Laundry",
+      progress: 3,
+      status: "Cleaning",
+    },
+  ]);
+
+  const [selectedOrderId, setSelectedOrderId] = useState("ORD-1001");
+
+  const selectedOrder =
+    orders.find((order) => order.id === selectedOrderId) || orders[0];
+
+  const navItems = [
+    { key: "overview", label: "Overview", icon: Home },
+    { key: "orders", label: "My Orders", icon: Package },
+    { key: "payments", label: "Payments", icon: CreditCard },
+    { key: "services", label: "Services", icon: Shirt },
+    { key: "tracking", label: "Tracking", icon: Truck },
+    { key: "settings", label: "Settings", icon: Settings },
   ];
 
-  const recentOrders = [
-    {
-      id: "ORD-58290",
-      service: "Shirts + Suits + Press",
-      date: "Est. Mar 24, 5:00 PM",
-      status: "Active",
-    },
-    {
-      id: "ORD-58291",
-      service: "Bedding & Linen + Deep Clean",
-      date: "Delivered Mar 20",
-      status: "Completed",
-    },
-  ];
+  const steps = ["Pickup", "Processing", "Cleaning", "Delivery"];
 
-  const addresses = [
-    {
-      title: "Home Default",
-      address: "123 Professional Way, Ste 402\nAustin, Texas, TX 10004",
-    },
-    {
-      title: "Office",
-      address: "88 Financial Plaza\nLower Manhattan, NY 10004",
-    },
-  ];
+  const statusFromProgress = (progress) => {
+    switch (progress) {
+      case 1:
+        return "Pickup Pending";
+      case 2:
+        return "Processing";
+      case 3:
+        return "Cleaning";
+      case 4:
+        return "Out for Delivery";
+      default:
+        return "Pending";
+    }
+  };
 
-  return (
-    <div className="min-h-screen bg-[#f4f7fb] flex font-sans">
-      {/* ================= SIDEBAR ================= */}
-      <aside className="w-[260px] bg-white border-r border-slate-200 hidden lg:flex flex-col justify-between shadow-sm">
+  const updateOrderProgress = (direction) => {
+    setOrders((prev) =>
+      prev.map((order) => {
+        if (order.id !== selectedOrderId) return order;
+
+        let newProgress = order.progress;
+        if (direction === "next" && order.progress < 4) newProgress += 1;
+        if (direction === "prev" && order.progress > 1) newProgress -= 1;
+
+        return {
+          ...order,
+          progress: newProgress,
+          status: statusFromProgress(newProgress),
+        };
+      })
+    );
+  };
+
+  const cardBase =
+    "rounded-3xl border border-white/60 bg-white/85 backdrop-blur-xl shadow-[0_18px_45px_rgba(15,23,42,0.08)]";
+
+  const renderOrders = () => (
+    <motion.div
+      key="orders"
+      className="flex flex-col gap-4 sm:gap-6"
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -18 }}
+      transition={{ duration: 0.35 }}
+    >
+      {/* Header */}
+      <div
+        className={`${cardBase} flex flex-col gap-4 p-4 sm:p-6 lg:flex-row lg:items-center lg:justify-between`}
+      >
         <div>
-          <div className="px-8 py-7 border-b border-slate-100">
-            <h1 className="text-2xl font-extrabold tracking-wide text-[#0d4ea6]">
-              ATHENURA.
-            </h1>
-            <p className="text-sm text-slate-500 mt-1">Laundry Dashboard</p>
-          </div>
-
-          <nav className="px-4 py-6 space-y-2">
-            <SidebarItem icon={<FaHome />} label="Overview" active />
-            <SidebarItem icon={<FaBoxOpen />} label="My Orders" />
-            <SidebarItem icon={<FaTshirt />} label="Services" />
-            <SidebarItem icon={<FaMapMarkerAlt />} label="Addresses" />
-            <SidebarItem icon={<FaCreditCard />} label="Payments" />
-<Link
-  to="/subscription"
-  className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50"
->
-  <FaClipboardList />
-  <span>Subscriptions</span>
-</Link>
-            <SidebarItem icon={<FaTruck />} label="Tracking" />
-            <SidebarItem icon={<FaCog />} label="Settings" />
-          </nav>
+          <h2 className="text-xl font-bold text-slate-800 sm:text-2xl lg:text-3xl">
+            Order Tracking Dashboard
+          </h2>
+          
         </div>
 
-        <div className="p-4 border-t border-slate-100">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-red-50 hover:text-red-500 transition">
-            <FaSignOutAlt />
-            <span className="font-medium">Sign Out</span>
-          </button>
+        <div className="w-full rounded-2xl bg-gradient-to-r from-teal-500 to-blue-600 px-4 py-3 text-center text-sm font-bold text-white shadow-lg shadow-blue-200/30 sm:w-auto">
+          Live Status Panel
         </div>
-      </aside>
+      </div>
 
-      {/* ================= MAIN ================= */}
-      <main className="flex-1">
-        {/* Topbar */}
-        <header className="bg-white border-b border-slate-200 px-6 md:px-8 py-4 flex items-center justify-between sticky top-0 z-10">
-          <div>
-            <h2 className="text-xl md:text-2xl font-bold text-slate-800">
-              User Dashboard
-            </h2>
-            <p className="text-sm text-slate-500">
-              Welcome back to your laundry account
-            </p>
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 xl:grid-cols-[320px_1fr]">
+        {/* LEFT ORDER LIST */}
+        <div className={`${cardBase} h-fit p-4 sm:p-5`}>
+          <div className="mb-4 flex items-center justify-between sm:mb-5">
+            <h3 className="text-lg font-bold text-slate-800 sm:text-xl">
+              Orders
+            </h3>
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+              {orders.length} Active
+            </span>
           </div>
 
-          <div className="flex items-center gap-4">
-            <button className="relative w-11 h-11 rounded-full border border-slate-200 bg-white flex items-center justify-center hover:bg-slate-50">
-              <FaBell className="text-slate-600" />
-              <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-blue-600"></span>
-            </button>
+          <div className="space-y-3 sm:space-y-4">
+            {orders.map((order) => {
+              const active = selectedOrderId === order.id;
+              return (
+                <motion.div
+                  key={order.id}
+                  whileHover={{ y: -2 }}
+                  onClick={() => setSelectedOrderId(order.id)}
+                  className={`cursor-pointer rounded-2xl border p-4 transition ${
+                    active
+                      ? "border-blue-200 bg-gradient-to-r from-cyan-50 to-blue-50 shadow-md"
+                      : "border-slate-200 bg-white hover:shadow-sm"
+                  }`}
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <h4 className="font-bold text-slate-800">{order.id}</h4>
+                      <p className="mt-1 text-sm text-slate-500">
+                        {order.customer}
+                      </p>
+                      <p className="text-sm text-slate-500">{order.service}</p>
+                    </div>
 
-            <div className="flex items-center gap-3 bg-white border border-slate-200 rounded-full px-3 py-2 shadow-sm">
-              <FaUserCircle className="text-3xl text-slate-500" />
-              <div className="hidden sm:block">
-                <p className="text-sm font-semibold text-slate-800">Alex Johnson</p>
-                <p className="text-xs text-slate-500">Premium Member</p>
+                    <div
+                      className={`w-fit rounded-full px-3 py-1 text-xs font-bold ${
+                        active
+                          ? "bg-blue-100 text-blue-700"
+                          : "bg-slate-100 text-slate-600"
+                      }`}
+                    >
+                      Step {order.progress}/4
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <div className="h-2 overflow-hidden rounded-full bg-slate-200">
+                      <motion.div
+                        initial={false}
+                        animate={{ width: `${(order.progress / 4) * 100}%` }}
+                        transition={{ duration: 0.4 }}
+                        className="h-full rounded-full bg-gradient-to-r from-teal-500 to-blue-600"
+                      />
+                    </div>
+                    <p className="mt-2 text-sm font-semibold text-slate-600">
+                      {order.status}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* RIGHT ORDER PROGRESS */}
+        <div className="flex flex-col gap-4 sm:gap-6">
+          {/* Selected Order Details */}
+          <div className={`${cardBase} p-4 sm:p-6`}>
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div>
+                <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 sm:text-xs">
+                  Selected Order
+                </p>
+                <h2 className="text-2xl font-bold text-slate-800 sm:text-3xl">
+                  {selectedOrder.id}
+                </h2>
+                <p className="mt-2 text-sm text-slate-500 sm:text-base">
+                  {selectedOrder.customer} • {selectedOrder.service}
+                </p>
+              </div>
+
+              <div className="w-fit rounded-full bg-gradient-to-r from-teal-500 to-blue-600 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-blue-200/30">
+                {selectedOrder.status}
               </div>
             </div>
           </div>
-        </header>
 
-        {/* Content */}
-        <div className="p-5 md:p-8">
-          {/* Welcome Card */}
-          <section className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 md:p-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          {/* PROGRESS CARD */}
+          <div className={`${cardBase} p-4 sm:p-6`}>
+            <div className="mb-5 flex flex-col gap-2 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
+              <h3 className="text-xl font-bold text-slate-800 sm:text-2xl">
+                Order Progress
+              </h3>
+              <span className="text-sm text-slate-500">
+                Live status timeline
+              </span>
+            </div>
+
+            {/* Desktop / tablet */}
+            <div className="hidden rounded-[28px] bg-slate-50 p-6 md:block md:p-8">
+              <div className="flex flex-wrap items-center justify-between gap-y-6 gap-x-2">
+                {steps.map((step, index) => {
+                  const stepNumber = index + 1;
+                  const isActive = stepNumber <= selectedOrder.progress;
+                  const isCurrent = stepNumber === selectedOrder.progress;
+
+                  return (
+                    <React.Fragment key={step}>
+                      <div className="flex min-w-[90px] flex-col items-center text-center">
+                        <motion.div
+                          animate={{
+                            scale: isCurrent ? [1, 1.08, 1] : 1,
+                          }}
+                          transition={{
+                            duration: 1.6,
+                            repeat: isCurrent ? Infinity : 0,
+                          }}
+                          className={`mb-3 grid h-14 w-14 place-items-center rounded-full text-lg font-bold ${
+                            isActive
+                              ? "bg-gradient-to-r from-teal-500 to-blue-600 text-white shadow-lg shadow-cyan-200/60"
+                              : "bg-slate-200 text-slate-500"
+                          }`}
+                        >
+                          {stepNumber}
+                        </motion.div>
+
+                        <p
+                          className={`text-base font-semibold ${
+                            isActive ? "text-slate-800" : "text-slate-500"
+                          }`}
+                        >
+                          {step}
+                        </p>
+                      </div>
+
+                      {index !== steps.length - 1 && (
+                        <div className="hidden flex-1 md:block">
+                          <div className="h-1.5 rounded-full bg-slate-200">
+                            <motion.div
+                              initial={false}
+                              animate={{
+                                width:
+                                  selectedOrder.progress > stepNumber
+                                    ? "100%"
+                                    : "0%",
+                              }}
+                              transition={{ duration: 0.45 }}
+                              className="h-full rounded-full bg-gradient-to-r from-teal-500 to-blue-600"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Mobile progress */}
+            <div className="space-y-3 md:hidden">
+              {steps.map((step, index) => {
+                const stepNumber = index + 1;
+                const isActive = stepNumber <= selectedOrder.progress;
+                const isCurrent = stepNumber === selectedOrder.progress;
+
+                return (
+                  <div
+                    key={step}
+                    className={`rounded-2xl border p-4 ${
+                      isActive
+                        ? "border-cyan-200 bg-cyan-50/70"
+                        : "border-slate-200 bg-slate-50"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <motion.div
+                        animate={{
+                          scale: isCurrent ? [1, 1.08, 1] : 1,
+                        }}
+                        transition={{
+                          duration: 1.6,
+                          repeat: isCurrent ? Infinity : 0,
+                        }}
+                        className={`grid h-11 w-11 shrink-0 place-items-center rounded-full text-sm font-bold ${
+                          isActive
+                            ? "bg-gradient-to-r from-teal-500 to-blue-600 text-white"
+                            : "bg-slate-200 text-slate-500"
+                        }`}
+                      >
+                        {stepNumber}
+                      </motion.div>
+
+                      <div className="min-w-0">
+                        <p
+                          className={`font-semibold ${
+                            isActive ? "text-slate-800" : "text-slate-500"
+                          }`}
+                        >
+                          {step}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {isCurrent
+                            ? "Current step"
+                            : isActive
+                            ? "Completed"
+                            : "Pending"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Controls */}
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:mt-8 sm:grid-cols-2">
+              <button
+                onClick={() => updateOrderProgress("prev")}
+                disabled={selectedOrder.progress === 1}
+                className={`rounded-2xl px-5 py-3 font-bold transition ${
+                  selectedOrder.progress === 1
+                    ? "cursor-not-allowed bg-slate-200 text-slate-400"
+                    : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                Previous Step
+              </button>
+
+              <button
+                onClick={() => updateOrderProgress("next")}
+                disabled={selectedOrder.progress === 4}
+                className={`rounded-2xl px-5 py-3 font-bold text-white transition ${
+                  selectedOrder.progress === 4
+                    ? "cursor-not-allowed bg-slate-300"
+                    : "bg-gradient-to-r from-teal-500 to-blue-600 shadow-lg shadow-blue-200/40 hover:opacity-95"
+                }`}
+              >
+                Next Step
+              </button>
+            </div>
+          </div>
+
+          {/* Status card */}
+          <div className={`${cardBase} p-4 sm:p-5`}>
             <div className="flex items-center gap-4">
-              <img
-                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop"
-                alt="profile"
-                className="w-16 h-16 rounded-2xl object-cover"
-              />
-              <div>
-                <h3 className="text-2xl md:text-3xl font-bold text-[#0d4ea6]">
-                  Welcome back, Alex
+              <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white sm:h-14 sm:w-14">
+                <CheckCircle2 size={22} />
+              </div>
+
+              <div className="min-w-0">
+                <p className="text-sm text-slate-500">Current Status</p>
+                <h3 className="text-xl font-bold text-slate-800 sm:text-2xl">
+                  {selectedOrder.status}
                 </h3>
-                <p className="text-slate-500 mt-1">
-                  Member since Jan 2026 • Professional Plan
+                <p className="mt-1 text-sm text-slate-500">
+                  Progress Step {selectedOrder.progress} of 4
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
 
-            <button className="bg-[#0d4ea6] hover:bg-[#0a428d] text-white font-semibold px-6 py-4 rounded-2xl shadow-md transition w-full sm:w-fit">
-              Schedule Pickup
-            </button>
-          </section>
+  return (
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.10),transparent_24%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.10),transparent_26%),linear-gradient(180deg,#f8fbff_0%,#eef5fb_100%)] text-slate-800">
+      <div className="mx-auto max-w-[1800px] px-0 pt-[84px] sm:pt-[88px]">
+        <div className="grid min-h-[calc(100vh-84px)] grid-cols-1 gap-4 px-4 pb-6 sm:gap-6 sm:px-6 xl:grid-cols-[280px_minmax(0,1fr)]">
+          {/* SIDEBAR */}
+          <aside className="xl:sticky xl:top-[104px] h-fit">
+            <div className="rounded-[28px] border border-slate-200/70 bg-white/75 p-4 backdrop-blur-xl shadow-[0_18px_45px_rgba(15,23,42,0.06)] sm:p-5">
+              <div className="flex flex-col gap-5 sm:gap-6">
+                <div>
+                  <div className="mb-5 flex items-center gap-4 rounded-[24px] bg-gradient-to-br from-teal-500 to-blue-600 p-4 text-white shadow-xl shadow-blue-200/40 sm:mb-6">
+                    <div className="grid h-12 w-12 place-items-center rounded-2xl bg-white/20 text-lg font-extrabold sm:h-14 sm:w-14 sm:text-xl">
+                      A
+                    </div>
+                    <div className="min-w-0">
+                      <h4 className="text-base font-bold sm:text-lg">Alex</h4>
+                      <p className="truncate text-sm text-white/90">
+                        alex@email.com
+                      </p>
+                    </div>
+                  </div>
 
-          {/* Stats */}
-          <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
-            {stats.map((item, idx) => (
-              <div
-                key={idx}
-                className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm"
-              >
-                <p className="text-sm text-slate-500 mb-3">{item.title}</p>
-                <h4 className="text-3xl font-bold text-slate-800">{item.value}</h4>
-                <p className="text-sm text-slate-400 mt-2">{item.sub}</p>
-              </div>
-            ))}
-          </section>
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                    {navItems.map((item) => {
+                      const Icon = item.icon;
+                      const active = activeTab === item.key;
 
-          {/* Main grid */}
-          <section className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
-            {/* LEFT SECTION */}
-            <div className="xl:col-span-2 space-y-6">
-              {/* Recent Orders */}
-              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
-                <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-xl font-bold text-slate-800">Recent Orders</h3>
-                  <button className="text-[#0d4ea6] text-sm font-semibold hover:underline">
-                    View All
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  {recentOrders.map((order, index) => (
-                    <div
-                      key={index}
-                      className="border border-slate-200 rounded-2xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4 hover:shadow-sm transition"
-                    >
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-blue-50 text-[#0d4ea6] flex items-center justify-center">
-                          <FaBoxOpen />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-slate-800">
-                            Order #{order.id}
-                          </h4>
-                          <p className="text-slate-500 text-sm mt-1">{order.service}</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between md:justify-end gap-4">
-                        <p className="text-sm text-slate-500">{order.date}</p>
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            order.status === "Active"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-slate-100 text-slate-600"
+                      return (
+                        <button
+                          key={item.key}
+                          onClick={() => setActiveTab(item.key)}
+                          className={`group flex items-center gap-3 rounded-2xl px-4 py-3 text-left font-semibold transition sm:py-4 ${
+                            active
+                              ? "bg-gradient-to-r from-teal-500 to-blue-600 text-white shadow-lg shadow-blue-200/30"
+                              : "bg-white text-slate-700 hover:bg-blue-50"
                           }`}
                         >
-                          {order.status}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Active Order Progress */}
-              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
-                <h3 className="text-xl font-bold text-slate-800 mb-8">
-                  Active Order Progress
-                </h3>
-
-                <div className="relative">
-                  {/* Line */}
-                  <div className="absolute top-5 left-0 right-0 h-1 bg-slate-200 rounded-full">
-                    <div className="w-[58%] h-1 bg-[#0d4ea6] rounded-full"></div>
-                  </div>
-
-                  <div className="relative grid grid-cols-4 gap-4 text-center">
-                    <ProgressStep
-                      icon={<FaClipboardList />}
-                      label="Picked Up"
-                      active
-                    />
-                    <ProgressStep icon={<FaTshirt />} label="Washing" active />
-                    <ProgressStep icon={<FaTruck />} label="Out for Delivery" />
-                    <ProgressStep icon={<FaCheckCircle />} label="Delivered" />
+                          <Icon size={18} />
+                          <span className="truncate text-sm sm:text-base">
+                            {item.label}
+                          </span>
+                          <ChevronRight
+                            size={16}
+                            className={`ml-auto hidden sm:block transition ${
+                              active
+                                ? "text-white/90"
+                                : "text-slate-400 group-hover:text-slate-600"
+                            }`}
+                          />
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
+
+                <button className="flex items-center justify-center gap-3 rounded-2xl bg-white px-4 py-3 font-bold text-rose-500 shadow-sm ring-1 ring-slate-200 transition hover:bg-rose-50 sm:justify-start sm:py-4">
+                  <LogOut size={18} />
+                  Logout
+                </button>
               </div>
             </div>
+          </aside>
 
-            {/* RIGHT SECTION */}
-            <div className="space-y-6">
-              {/* Addresses */}
-              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
-                <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-xl font-bold text-slate-800">Addresses</h3>
-                  <button className="text-[#0d4ea6]">
-                    <FaPlus />
-                  </button>
-                </div>
+          {/* MAIN */}
+          <main className="min-w-0">
+            <AnimatePresence mode="wait">
+              {activeTab === "orders" && renderOrders()}
 
-                <div className="space-y-4">
-                  {addresses.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="border border-slate-200 rounded-2xl p-4"
-                    >
-                      <div className="flex gap-3">
-                        <div className="mt-1 text-[#0d4ea6]">
-                          <FaMapMarkerAlt />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-slate-800">{item.title}</h4>
-                          <p className="text-sm text-slate-500 whitespace-pre-line mt-1">
-                            {item.address}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Payments */}
-              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
-                <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-xl font-bold text-slate-800">Payments</h3>
-                  <button className="text-[#0d4ea6]">
-                    <FaPlus />
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="border border-slate-200 rounded-2xl p-4 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <FaCreditCard className="text-slate-500" />
-                      <div>
-                        <p className="font-semibold text-slate-800">•••• 4412</p>
-                        <p className="text-sm text-slate-500">Visa ending in 4412</p>
-                      </div>
-                    </div>
-                    <span className="text-xs font-semibold bg-blue-50 text-[#0d4ea6] px-3 py-1 rounded-full">
-                      Default
-                    </span>
-                  </div>
-
-                  <div className="border border-slate-200 rounded-2xl p-4 flex items-center gap-3">
-                    <FaCreditCard className="text-slate-500" />
-                    <div>
-                      <p className="font-semibold text-slate-800">Apple Pay</p>
-                      <p className="text-sm text-slate-500">Connected wallet</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick Settings */}
-              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm">
-                <h3 className="text-xl font-bold text-slate-800 mb-4">
-                  Quick Settings
-                </h3>
-
-                <div className="space-y-3">
-                  <QuickLink label="Notification Preferences" />
-                  <QuickLink label="Privacy & Security" />
-                  <QuickLink label="Billing Settings" />
-                  <QuickLink label="Sign Out" danger />
-                </div>
-              </div>
-            </div>
-          </section>
+              {activeTab !== "orders" && (
+                <motion.div
+                  key={activeTab}
+                  className={`${cardBase} p-5 sm:p-6`}
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -18 }}
+                >
+                  <h2 className="text-xl font-bold text-slate-800 capitalize sm:text-2xl">
+                    {activeTab}
+                  </h2>
+                  <p className="mt-3 text-sm text-slate-500 sm:text-base">
+                    This section is currently empty. Use the Orders tab to test
+                    the live order progress flow.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </main>
         </div>
-      </main>
-    </div>
-  );
-};
-
-const SidebarItem = ({ icon, label, active }) => {
-  return (
-    <button
-      className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition font-medium ${
-        active
-          ? "bg-[#0d4ea6] text-white shadow-md"
-          : "text-slate-600 hover:bg-slate-100"
-      }`}
-    >
-      <span className="text-lg">{icon}</span>
-      <span>{label}</span>
-    </button>
-  );
-};
-
-const ProgressStep = ({ icon, label, active }) => {
-  return (
-    <div className="flex flex-col items-center relative z-10">
-      <div
-        className={`w-10 h-10 rounded-full flex items-center justify-center border-4 ${
-          active
-            ? "bg-[#0d4ea6] border-[#dbeafe] text-white"
-            : "bg-white border-slate-200 text-slate-400"
-        }`}
-      >
-        {icon}
       </div>
-      <p
-        className={`text-sm mt-3 font-medium ${
-          active ? "text-slate-800" : "text-slate-400"
-        }`}
-      >
-        {label}
-      </p>
     </div>
   );
 };
 
-const QuickLink = ({ label, danger }) => {
-  return (
-    <button
-      className={`w-full text-left px-4 py-3 rounded-xl border transition ${
-        danger
-          ? "border-red-100 text-red-500 hover:bg-red-50"
-          : "border-slate-200 text-slate-700 hover:bg-slate-50"
-      }`}
-    >
-      {label}
-    </button>
-  );
-};
-
-export default UserDashboard;
+export default Dashboard;

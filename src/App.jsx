@@ -18,7 +18,8 @@ import UserDashboard from "./Pages/UserDashboard";
 import AdminLayout from "./components/Admin/AdminLayout";
 import UserManagement from "./components/Admin/UserManagement";
 import OrderManagement from "./components/Admin/OrderManagement"; 
-import Payments from "./components/Admin/Payments"; 
+import Payments from "./components/Admin/Payments";
+import BookingApplyForm from "./Pages/BookingApplyForm"; 
 
 function App() {
   const location = useLocation();
@@ -44,6 +45,8 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/subscription" element={<Subscription />} />
+        <Route path="/bookingapplyform" element={<BookingApplyForm/>}/>
+
 
         {/* Admin Routes with Layout */}
         <Route path="/admin-dashboard" element={<AdminLayout />}>
