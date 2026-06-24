@@ -13,13 +13,22 @@ import AdminDashboard from "./components/Admin/AdminDashboard";
 import TermsConndition from "./Pages/TermsCondition";
 import FAQ from "./Pages/FAQ";
 import Login from './Pages/Login'
-import SignUp from './Pages/SignUp' 
+
+import SignUp from './Pages/SignUp'
+
 import UserDashboard from "./Pages/UserDashboard";
 import AdminLayout from "./components/Admin/AdminLayout";
 import UserManagement from "./components/Admin/UserManagement";
+ 
+import OrderManagement from "./components/Admin/OrderManagement";
+import ServiceManagement from './components/Admin/ServiceManagement';
+import Payments from "./components/Admin/Payments";
+import OrderTracking from "./components/OrderTracking";
+
+ 
 import OrderManagement from "./components/Admin/OrderManagement"; 
 import Payments from "./components/Admin/Payments";
-import BookingApplyForm from "./Pages/BookingApplyForm"; 
+import BookingApplyForm from "./Pages/BookingApplyForm";  
 
 function App() {
   const location = useLocation();
@@ -38,22 +47,39 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/services" element={<Services />} />
-        <Route path="/services/:service" element={<ServicePage key={location.pathname} />} /> 
+
+        <Route path="/services/:service" element={<ServicePage key={location.pathname} />} />
+      
+       
+
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/TermsCondition" element={<TermsConndition />} />
         <Route path="/FAQ" element={<FAQ />} />
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/subscription" element={<Subscription />} />
+
+        <Route path="/order-tracking" element={<OrderTracking />} />
+
         <Route path="/bookingapplyform" element={<BookingApplyForm/>}/>
 
 
-        {/* Admin Routes with Layout */}
+
+
+      
         <Route path="/admin-dashboard" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="user-management" element={<UserManagement />} />
-          <Route path="orders" element={<OrderManagement />} /> 
-          <Route path="payments" element={<Payments />} /> 
+
+          <Route path="orders" element={<OrderManagement />} />
+       
+          <Route path="payments" element={<Payments />} />
+          
+          <Route path="services" element={<ServiceManagement />} />
+         
+
+      
+
         </Route>
       </Routes>
 

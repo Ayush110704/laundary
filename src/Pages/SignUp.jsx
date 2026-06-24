@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Form, Link } from 'react-router-dom';
+import { Form, Link ,useNavigate} from 'react-router-dom';
 import  Swal  from 'sweetalert2'
 import { User, Mail, Phone, Lock, Eye, EyeOff, MapPin, Shield, Star, } from "lucide-react";
 
@@ -15,18 +15,38 @@ const SignUp = () => {
     number: ""
   });
 
+  const navigate = useNavigate(); 
+
   const handleChange = (e) => {
 
     setText({ ...text, [e.target.name]: e.target.value });
   }
 
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log(text);
 
     const existingData = JSON.parse(localStorage.getItem("Users")) || [];
-    existingData.push(text);
+    
+
+    const userExists = existingData.find(
+    (user) => user.Email === text.Email
+  );
+
+  if (userExists) {
+    Swal.fire({
+      icon: "error",
+      title: "User already exists",
+      text: "Please use another email",
+    });
+
+    return;
+  }
+
+  existingData.push(text);
+
 
     setText
     ({
@@ -40,12 +60,14 @@ const SignUp = () => {
 
     localStorage.setItem("Users", JSON.stringify(existingData));
 
-    Swal.fire({
+    await Swal.fire({
       title: "Signup Successful!",
       text: "Please login to continue",
       icon: "success",
       confirmButtonColor: "#10b981",
     });
+
+    navigate("/login");
   }
 
 
@@ -147,7 +169,7 @@ const SignUp = () => {
                   <input
                     type="text"
                     name="FirstName"
-                    placeholder="John"
+                    placeholder="First Name"
                     className="w-full px-3 outline-none"
                     value={text.FirstName}
                     onChange={handleChange}
@@ -167,7 +189,7 @@ const SignUp = () => {
                   <input
                     type="text"
                     name="LastName"
-                    placeholder="Doe"
+                    placeholder="Last Name"
                     className="w-full px-3 outline-none"
                     value={text.LastName}
                     onChange={handleChange}
@@ -192,7 +214,7 @@ const SignUp = () => {
                 <input
                   type="email"
                   name="Email"
-                  placeholder="john@company.com"
+                  placeholder="xyz@gmail.com"
                   className="w-full px-3 outline-none"
                   value={text.Email}
                   onChange={handleChange}
@@ -312,9 +334,7 @@ const SignUp = () => {
             <div className="flex-1 border"></div>
           </div>
 
-          <button className="w-full sm:w-auto border-2 border-blue-900 text-blue-900 px-8 py-3 rounded-full font-semibold hover:bg-blue-900 hover:text-white transition">
-            Login to your dashboard
-          </button>
+          
 
         </motion.div>
       </motion.div>

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const CTA =( { type, headingtop, headingbottom,subHeading,})=> {
   return (
-    <section className="w-full flex justify-center py-16 p-5 md:p-0 ">
+    <section className="w-full flex justify-center py-16 p-5 md:p-0 mb-10">
 
       <motion.div
         initial={{ opacity: 0, y: 70 }}
