@@ -15,6 +15,7 @@ import {
   Plus
 } from 'lucide-react';
 
+
 const AdminDashboard = () => {
   // Real profit/loss data for weekly revenue
   const orderData = [

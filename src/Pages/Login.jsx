@@ -1,36 +1,63 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, Shield, Headphones, Zap, ShoppingBasket, } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple } from "react-icons/fa";
 import logo from '../assets/Athenura.png'
-import {Link} from 'react-router-dom'
+import {Link,useNavigate} from 'react-router-dom'
 import Image from '../assets/LoginImage.jpeg'
+import Swal from 'sweetalert2'
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [userdata,setUserdata]=useState({
-        email:"",
-        
-       
-        password:""
+        Email:"",
+        Password:""
     })
 
-    const features = [
-        { id: 1, logo: Shield, title: "Secure Login", subtitle: "100% protected", color: "text-blue-600", bg: "bg-blue-100" },
-        { id: 2, logo: Zap, title: "Fast Access", subtitle: "Login in seconds", color: "text-green-600", bg: "bg-green-100" },
-        { id: 3, logo: Headphones, title: "24/7 Support", subtitle: "We're here to help", color: "text-purple-600", bg: "bg-purple-100" },
-    ]
+const Navigate = useNavigate();
 
+    
 
     const handleChange =(e)=>{
        setUserdata({...userdata,[e.target.name]:e.target.value})
     }
 
-    const handleLogin=(e)=>{
+    
+
+    
+    const handleLogin= async(e)=>{
          e.preventDefault();
-         console.log(userdata);
+
+         const users = JSON.parse(localStorage.getItem("Users"));
+         console.log(users)
+         const  user= users.find(
+            (item)=> item.Email === userdata.Email &&
+                    item.Password === userdata.Password
+         );
+
+        if(user){
+            localStorage.setItem("currentUser", JSON.stringify(user))
+        
+
+        await Swal.fire({
+      icon: "success",
+      title: "Login Successful",
+      text: `Welcome ${user.FirstName}`,
+    });
+
+    Navigate("/Dashboard")
+
+}else{
+    
+    Swal.fire({
+      icon: "error",
+      title: "Login Failed",
+      text: "Invalid email or password",
+    });
+}
     }
+
 
     return (
         <div className="w-full min-h-screen bg-slate-100 py-7 overflow-x-hidden">
@@ -125,9 +152,9 @@ const Login = () => {
                                     <Mail className="text-gray-400" />
 
                                     <input
-                                        type="text "
-                                        name="email"
-                                        value={userdata.email}
+                                        type="email"
+                                        name="Email"
+                                        value={userdata.Email}
                                         placeholder="name@company.com"
                                         onChange={handleChange}
                                         required
@@ -149,15 +176,15 @@ const Login = () => {
                                     <input
                                         type={showPassword ? "text" : "password"}
                                         placeholder="••••••••"
-                                        name="password"
-                                        value={userdata.password}
+                                        name="Password"
+                                        value={userdata.Password}
                                         onChange={handleChange}
                                         required
                                         className="w-full px-4 outline-none"
                                     />
 
                                     <button
-                                        onClick={() => setShowPassword(!showPassword)} >
+                                        onClick={() => setShowPassword(!showPassword)} type="button" >
                                         {showPassword ? (<EyeOff />) : (<Eye />)}
                                     </button>
 
@@ -184,7 +211,8 @@ const Login = () => {
                                 whileHover={{ scale: 1.02, }}
                                 whileTap={{ scale: 0.98, }}
                                 className="w-full  h-10 md:h-14 bg-blue-900 text-white rounded-2xl mt-5  text-lg md:text-xl font-semibold"
-                            >
+                          type="submit"
+                          >
                                 Login
                             </motion.button>
 

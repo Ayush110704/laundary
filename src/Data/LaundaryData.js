@@ -12,7 +12,7 @@ import ecoIcon from '../assets/freshandechofriendly.webp';
 
 // Laundry-Service Page Images
 
-import LaundryHeroBackground from '../assets/Laundry-Service/LaundryHeroBackground.png'
+import LaundryHeroBackground from '../assets/Laundry-Service/LaundryHeroBackground1.png'
 import LaundryHeroVector from '../assets/Laundry-Service/LaundryHeroVector.png'
 import baby from '../assets/Laundry-Service/baby.webp'
 import Curtain from '../assets/Laundry-Service/Curtain.webp'
@@ -44,7 +44,7 @@ import Weeding from '../assets/DryClean/Weeding.webp'
 
 // Iron Service page Images
 
-import IronHeroBackground from '../assets/Iron-Service/IronHeroBackground.png'
+import IronHeroBackground from '../assets/Iron-Service/IronHeroBackground1.png'
 import IronHeroVector from '../assets/Iron-Service/IronHeroVector1.png'
 import pant from '../assets/Iron-Service/pant.webp'
 import saree from '../assets/Iron-Service/saree.webp'
@@ -53,7 +53,7 @@ import suit from '../assets/Iron-Service/suit.webp'
 
 //Curatin service page Images
 
-import CurtainHeroBackground from '../assets/CurtainClean/CurtainHeroBackground.png'
+import CurtainHeroBackground from '../assets/CurtainClean/CurtainHeroBackground1.png'
 import CurtainHeroVector from '../assets/CurtainClean/CurtainHeroVector.png'
 import antibacteria from '../assets/CurtainClean/antibacteria.webp'
 import black from '../assets/CurtainClean/black.webp'
@@ -66,7 +66,7 @@ import steam from '../assets/CurtainClean/steam.webp'
 import velvet from '../assets/CurtainClean/velvet.webp'
 
 // Shoe service page Images
-import ShoeHeroBackground from '../assets/ShoeClean/ShoeHeroBackground.png'
+import ShoeHeroBackground from '../assets/ShoeClean/ShoeHeroBackground1.png'
 import ShoeHeroVector from '../assets/ShoeClean/ShoeHeroVector.png'
 import heels from '../assets/ShoeClean/heels.webp'
 import  jordan from '../assets/ShoeClean/jordan.webp'
@@ -78,7 +78,7 @@ import white from '../assets/ShoeClean/white.webp'
 
 // Carpet service page Images
 
-import CarpetHeroBackground from '../assets/CarpetClean/CarpetHeroBackground.png'
+import CarpetHeroBackground from '../assets/CarpetClean/CarpetHeroBackground1.png'
 import CarpetHeroVector from '../assets/CarpetClean/CarpetHeroVector.png'
 import dry from '../assets/CarpetClean/dry.webp'
 import nylon from '../assets/CarpetClean/nylon.webp'
@@ -470,9 +470,10 @@ export const ServicesData = {
       HeroBackground: ShoeHeroBackground,
       HeroVector: ShoeHeroVector,
       HeroBadge: " ✦ EXPERT CARE",
-      HeroTitle: "Shoe Cleaning",
+      HeroTitle: "Give Your Shoes Second Life. ",
+      HeroSub:"Confident Steps.",
 
-      HeroPara: "  Trusted care for every garment — pickup, clean & deliver.",
+      HeroPara: " Professional shoe cleaning that restores freshness, shine, and comfort.",
 
     },
 
@@ -512,9 +513,10 @@ Servicetitle:"Shoe Cleaning",
       HeroBackground: CurtainHeroBackground,
       HeroVector: CurtainHeroVector,
       HeroBadge: " ✦ EXPERT CARE",
-      HeroTitle: "Dry Cleaning",
+      HeroTitle: "Revive Your Curtains,",
+      HeroSub:"Without the Hassle",
 
-      HeroPara: "  Trusted care for every garment — pickup, clean & deliver.",
+      HeroPara: "Gentle yet effective cleaning for every type of curtain fabric.",
 
     },
 
@@ -559,9 +561,10 @@ Servicetitle:"Curtain Cleaning",
       HeroBackground: CarpetHeroBackground,
       HeroVector: CarpetHeroVector,
       HeroBadge: " ✦ EXPERT CARE",
-      HeroTitle: "Dry Cleaning",
+      HeroTitle: "Deep Clean Carpets.",
+      HeroSub:"Healthier Homes",
 
-      HeroPara: "  Trusted care for every garment — pickup, clean & deliver.",
+      HeroPara: " Eliminate dirt, stains, and odors to bring your carpets back to life.",
 
     },
 
@@ -604,9 +607,10 @@ Servicetitle:"Carpet Cleaning",
       HeroBackground: IronHeroBackground,
       HeroVector: IronHeroVector,
       HeroBadge: " ✦ EXPERT CARE",
-      HeroTitle: "Expert Ironing",
+      HeroTitle: "Perfectly Pressed.",
+      HeroSub:"Professionally Finished.",
 
-      HeroPara: "  Trusted care for every garment — pickup, clean & deliver.",
+      HeroPara: "Save time while we remove every crease with precision and care.",
 
     },
 
