@@ -38,194 +38,7 @@ import {
   Ban,
   Users
 } from 'lucide-react';
-
-// ============================================================
-// MOCK DATA - Payments
-// ============================================================
-const MOCK_PAYMENTS = [
-  {
-    id: 'PAY001',
-    bookingId: 'BK001',
-    customerName: 'Rajesh Kumar',
-    customerEmail: 'rajesh@email.com',
-    customerPhone: '+91 98765 43210',
-    amount: 1250,
-    paymentDate: '2024-06-19T10:30:00',
-    paymentMethod: 'Online',
-    paymentStatus: 'Completed',
-    transactionId: 'TXN123456789',
-    bookingStatus: 'Completed',
-    service: 'Dry Cleaning',
-    items: 5,
-    notes: 'Payment successful'
-  },
-  {
-    id: 'PAY002',
-    bookingId: 'BK002',
-    customerName: 'Priya Sharma',
-    customerEmail: 'priya@email.com',
-    customerPhone: '+91 98765 43211',
-    amount: 800,
-    paymentDate: '2024-06-20T14:20:00',
-    paymentMethod: 'COD',
-    paymentStatus: 'Completed',
-    transactionId: 'TXN123456790',
-    bookingStatus: 'Active',
-    service: 'Wash & Fold',
-    items: 8,
-    notes: 'Cash on delivery'
-  },
-  {
-    id: 'PAY003',
-    customerName: 'Amit Patel',
-    customerEmail: 'amit@email.com',
-    customerPhone: '+91 98765 43212',
-    amount: 450,
-    paymentDate: '2024-06-20T08:45:00',
-    paymentMethod: 'COD',
-    paymentStatus: 'Pending',
-    transactionId: null,
-    bookingStatus: 'Pending',
-    service: 'Ironing',
-    items: 3,
-    notes: 'Awaiting payment'
-  },
-  {
-    id: 'PAY004',
-    customerName: 'Sneha Reddy',
-    customerEmail: 'sneha@email.com',
-    customerPhone: '+91 98765 43213',
-    amount: 600,
-    paymentDate: '2024-06-18T09:15:00',
-    paymentMethod: 'Online',
-    paymentStatus: 'Refunded',
-    transactionId: 'TXN123456791',
-    bookingStatus: 'Cancelled',
-    service: 'Stain Removal',
-    items: 2,
-    notes: 'Refund processed due to cancellation'
-  },
-  {
-    id: 'PAY005',
-    customerName: 'Ananya Gupta',
-    customerEmail: 'ananya@email.com',
-    customerPhone: '+91 98765 43215',
-    amount: 1100,
-    paymentDate: '2024-06-17T16:00:00',
-    paymentMethod: 'Online',
-    paymentStatus: 'Completed',
-    transactionId: 'TXN123456792',
-    bookingStatus: 'Completed',
-    service: 'Dry Cleaning',
-    items: 4,
-    notes: 'Payment successful'
-  },
-  {
-    id: 'PAY006',
-    customerName: 'Rahul Verma',
-    customerEmail: 'rahul@email.com',
-    customerPhone: '+91 98765 43216',
-    amount: 1020,
-    paymentDate: '2024-06-20T22:10:00',
-    paymentMethod: 'Online',
-    paymentStatus: 'Completed',
-    transactionId: 'TXN123456793',
-    bookingStatus: 'Active',
-    service: 'Wash & Fold',
-    items: 10,
-    notes: 'Payment successful'
-  },
-  {
-    id: 'PAY007',
-    customerName: 'Meera Nair',
-    customerEmail: 'meera@email.com',
-    customerPhone: '+91 98765 43217',
-    amount: 800,
-    paymentDate: '2024-06-20T12:00:00',
-    paymentMethod: 'COD',
-    paymentStatus: 'Pending',
-    transactionId: null,
-    bookingStatus: 'Pending',
-    service: 'Ironing',
-    items: 6,
-    notes: 'Awaiting cash collection'
-  },
-  {
-    id: 'PAY008',
-    customerName: 'Arjun Reddy',
-    customerEmail: 'arjun@email.com',
-    customerPhone: '+91 98765 43218',
-    amount: 300,
-    paymentDate: '2024-06-16T11:30:00',
-    paymentMethod: 'Online',
-    paymentStatus: 'Refunded',
-    transactionId: 'TXN123456794',
-    bookingStatus: 'Cancelled',
-    service: 'Stain Removal',
-    items: 1,
-    notes: 'Refund processed'
-  },
-  {
-    id: 'PAY009',
-    customerName: 'Kavya Menon',
-    customerEmail: 'kavya@email.com',
-    customerPhone: '+91 98765 43219',
-    amount: 750,
-    paymentDate: '2024-06-15T15:30:00',
-    paymentMethod: 'Online',
-    paymentStatus: 'Completed',
-    transactionId: 'TXN123456795',
-    bookingStatus: 'Completed',
-    service: 'Dry Cleaning',
-    items: 3,
-    notes: 'Payment successful'
-  },
-  {
-    id: 'PAY010',
-    customerName: 'Vikram Singh',
-    customerEmail: 'vikram@email.com',
-    customerPhone: '+91 98765 43214',
-    amount: 480,
-    paymentDate: '2024-06-20T18:45:00',
-    paymentMethod: 'COD',
-    paymentStatus: 'Pending',
-    transactionId: null,
-    bookingStatus: 'Pending',
-    service: 'Wash & Fold',
-    items: 5,
-    notes: 'First time customer - COD'
-  },
-  {
-    id: 'PAY011',
-    customerName: 'Neha Gupta',
-    customerEmail: 'neha@email.com',
-    customerPhone: '+91 98765 43220',
-    amount: 2000,
-    paymentDate: '2024-06-21T09:00:00',
-    paymentMethod: 'UPI',
-    paymentStatus: 'Completed',
-    transactionId: 'TXN123456796',
-    bookingStatus: 'Active',
-    service: 'Premium Dry Cleaning',
-    items: 6,
-    notes: 'UPI payment successful'
-  },
-  {
-    id: 'PAY012',
-    customerName: 'Sanjay Patel',
-    customerEmail: 'sanjay@email.com',
-    customerPhone: '+91 98765 43221',
-    amount: 1500,
-    paymentDate: '2024-06-21T11:30:00',
-    paymentMethod: 'Card',
-    paymentStatus: 'Completed',
-    transactionId: 'TXN123456797',
-    bookingStatus: 'Active',
-    service: 'Wash & Fold',
-    items: 12,
-    notes: 'Card payment successful'
-  }
-];
+import { useOrders } from './OrderManagement';
 
 // ============================================================
 // PAYMENT DETAIL VIEW COMPONENT
@@ -280,10 +93,6 @@ function PaymentDetailView({ payment, onBack }) {
           </div>
         </div>
         <div className="flex gap-2">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm flex items-center gap-2">
-            <Edit className="w-4 h-4" />
-            Edit
-          </button>
           <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm flex items-center gap-2">
             <Download className="w-4 h-4" />
             Receipt
@@ -417,8 +226,56 @@ function PaymentDetailView({ payment, onBack }) {
 // MAIN COMPONENT
 // ============================================================
 function Payments() {
+  const { bookings } = useOrders();
+  
+  // Generate payments from bookings
+  const generatePaymentsFromBookings = () => {
+    return bookings.map((booking, index) => {
+      // Determine payment status based on booking status and payment status
+      let paymentStatus = 'Pending';
+      let transactionId = null;
+      let notes = '';
+      
+      if (booking.paymentStatus === 'Paid') {
+        paymentStatus = 'Completed';
+        transactionId = `TXN${String(Math.floor(Math.random() * 1000000000)).padStart(9, '0')}`;
+        notes = 'Payment successful';
+      } else if (booking.paymentStatus === 'Refunded') {
+        paymentStatus = 'Refunded';
+        transactionId = `TXN${String(Math.floor(Math.random() * 1000000000)).padStart(9, '0')}`;
+        notes = 'Refund processed';
+      } else if (booking.paymentStatus === 'Pending') {
+        paymentStatus = 'Pending';
+        notes = 'Awaiting payment';
+      }
+      
+      // If booking is cancelled but payment was made, it should be refunded
+      if (booking.status === 'Cancelled' && booking.paymentStatus === 'Paid') {
+        paymentStatus = 'Refunded';
+        notes = 'Refund processed due to cancellation';
+      }
+      
+      return {
+        id: `PAY${String(index + 1).padStart(3, '0')}`,
+        bookingId: booking.id,
+        customerName: booking.customerName,
+        customerEmail: booking.customerEmail,
+        customerPhone: booking.customerPhone,
+        amount: booking.totalAmount,
+        paymentDate: booking.bookingDate,
+        paymentMethod: booking.paymentMethod,
+        paymentStatus: paymentStatus,
+        transactionId: transactionId,
+        bookingStatus: booking.status,
+        service: booking.service,
+        items: booking.items,
+        notes: notes
+      };
+    });
+  };
+
   // State
-  const [payments, setPayments] = useState(MOCK_PAYMENTS);
+  const [payments, setPayments] = useState(generatePaymentsFromBookings());
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [filterStatus, setFilterStatus] = useState('All');
@@ -426,6 +283,11 @@ function Payments() {
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [showDetailView, setShowDetailView] = useState(false);
   const itemsPerPage = 5;
+
+  // Update payments when bookings change
+  useEffect(() => {
+    setPayments(generatePaymentsFromBookings());
+  }, [bookings]);
 
   // ============================================================
   // COMPUTED VALUES
@@ -435,7 +297,7 @@ function Payments() {
     completed: payments.filter(p => p.paymentStatus === 'Completed').length,
     pending: payments.filter(p => p.paymentStatus === 'Pending').length,
     refunded: payments.filter(p => p.paymentStatus === 'Refunded').length,
-    totalRevenue: payments.reduce((sum, p) => sum + p.amount, 0),
+    totalRevenue: payments.filter(p => p.paymentStatus === 'Completed').reduce((sum, p) => sum + p.amount, 0),
   };
 
   // Get unique payment methods for filter
