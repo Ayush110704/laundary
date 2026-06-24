@@ -275,6 +275,7 @@ const ServicePage = () => {
           </div>
         </div>
 
+ 
 
         {/* Expert Service */}
 <section
@@ -350,13 +351,13 @@ const ServicePage = () => {
         </section>
 
 
-
-        <HeroCTA
+<HeroCTA
           type={CTA.type}
           headingtop={CTA.headingtop}
           headingbottom={CTA.headingbottom}
           subHeading={CTA.subHeading}
-        />
+         />
+       
       </div>
     </>
   )
