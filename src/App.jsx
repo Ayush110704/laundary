@@ -19,11 +19,16 @@ import SignUp from './Pages/SignUp'
 import UserDashboard from "./Pages/UserDashboard";
 import AdminLayout from "./components/Admin/AdminLayout";
 import UserManagement from "./components/Admin/UserManagement";
+ 
 import OrderManagement from "./components/Admin/OrderManagement";
 import ServiceManagement from './components/Admin/ServiceManagement';
 import Payments from "./components/Admin/Payments";
 import OrderTracking from "./components/OrderTracking";
 
+ 
+import OrderManagement from "./components/Admin/OrderManagement"; 
+import Payments from "./components/Admin/Payments";
+import BookingApplyForm from "./Pages/BookingApplyForm";  
 
 function App() {
   const location = useLocation();
@@ -53,7 +58,12 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/subscription" element={<Subscription />} />
+
         <Route path="/order-tracking" element={<OrderTracking />} />
+
+        <Route path="/bookingapplyform" element={<BookingApplyForm/>}/>
+
+
 
 
       
