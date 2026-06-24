@@ -17,13 +17,22 @@ import SignUp from './Pages/SignUp'
 import UserDashboard from "./Pages/UserDashboard";
 import AdminLayout from "./components/Admin/AdminLayout";
 import UserManagement from "./components/Admin/UserManagement";
-import OrderManagement from "./components/Admin/OrderManagement"; 
-import Payments from "./components/Admin/Payments"; 
+// ✅ Fix: Correct import path for OrderManagement
+import OrderManagement, { MOCK_BOOKINGS, OrderProvider } from "./components/Admin/OrderManagement"; 
+import Payments from "./components/Admin/Payments";
+import Analytics from "./components/Admin/Analytics";
 
 function App() {
   const location = useLocation();
   const hideLayoutRoutes = ["/login", "/signup"];
-  const adminRoutes = ["/admin-dashboard", "/admin-dashboard/user-management", "/admin-dashboard/orders", "/admin-dashboard/services", "/admin-dashboard/payments", "/admin-dashboard/analytics"];
+  const adminRoutes = [
+    "/admin-dashboard", 
+    "/admin-dashboard/user-management", 
+    "/admin-dashboard/orders", 
+    "/admin-dashboard/services", 
+    "/admin-dashboard/payments", 
+    "/admin-dashboard/analytics"
+  ];
   const hideLayout = hideLayoutRoutes.includes(location.pathname);
   const isAdminRoute = adminRoutes.some(route => location.pathname.startsWith('/admin-dashboard'));
 
@@ -45,12 +54,20 @@ function App() {
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/subscription" element={<Subscription />} />
 
-        {/* Admin Routes with Layout */}
-        <Route path="/admin-dashboard" element={<AdminLayout />}>
+        {/* Admin Routes with Layout - Wrapped with OrderProvider */}
+        <Route 
+          path="/admin-dashboard" 
+          element={
+            <OrderProvider initialData={MOCK_BOOKINGS}>
+              <AdminLayout />
+            </OrderProvider>
+          }
+        >
           <Route index element={<AdminDashboard />} />
           <Route path="user-management" element={<UserManagement />} />
           <Route path="orders" element={<OrderManagement />} /> 
           <Route path="payments" element={<Payments />} /> 
+          <Route path="analytics" element={<Analytics />} />
         </Route>
       </Routes>
 

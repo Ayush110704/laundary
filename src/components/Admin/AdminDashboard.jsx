@@ -3,7 +3,17 @@ import { motion } from 'framer-motion';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line
-} from 'recharts'; 
+} from 'recharts';
+import { 
+  Users, 
+  ShoppingBag, 
+  Wrench, 
+  CreditCard, 
+  BarChart3,
+  ChevronRight,
+  Clock,
+  Plus
+} from 'lucide-react';
 
 const AdminDashboard = () => {
   // Real profit/loss data for weekly revenue
@@ -45,6 +55,24 @@ const AdminDashboard = () => {
   const totalOrderRevenue = orderData.reduce((sum, day) => sum + day.revenue, 0);
   const totalOrderProfit = orderData.reduce((sum, day) => sum + day.profit, 0);
   const totalOrderLoss = orderData.reduce((sum, day) => sum + day.loss, 0);
+
+  // Recent Activity Data
+  const recentActivities = [
+    { id: 1, initials: 'PS', name: 'Priya Sharma', action: 'New inquiry from', time: '2 min ago' },
+    { id: 2, initials: 'AR', name: 'Admission', action: 'Application submitted', time: '15 min ago' },
+    { id: 3, initials: 'AD', name: 'Admin', action: 'Notice published: Exam Schedule', time: '1 hr ago' },
+    { id: 4, initials: 'SK', name: 'Staff', action: 'Calendar event added: PTM', time: '3 hrs ago' },
+    { id: 5, initials: 'RK', name: 'Admin', action: 'Announcement updated', time: 'Yesterday' },
+  ];
+
+  // Quick Actions Data - Navigation links
+  const quickActions = [
+    { id: 1, icon: Users, label: 'User Management', color: 'bg-blue-500' },
+    { id: 2, icon: ShoppingBag, label: 'Order Management', color: 'bg-green-500' },
+    { id: 3, icon: Wrench, label: 'Service Management', color: 'bg-yellow-500' },
+    { id: 4, icon: CreditCard, label: 'Payments', color: 'bg-purple-500' },
+    { id: 5, icon: BarChart3, label: 'Analytics', color: 'bg-red-500' },
+  ];
 
   // Get current date and time for welcome message
   const currentHour = new Date().getHours();
@@ -97,21 +125,109 @@ const AdminDashboard = () => {
               Welcome back to your LaundryHub dashboard. Here's what's happening with your business today.
             </p>
             <p className="text-blue-200 text-sm mt-2">
-              📅 {currentDate}
+              {currentDate}
             </p>
           </div>
           <div className="hidden md:block">
-            <span className="text-6xl opacity-20">🧺</span>
+            <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
+              <p className="text-sm font-medium">Last Login</p>
+              <p className="text-xs text-blue-100">Today at 9:30 AM</p>
+            </div>
           </div>
         </div>
       </motion.div>
+
+      {/* Recent Activity & Quick Actions Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        {/* Recent Activity - Takes 2 columns */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="lg:col-span-2"
+        >
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <Clock size={20} className="text-blue-600" />
+              <h3 className="text-lg font-semibold text-gray-800">Recent Activity</h3>
+            </div>
+
+            <div className="space-y-4">
+              {recentActivities.map((activity, index) => (
+                <motion.div
+                  key={activity.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 + index * 0.05 }}
+                  className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
+                      {activity.initials}
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-800">
+                        <span className="font-medium">{activity.name}</span>
+                        <span className="text-gray-500 ml-1">{activity.action}</span>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-400">{activity.time}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Quick Actions - Takes 1 column with navigation links */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 h-full">
+            <div className="flex items-center gap-2 mb-4">
+              <Plus size={20} className="text-blue-600" />
+              <h3 className="text-lg font-semibold text-gray-800">Quick Actions</h3>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3">
+              {quickActions.map((action, index) => (
+                <motion.button
+                  key={action.id}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.25 + index * 0.05 }}
+                  whileHover={{ 
+                    scale: 1.02,
+                    x: 4,
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-200 border border-transparent hover:border-gray-200"
+                >
+                  <div className={`${action.color} p-2 rounded-lg text-white`}>
+                    <action.icon size={18} />
+                  </div>
+                  <span className="text-sm font-medium text-gray-700 flex-1 text-left">
+                    {action.label}
+                  </span>
+                  <ChevronRight size={16} className="text-gray-400" />
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        </motion.div>
+      </div>
 
       {/* Profit/Loss Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: 0.3 }}
           className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500"
         >
           <p className="text-sm text-gray-500">Total Revenue</p>
@@ -122,7 +238,7 @@ const AdminDashboard = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.4 }}
           className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500"
         >
           <p className="text-sm text-gray-500">Total Profit</p>
@@ -133,7 +249,7 @@ const AdminDashboard = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.5 }}
           className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-red-500"
         >
           <p className="text-sm text-gray-500">Total Loss</p>

@@ -40,6 +40,14 @@ const AdminLayout = () => {
     navigate('/');
   };
 
+  const handleLogout = () => {
+    // Clear any authentication tokens or user data
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    // Redirect to login page
+    navigate('/login');
+  };
+
   const isActive = (path) => {
     return location.pathname === path;
   };
@@ -106,6 +114,12 @@ const AdminLayout = () => {
               className="w-full text-left px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 transition-all cursor-pointer"
             >
               🔙 Back to Website
+            </button>
+            <button 
+              onClick={handleLogout}
+              className="w-full text-left px-4 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-all cursor-pointer mt-1"
+            >
+              🚪 Logout
             </button>
           </div>
         </nav>
