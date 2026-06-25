@@ -46,7 +46,7 @@ const Navigate = useNavigate();
       text: `Welcome ${user.FirstName}`,
     });
 
-    Navigate("/Dashboard")
+    Navigate("/")
 
 }else{
     
@@ -202,7 +202,7 @@ const Navigate = useNavigate();
                                     </span>
                                 </label>
 
-                                <button className="font-semibold text-blue-600 text-sm"> Forgot Password? </button>
+                                <button className="font-semibold text-blue-600 text-sm" type="button"> Forgot Password? </button>
 
                             </div>
 

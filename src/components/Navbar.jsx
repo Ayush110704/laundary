@@ -115,37 +115,46 @@ const Navbar = () => {
 
         {userlogin ? (
           <>
-            <button
-              onClick={() => setProfile(!profile)}
-              className="hidden md:flex items-center gap-2 py-1 px-4 bg-white border border-blue-600  rounded-3xl text-blue-700 cursor-pointer mr-15 font-semibold transition-all duration-500 hover:scale-105 hover:bg-blue-700 hover:text-white"
-            >
-              <User size={18} />Profile
+           <div
+  className="relative"
+  onMouseEnter={() => setProfile(true)}
+  onMouseLeave={() => setProfile(false)}
+>
+  <button
+    className="hidden md:flex items-center gap-2 py-1 px-4 bg-white border border-blue-600 rounded-3xl text-blue-700 cursor-pointer mr-15 font-semibold transition-all duration-500 hover:scale-105 hover:bg-blue-700 hover:text-white"
+  >
+    <User size={18} />
+    Profile
+  </button>
 
-            </button>
+  <AnimatePresence>
+    {profile && (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        transition={{ duration: 0.2 }}
+        className="absolute top-full right-2 mt-2 shadow-lg rounded-xl p-4 grid space-y-1 w-50 z-50 bg-gradient-to-b from-blue-50 to-blue-200 text-blue-600 font-semibold border border-blue-200 text-center"
+      >
+        <Link
+          to="/Dashboard"
+          onClick={() => setProfile(false)}
+          className="hover:text-blue-800 transition-all hover:scale-105"
+        >
+          Dashboard
+        </Link>
 
-            <AnimatePresence>
-              {profile && (
-                <motion.div
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 45, opacity: 1 }}
-                  exit={{ y: 30, opacity: 0 }}
-                  transition={{ duration: 0.35 }}
-                  className="absolute top-4.5 right-10  shadow-lg rounded-xl p-4 grid space-y-1 w-50 z-10 bg-linear-to-b from-blue-50 to to-blue-200 text-blue-600 font-semibold border border-blue-200 text-center">
-
-                  <Link
-                    to="/Dashboard"
-                    onClick={() => setProfile(false)}
-                    className="hover:text-blue-800 transition-all hover:scale-105 "
-                  >
-                    Dashboard
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="text-red-700  flex  justify-center items-center gap-1 transition-all hover:scale-105">< LogOut size={18} />Logout</button>
-
-                </motion.div>
-              )}
-            </AnimatePresence>
+        <button
+          onClick={handleLogout}
+          className="text-red-700 flex justify-center items-center gap-1 transition-all hover:scale-105"
+        >
+          <LogOut size={18} />
+          Logout
+        </button>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</div>
           </>
         ) : (
           <button
