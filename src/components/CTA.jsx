@@ -22,7 +22,7 @@ const CTA =( { type, headingtop, headingbottom,subHeading,})=> {
         <motion.div
           animate={{  y: [0, -12, 0], }}
           transition={{duration: 6, repeat: Infinity,ease: "easeInOut", }}
-          className="absolute -left-24 bottom-[-80px] h-72 w-72 rounded-full bg-white/5"
+          className="absolute -left-24 -bottom-20 h-72 w-72 rounded-full bg-white/5"
         />
 
         <motion.div
@@ -37,7 +37,7 @@ const CTA =( { type, headingtop, headingbottom,subHeading,})=> {
 
           {/* Badge */}
 
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: -15 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
@@ -47,7 +47,7 @@ const CTA =( { type, headingtop, headingbottom,subHeading,})=> {
 
             <ShieldCheck size={16} />
             Premium {type} Services
-          </motion.div>
+          </motion.div> */}
 
           {/* Heading */}
 
