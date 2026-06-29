@@ -14,13 +14,13 @@ import TermsConndition from "./Pages/TermsCondition";
 import FAQ from "./Pages/FAQ";
 import Login from './Pages/Login'
 import SignUp from './Pages/SignUp' 
-import UserDashboard from "./Pages/UserDashboard";
 import AdminLayout from "./components/Admin/AdminLayout";
 import UserManagement from "./components/Admin/UserManagement";
 import OrderManagement from "./components/Admin/OrderManagement"; 
 import Payments from "./components/Admin/Payments";
 import BookingApplyForm from "./Pages/BookingApplyForm"; 
-import UserLayout from "./components/User/UserLayout";
+// FIX: Updated path pointing to the Pages folder
+import UserLayout from "./Pages/UserLayout"; 
 
 function App() {
   const location = useLocation();
@@ -48,7 +48,6 @@ function App() {
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/bookingapplyform" element={<BookingApplyForm/>}/>
         <Route path="/UserLayout" element={<UserLayout/>}/>
-
 
         {/* Admin Routes with Layout */}
         <Route path="/admin-dashboard" element={<AdminLayout />}>
