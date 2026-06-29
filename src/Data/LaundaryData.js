@@ -675,3 +675,128 @@ export const subscriptionHistory = [
   },
 ];
 
+ 
+export const pricingFaqs = [
+ {
+    id: 1,
+    question: "Is there a minimum order amount?",
+    answer:
+      "Yes, for our Wash & Fold service, we have a 15 lb minimum per order. Orders under 15 lbs will be charged the minimum flat rate of $29.25.",
+  },
+  {
+    id: 2,
+    question: "How do you charge for Dry Cleaning?",
+    answer:
+      "Dry Cleaning is charged per item. A full price list for specific items (suits, dresses, coats) is available in our mobile app or at the checkout screen.",
+  },
+  {
+    id: 3,
+    question: "Do you charge for pickup and delivery?",
+    answer:
+      "Standard pickup and delivery are free for all orders over $35. For orders under $35, a small $5 logistics fee is applied.",
+  },
+];
+
+ export const MOCK_SERVICES = [
+  {
+    id: "SRV001",
+    name: "Laundry",
+    category: "Clothes",
+    price: 120,
+    duration: "24 Hours",
+    status: "Active",
+    description:
+      "Professional wash, dry and fold service for everyday clothes.",
+    createdDate: "2026-06-20",
+
+    totalOrders: 420,
+    completedOrders: 398,
+    cancelledOrders: 22,
+    totalEarnings: 47760,
+  },
+
+  {
+    id: "SRV002",
+    name: "Dry Cleaning",
+    category: "Premium",
+    price: 250,
+    duration: "48 Hours",
+    status: "Active",
+    description:
+      "Premium dry cleaning for delicate garments.",
+    createdDate: "2026-06-19",
+
+    totalOrders: 185,
+    completedOrders: 175,
+    cancelledOrders: 10,
+    totalEarnings: 43750,
+  },
+
+  {
+    id: "SRV003",
+    name: "Ironing",
+    category: "Clothes",
+    price: 80,
+    duration: "12 Hours",
+    status: "Active",
+    description:
+      "Steam ironing for wrinkle free clothes.",
+    createdDate: "2026-06-18",
+
+    totalOrders: 310,
+    completedOrders: 296,
+    cancelledOrders: 14,
+    totalEarnings: 23680,
+  },
+
+  {
+    id: "SRV004",
+    name: "Carpet Cleaning",
+    category: "Home Care",
+    price: 650,
+    duration: "72 Hours",
+    status: "Active",
+    description:
+      "Deep carpet cleaning with stain removal.",
+    createdDate: "2026-06-17",
+
+    totalOrders: 92,
+    completedOrders: 86,
+    cancelledOrders: 6,
+    totalEarnings: 55900,
+  },
+
+  {
+    id: "SRV005",
+    name: "Curtain Cleaning",
+    category: "Home Care",
+    price: 550,
+    duration: "48 Hours",
+    status: "Inactive",
+    description:
+      "Dust removal and deep cleaning for curtains.",
+    createdDate: "2026-06-16",
+
+    totalOrders: 78,
+    completedOrders: 70,
+    cancelledOrders: 8,
+    totalEarnings: 38500,
+  },
+
+  {
+    id: "SRV006",
+    name: "Shoe Cleaning",
+    category: "Accessories",
+    price: 300,
+    duration: "24 Hours",
+    status: "Active",
+    description:
+      "Premium shoe cleaning and polishing.",
+    createdDate: "2026-06-15",
+
+    totalOrders: 145,
+    completedOrders: 136,
+    cancelledOrders: 9,
+    totalEarnings: 40800,
+  },
+];

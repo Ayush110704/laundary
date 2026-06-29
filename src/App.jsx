@@ -21,11 +21,26 @@ import AdminLayout from "./components/Admin/AdminLayout";
 import UserManagement from "./components/Admin/UserManagement";
 import OrderManagement, { MOCK_BOOKINGS, OrderProvider } from "./components/Admin/OrderManagement"; 
 import Payments from "./components/Admin/Payments";
-import Analytics from "./components/Admin/Analytics";
+import Analytics from "./components/Admin/Analytics"; 
 import ServiceManagement from './components/Admin/ServiceManagement';
 import OrderTracking from "./components/OrderTracking";
 import BookingApplyForm from "./Pages/BookingApplyForm";  
-import Address from "./Pages/Address"; // ← IMPORT ADDRESS COMPONENT
+import Address from "./Pages/Address"; // ← IMPORT ADDRESS COMPONENT 
+
+ 
+
+import ServiceManagement from './components/Admin/ServiceManagement';
+
+import OrderTracking from "./components/OrderTracking";
+
+ 
+import OrderManagement from "./components/Admin/OrderManagement"; 
+import Payments from "./components/Admin/Payments"; 
+import BookingApplyForm from "./Pages/BookingApplyForm"; 
+import UserLayout from "./components/User/UserLayout"; 
+import BookingApplyForm from "./Pages/BookingApplyForm";
+import Pricing from './Pages/Pricing'; 
+import CheckOut from './Pages/CheckOut'   
 
 function App() {
   const location = useLocation();
@@ -63,6 +78,7 @@ function App() {
         
         {/*  Auth Routes */}
         <Route path="/login" element={<Login/>} />
+ 
         <Route path="/signup" element={<SignUp/>} /> 
         <Route path="/profile" element={<UserProfile/>} />  
         <Route path="/address" element={<Address/>} />  {/* ← ADD ADDRESS ROUTE */}
@@ -71,6 +87,12 @@ function App() {
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/order-tracking" element={<OrderTracking />} />
         <Route path="/bookingapplyform" element={<BookingApplyForm/>} />
+ 
+        <Route path="/signup" element={<SignUp/>} />
+        <Route path="/subscription" element={<Subscription />} /> 
+        <Route path="/bookingapplyform" element={<BookingApplyForm/>}/>
+        <Route path="/UserLayout" element={<UserLayout/>}/> 
+        <Route path="/checkout" element={<CheckOut/>} />  
 
         {/*  Admin Routes with Layout  */}
         <Route
@@ -86,7 +108,28 @@ function App() {
           <Route path="orders" element={<OrderManagement />} /> 
           <Route path="services" element={<ServiceManagement />} />
           <Route path="payments" element={<Payments />} /> 
-          <Route path="analytics" element={<Analytics />} />
+          <Route path="analytics" element={<Analytics />} /> 
+        <Route path="/order-tracking" element={<OrderTracking />} />
+
+        <Route path="/bookingapplyform" element={<BookingApplyForm/>}/>
+      <Route path="/pricing" element={<Pricing/>} />
+
+
+
+      
+        <Route path="/admin-dashboard" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="user-management" element={<UserManagement />} />
+
+          <Route path="orders" element={<OrderManagement />} />
+       
+          <Route path="payments" element={<Payments />} />
+          
+          <Route path="services" element={<ServiceManagement />} />
+         
+
+      
+ 
         </Route>
       </Routes>
 

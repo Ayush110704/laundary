@@ -12,6 +12,7 @@ import {
   ClipboardList,
   CheckCircle2,
 } from "lucide-react";
+import {useNavigate} from 'react-router-dom'
 
 const BookingApplyForm = () => {
   const [formData, setFormData] = useState({
@@ -29,6 +30,7 @@ const BookingApplyForm = () => {
 
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate()
 
   const today = new Date().toISOString().split("T")[0];
 
