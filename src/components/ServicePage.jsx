@@ -174,7 +174,7 @@ const ServicePage = () => {
                       alt={item.title}
                       whileHover={{ scale: 1.08 }}
                       transition={{ duration: 0.4 }}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                   </div>
 
@@ -193,10 +193,6 @@ const ServicePage = () => {
           </div>
         </section>
         )}
-
-
-
-
 
 
 
@@ -268,13 +264,14 @@ const ServicePage = () => {
                 alt="Laundry Process"
                 whileHover={{ y: -8, scale: 1.02 }}
                 transition={{ duration: 0.3 }}
-                className="w-full max-w-[500px] h-auto"
+                className="w-full max-w-125 h-auto"
               />
             </motion.div>
 
           </div>
         </div>
 
+ 
 
         {/* Expert Service */}
 <section
@@ -312,7 +309,7 @@ const ServicePage = () => {
                       alt={item.title}
                       whileHover={{ scale: 1.08 }}
                       transition={{ duration: 0.4 }}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                   </div>
 
@@ -350,13 +347,13 @@ const ServicePage = () => {
         </section>
 
 
-
-        <HeroCTA
-          type={CTA.type}
+<HeroCTA
+          
           headingtop={CTA.headingtop}
           headingbottom={CTA.headingbottom}
           subHeading={CTA.subHeading}
-        />
+         />
+       
       </div>
     </>
   )

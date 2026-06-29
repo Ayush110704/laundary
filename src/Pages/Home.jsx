@@ -10,6 +10,7 @@ import {
   buttonTexts,
   colors
 } from '../Data/LaundaryData';
+import { Link } from 'react-router-dom';
 
 // Animated Heading Component with scroll trigger - Now plays every time
 function AnimatedHeading({ isInView }) {
@@ -480,14 +481,15 @@ function HomePage() {
                 >
                   {buttonTexts.primary}
                 </motion.a>
-                <motion.a 
-                  href="#" 
+                <motion.button
+               
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="px-8 py-3 bg-white hover:bg-gray-50 text-gray-800 font-semibold rounded-full shadow-md transition duration-200 text-center"
                 >
-                  {buttonTexts.secondary}
-                </motion.a>
+                  <Link  to="/pricing">{buttonTexts.secondary}</Link>
+                  
+                </motion.button>
               </motion.div>
 
               {/* Features Section */}

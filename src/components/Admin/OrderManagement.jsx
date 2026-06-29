@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, createContext } from 'react';
 import { 
   Search, 
   Eye, 
@@ -42,7 +42,70 @@ import {
 } from 'lucide-react';
 
 // ============================================================
-// MOCK DATA - Bookings with Items
+// ORDER CONTEXT - For sharing data with Analytics and Payments
+// ============================================================
+const OrderContext = createContext();
+
+const useOrders = () => {
+  const context = useContext(OrderContext);
+  if (!context) {
+    throw new Error('useOrders must be used within an OrderProvider');
+  }
+  return context;
+};
+
+const OrderProvider = ({ children, initialData }) => {
+  const [bookings, setBookings] = useState(initialData || []);
+
+  const updateBookings = (newBookings) => {
+    setBookings(newBookings);
+  };
+
+  const addBooking = (booking) => {
+    setBookings(prev => [...prev, booking]);
+  };
+
+  const updateBooking = (id, updatedData) => {
+    setBookings(prev => prev.map(b => 
+      b.id === id ? { ...b, ...updatedData } : b
+    ));
+  };
+
+  const deleteBooking = (id) => {
+    setBookings(prev => prev.filter(b => b.id !== id));
+  };
+
+  return (
+    <OrderContext.Provider value={{
+      bookings,
+      setBookings,
+      updateBookings,
+      addBooking,
+      updateBooking,
+      deleteBooking
+    }}>
+      {children}
+    </OrderContext.Provider>
+  );
+};
+
+// ============================================================
+// HELPER FUNCTIONS FOR DYNAMIC DATES
+// ============================================================
+const getDate = (daysAgo) => {
+  const date = new Date();
+  date.setDate(date.getDate() - daysAgo);
+  return date.toISOString();
+};
+
+const getFutureDate = (daysFromNow) => {
+  const date = new Date();
+  date.setDate(date.getDate() + daysFromNow);
+  return date.toISOString();
+};
+
+// ============================================================
+// MOCK DATA - Bookings with Items (Dynamic Dates)
 // ============================================================
 const MOCK_BOOKINGS = [
   {
@@ -61,9 +124,9 @@ const MOCK_BOOKINGS = [
     ],
     totalAmount: 1250,
     status: 'Completed',
-    bookingDate: '2024-06-19T10:30:00',
-    pickupDate: '2024-06-20T09:00:00',
-    deliveryDate: '2024-06-21T18:00:00',
+    bookingDate: getDate(1), // 1 day ago
+    pickupDate: getDate(0),
+    deliveryDate: getFutureDate(1),
     notes: 'Handle with care - silk items',
     paymentStatus: 'Paid',
     paymentMethod: 'Online',
@@ -86,9 +149,9 @@ const MOCK_BOOKINGS = [
     ],
     totalAmount: 800,
     status: 'Active',
-    bookingDate: '2024-06-20T14:20:00',
-    pickupDate: '2024-06-21T09:00:00',
-    deliveryDate: '2024-06-22T18:00:00',
+    bookingDate: getDate(2), // 2 days ago
+    pickupDate: getDate(1),
+    deliveryDate: getFutureDate(1),
     notes: 'Use gentle detergent',
     paymentStatus: 'Paid',
     paymentMethod: 'COD',
@@ -109,8 +172,8 @@ const MOCK_BOOKINGS = [
     ],
     totalAmount: 450,
     status: 'Pending',
-    bookingDate: '2024-06-20T08:45:00',
-    pickupDate: '2024-06-21T10:00:00',
+    bookingDate: getDate(3), // 3 days ago
+    pickupDate: getDate(2),
     deliveryDate: null,
     notes: 'Extra starch on shirts',
     paymentStatus: 'Pending',
@@ -132,16 +195,16 @@ const MOCK_BOOKINGS = [
       { name: 'Cotton Blouse', quantity: 1, price: 250 }
     ],
     totalAmount: 600,
-    status: 'Cancelled',
-    bookingDate: '2024-06-18T09:15:00',
-    pickupDate: '2024-06-19T09:00:00',
+    status: 'Active',
+    bookingDate: getDate(4), // 4 days ago
+    pickupDate: getDate(3),
     deliveryDate: null,
     notes: 'Red wine stain on white shirt',
     paymentStatus: 'Paid',
     paymentMethod: 'Online',
-    refundStatus: 'Pending',
+    refundStatus: null,
     refundDate: null,
-    refundAmount: 600
+    refundAmount: null
   },
   {
     id: 'BK005',
@@ -159,9 +222,9 @@ const MOCK_BOOKINGS = [
     ],
     totalAmount: 1100,
     status: 'Completed',
-    bookingDate: '2024-06-17T16:00:00',
-    pickupDate: '2024-06-18T09:00:00',
-    deliveryDate: '2024-06-19T18:00:00',
+    bookingDate: getDate(5), // 5 days ago
+    pickupDate: getDate(4),
+    deliveryDate: getDate(3),
     notes: 'Wedding dress - very delicate',
     paymentStatus: 'Paid',
     paymentMethod: 'Online',
@@ -184,9 +247,9 @@ const MOCK_BOOKINGS = [
     ],
     totalAmount: 1020,
     status: 'Active',
-    bookingDate: '2024-06-20T22:10:00',
-    pickupDate: '2024-06-21T11:00:00',
-    deliveryDate: '2024-06-22T18:00:00',
+    bookingDate: getDate(6), // 6 days ago
+    pickupDate: getDate(5),
+    deliveryDate: getDate(4),
     notes: 'Separate whites and colors',
     paymentStatus: 'Paid',
     paymentMethod: 'Online',
@@ -208,11 +271,11 @@ const MOCK_BOOKINGS = [
     ],
     totalAmount: 800,
     status: 'Pending',
-    bookingDate: '2024-06-20T12:00:00',
-    pickupDate: '2024-06-21T14:00:00',
+    bookingDate: getDate(0), // Today
+    pickupDate: getFutureDate(1),
     deliveryDate: null,
     notes: 'Need same day delivery',
-    paymentStatus: 'Pending',
+    paymentStatus: 'Paid', // ✅ CHANGED from 'Pending' to 'Paid'
     paymentMethod: 'COD',
     refundStatus: null,
     refundDate: null,
@@ -231,14 +294,14 @@ const MOCK_BOOKINGS = [
     ],
     totalAmount: 300,
     status: 'Cancelled',
-    bookingDate: '2024-06-16T11:30:00',
-    pickupDate: '2024-06-17T09:00:00',
+    bookingDate: getDate(7), // 7 days ago
+    pickupDate: getDate(6),
     deliveryDate: null,
     notes: 'Oil stain on jacket',
     paymentStatus: 'Paid',
     paymentMethod: 'Online',
     refundStatus: 'Completed',
-    refundDate: '2024-06-18T14:30:00',
+    refundDate: getDate(6),
     refundAmount: 300
   },
   {
@@ -256,9 +319,9 @@ const MOCK_BOOKINGS = [
     ],
     totalAmount: 750,
     status: 'Completed',
-    bookingDate: '2024-06-15T15:30:00',
-    pickupDate: '2024-06-16T09:00:00',
-    deliveryDate: '2024-06-17T18:00:00',
+    bookingDate: getDate(8), // 8 days ago (outside 7 days)
+    pickupDate: getDate(7),
+    deliveryDate: getDate(6),
     notes: 'Saree - handle carefully',
     paymentStatus: 'Paid',
     paymentMethod: 'Online',
@@ -280,8 +343,8 @@ const MOCK_BOOKINGS = [
     ],
     totalAmount: 480,
     status: 'Pending',
-    bookingDate: '2024-06-20T18:45:00',
-    pickupDate: '2024-06-21T12:00:00',
+    bookingDate: getDate(9), // 9 days ago (outside 7 days)
+    pickupDate: getDate(8),
     deliveryDate: null,
     notes: 'First time customer',
     paymentStatus: 'Pending',
@@ -439,7 +502,6 @@ function BookingDetailView({ booking, onBack, onRefund }) {
     'Failed': { color: 'bg-red-100 text-red-800', icon: XCircle }
   };
 
-  // Payment method icons
   const getPaymentMethodIcon = (method) => {
     switch(method) {
       case 'Online':
@@ -458,10 +520,8 @@ function BookingDetailView({ booking, onBack, onRefund }) {
   const StatusIcon = statusConfig[booking.status]?.icon || CheckCircle;
   const PaymentIcon = paymentStatusConfig[booking.paymentStatus]?.icon || CheckCircle;
 
-  // Calculate total items count
   const totalItems = booking.itemsList?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
-  // Get delivery display based on status
   const getDeliveryDisplay = () => {
     if (booking.status === 'Cancelled') {
       return {
@@ -492,10 +552,10 @@ function BookingDetailView({ booking, onBack, onRefund }) {
 
   const deliveryInfo = getDeliveryDisplay();
 
-  // Check if refund is possible (Cancelled and Paid)
-  const canRefund = booking.status === 'Cancelled' && booking.paymentStatus === 'Paid' && booking.refundStatus !== 'Completed';
+  const canRefund = (booking.status === 'Active' || booking.status === 'Completed') && 
+                    booking.paymentStatus === 'Paid' && 
+                    booking.refundStatus !== 'Completed';
 
-  // Get refund status badge
   const getRefundStatusBadge = (status) => {
     if (!status) return null;
     const config = {
@@ -514,7 +574,6 @@ function BookingDetailView({ booking, onBack, onRefund }) {
 
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-      {/* Header with back button */}
       <div className="p-6 border-b border-gray-200 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
@@ -545,12 +604,9 @@ function BookingDetailView({ booking, onBack, onRefund }) {
         </div>
       </div>
 
-      {/* Booking Details Grid */}
       <div className="p-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left Column - Customer Info & Items */}
           <div>
-            {/* Customer Information */}
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Customer Information</h3>
             <div className="space-y-3">
               <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
@@ -583,7 +639,6 @@ function BookingDetailView({ booking, onBack, onRefund }) {
               </div>
             </div>
 
-            {/* Items List */}
             <div className="mt-6">
               <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
                 Items List ({totalItems} items)
@@ -622,7 +677,6 @@ function BookingDetailView({ booking, onBack, onRefund }) {
             </div>
           </div>
 
-          {/* Right Column - Booking Info */}
           <div>
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">Booking Details</h3>
             <div className="space-y-3">
@@ -657,7 +711,6 @@ function BookingDetailView({ booking, onBack, onRefund }) {
               </div>
             </div>
 
-            {/* Payment Details */}
             <div className="mt-4">
               <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Payment Details</h3>
               <div className="space-y-2">
@@ -686,7 +739,6 @@ function BookingDetailView({ booking, onBack, onRefund }) {
               </div>
             </div>
 
-            {/* Refund Details - Show if refund exists */}
             {booking.refundStatus && (
               <div className="mt-4">
                 <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Refund Details</h3>
@@ -711,7 +763,6 @@ function BookingDetailView({ booking, onBack, onRefund }) {
               </div>
             )}
 
-            {/* Dates */}
             <div className="mt-4 space-y-2">
               <div className="flex items-center gap-2 text-sm">
                 <Calendar className="w-4 h-4 text-gray-400" />
@@ -741,7 +792,6 @@ function BookingDetailView({ booking, onBack, onRefund }) {
               )}
             </div>
 
-            {/* Notes */}
             {booking.notes && (
               <div className="mt-4 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
                 <p className="text-xs text-gray-500">Notes</p>
@@ -759,8 +809,8 @@ function BookingDetailView({ booking, onBack, onRefund }) {
 // MAIN COMPONENT
 // ============================================================
 function OrderManagement() {
-  // State
-  const [bookings, setBookings] = useState(MOCK_BOOKINGS);
+  const { bookings, updateBooking } = useOrders();
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [filterStatus, setFilterStatus] = useState('All');
@@ -771,9 +821,6 @@ function OrderManagement() {
   const [refundBooking, setRefundBooking] = useState(null);
   const itemsPerPage = 5;
 
-  // ============================================================
-  // COMPUTED VALUES
-  // ============================================================
   const stats = {
     total: bookings.length,
     active: bookings.filter(b => b.status === 'Active').length,
@@ -783,10 +830,8 @@ function OrderManagement() {
     totalRevenue: bookings.reduce((sum, b) => sum + b.totalAmount, 0),
   };
 
-  // Get unique services for filter
   const uniqueServices = ['All', ...new Set(bookings.map(b => b.service))];
 
-  // Filter bookings
   const filteredBookings = bookings.filter(booking => {
     const matchesSearch = booking.customerName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           booking.customerEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -797,21 +842,16 @@ function OrderManagement() {
     return matchesSearch && matchesStatus && matchesService;
   });
 
-  // Pagination
   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
   const paginatedBookings = filteredBookings.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, filterStatus, filterService]);
 
-  // ============================================================
-  // HANDLERS
-  // ============================================================
   const handleBookingClick = (booking) => {
     setSelectedBooking(booking);
     setShowDetailView(true);
@@ -830,24 +870,19 @@ function OrderManagement() {
   const handleRefundConfirm = (refundData) => {
     if (!refundBooking) return;
     
-    setBookings(bookings.map(b => {
-      if (b.id === refundBooking.id) {
-        return {
-          ...b,
-          paymentStatus: 'Refunded',
-          refundStatus: 'Completed',
-          refundDate: refundData.date,
-          refundAmount: refundData.amount,
-          notes: b.notes ? `${b.notes} | Refund: ${refundData.reason}` : `Refund: ${refundData.reason}`
-        };
-      }
-      return b;
-    }));
+    updateBooking(refundBooking.id, {
+      status: 'Cancelled',
+      paymentStatus: 'Refunded',
+      refundStatus: 'Completed',
+      refundDate: refundData.date,
+      refundAmount: refundData.amount,
+      notes: refundBooking.notes ? `${refundBooking.notes} | Refund: ${refundData.reason}` : `Refund: ${refundData.reason}`
+    });
 
-    // Update selected booking if it's the one being refunded
     if (selectedBooking?.id === refundBooking.id) {
       setSelectedBooking({
         ...selectedBooking,
+        status: 'Cancelled',
         paymentStatus: 'Refunded',
         refundStatus: 'Completed',
         refundDate: refundData.date,
@@ -858,7 +893,7 @@ function OrderManagement() {
 
     setShowRefundModal(false);
     setRefundBooking(null);
-    alert(`Refund of ₹${refundData.amount} processed successfully!`);
+    alert(`Refund of ₹${refundData.amount} processed successfully! Order ${refundBooking.id} has been cancelled.`);
   };
 
   const getStatusBadge = (status) => {
@@ -892,11 +927,6 @@ function OrderManagement() {
     );
   };
 
-  // ============================================================
-  // RENDER
-  // ============================================================
-  
-  // If detail view is active, show the booking detail
   if (showDetailView && selectedBooking) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
@@ -921,12 +951,9 @@ function OrderManagement() {
     );
   }
 
-  // Otherwise show the list view
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
-        
-        {/* HEADER */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
@@ -948,7 +975,6 @@ function OrderManagement() {
           </button>
         </div>
 
-        {/* STATS CARDS */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-blue-500 hover:shadow-md transition">
             <p className="text-sm text-gray-500">Total</p>
@@ -976,10 +1002,8 @@ function OrderManagement() {
           </div>
         </div>
 
-        {/* TOOLBAR */}
         <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
-            {/* Search */}
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
@@ -991,7 +1015,6 @@ function OrderManagement() {
               />
             </div>
 
-            {/* Filters */}
             <select
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
               value={filterStatus}
@@ -1016,7 +1039,6 @@ function OrderManagement() {
           </div>
         </div>
 
-        {/* TABLE */}
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -1085,7 +1107,6 @@ function OrderManagement() {
             </table>
           </div>
 
-          {/* Empty State */}
           {filteredBookings.length === 0 && (
             <div className="text-center py-12">
               <ShoppingBag className="w-12 h-12 text-gray-400 mx-auto mb-3" />
@@ -1093,7 +1114,6 @@ function OrderManagement() {
             </div>
           )}
 
-          {/* PAGINATION */}
           {filteredBookings.length > 0 && (
             <div className="px-4 py-3 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-3">
               <p className="text-sm text-gray-500">
@@ -1137,7 +1157,6 @@ function OrderManagement() {
         </div>
       </div>
 
-      {/* Refund Modal */}
       {showRefundModal && refundBooking && (
         <RefundModal
           booking={refundBooking}
@@ -1152,4 +1171,8 @@ function OrderManagement() {
   );
 }
 
+// ============================================================
+// EXPORTS - Only export once at the bottom
+// ============================================================
 export default OrderManagement;
+export { MOCK_BOOKINGS, useOrders, OrderProvider };

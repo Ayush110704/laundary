@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ChevronDown, ChevronUp } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Menu, X, ChevronDown, ChevronUp, User, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/Athenura.png";
 
 const Navbar = () => {
@@ -9,6 +9,30 @@ const Navbar = () => {
   const [userlogin, setUserLogin] = useState(false);
   const [hover, setHover] = useState(false);
   const [showServices, setShowServices] = useState(false);
+  const [profile, setProfile] = useState(false);
+  const[userData,setUserData]= useState();
+
+  const navigate = useNavigate();
+
+
+  useEffect(() => {
+
+    const User = JSON.parse(localStorage.getItem("currentUser"));
+    console.log(User)
+    if (User) {
+      setUserLogin(true);
+      setUserData(User);
+    } else {
+      setUserLogin(false);
+    }
+
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    navigate("/login")
+    setUserLogin(false)
+  }
 
   const menu = [
     { id: "Home", label: "Home", path: "/" },
@@ -90,12 +114,64 @@ const Navbar = () => {
         </div>
 
         {/* Login/Profile Button */}
-        <button
-         
-          className="hidden md:flex py-1 px-4 bg-blue-600 rounded-3xl text-white cursor-pointer mr-15 hover:bg-blue-700"
+
+        {userlogin ? (
+          <>
+           <div
+  className="relative"
+  onMouseEnter={() => setProfile(true)}
+  onMouseLeave={() => setProfile(false)}
+>
+  <button
+    className="hidden md:flex items-center gap-2 py-1 px-4 bg-white border border-blue-600 rounded-3xl text-blue-700 cursor-pointer mr-15 font-semibold transition-all duration-500 hover:scale-105 hover:bg-blue-700 hover:text-white"
+  >
+    <User size={18} />
+    {userData.FirstName || "Profile"}
+  </button>
+
+  <AnimatePresence>
+    {profile && (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        transition={{ duration: 0.2 }}
+        className="absolute top-full right-2 mt-2 shadow-lg rounded-xl p-4 grid space-y-2 w-50 z-50 bg-linear-to-b from-blue-50 to-blue-200 text-blue-600 font-semibold border border-blue-200 text-center"
+      >
+        <div className="flex justify-center">
+          <div>
+          <h3 className='flex items-center text-blue-500'><User size={18} />{userData.FirstName}</h3>
+          <h5 className='text-[12px]'>{userData.number}</h5>
+          </div>
+        </div>
+        <Link
+          to="/Dashboard"
+          onClick={() => setProfile(false)}
+          className="hover:text-blue-800 transition-all hover:scale-105"
         >
-         <Link to="/login">Login</Link>
+          Dashboard
+        </Link>
+
+        <button
+          onClick={handleLogout}
+          className="text-red-700 flex justify-center items-center gap-1 transition-all hover:scale-105"
+        >
+          <LogOut size={18} />
+          Logout
         </button>
+      </motion.div>
+    )}
+  </AnimatePresence>
+</div>
+          </>
+        ) : (
+          <button
+
+            className="hidden md:flex py-1 px-4 bg-blue-600 rounded-3xl text-white cursor-pointer mr-15 hover:bg-blue-700"
+          >
+            <Link to="/login"> Login</Link>
+          </button>)}
+
 
         {/* Mobile Icon */}
         <div
