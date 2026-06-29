@@ -10,6 +10,7 @@ const Navbar = () => {
   const [hover, setHover] = useState(false);
   const [showServices, setShowServices] = useState(false);
   const [profile, setProfile] = useState(false);
+  const[userData,setUserData]= useState();
 
   const navigate = useNavigate();
 
@@ -20,6 +21,7 @@ const Navbar = () => {
     console.log(User)
     if (User) {
       setUserLogin(true);
+      setUserData(User);
     } else {
       setUserLogin(false);
     }
@@ -124,7 +126,7 @@ const Navbar = () => {
     className="hidden md:flex items-center gap-2 py-1 px-4 bg-white border border-blue-600 rounded-3xl text-blue-700 cursor-pointer mr-15 font-semibold transition-all duration-500 hover:scale-105 hover:bg-blue-700 hover:text-white"
   >
     <User size={18} />
-    Profile
+    {userData.FirstName || "Profile"}
   </button>
 
   <AnimatePresence>
@@ -134,8 +136,14 @@ const Navbar = () => {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 10 }}
         transition={{ duration: 0.2 }}
-        className="absolute top-full right-2 mt-2 shadow-lg rounded-xl p-4 grid space-y-1 w-50 z-50 bg-gradient-to-b from-blue-50 to-blue-200 text-blue-600 font-semibold border border-blue-200 text-center"
+        className="absolute top-full right-2 mt-2 shadow-lg rounded-xl p-4 grid space-y-2 w-50 z-50 bg-linear-to-b from-blue-50 to-blue-200 text-blue-600 font-semibold border border-blue-200 text-center"
       >
+        <div className="flex justify-center">
+          <div>
+          <h3 className='flex items-center text-blue-500'><User size={18} />{userData.FirstName}</h3>
+          <h5 className='text-[12px]'>{userData.number}</h5>
+          </div>
+        </div>
         <Link
           to="/Dashboard"
           onClick={() => setProfile(false)}

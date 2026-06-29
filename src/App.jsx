@@ -26,15 +26,17 @@ import Payments from "./components/Admin/Payments";
 import Analytics from "./components/Admin/Analytics";
 
  
-import OrderManagement from "./components/Admin/OrderManagement";
+
 import ServiceManagement from './components/Admin/ServiceManagement';
-import Payments from "./components/Admin/Payments";
+
 import OrderTracking from "./components/OrderTracking";
 
  
 import OrderManagement from "./components/Admin/OrderManagement"; 
 import Payments from "./components/Admin/Payments";
-import BookingApplyForm from "./Pages/BookingApplyForm";  
+import BookingApplyForm from "./Pages/BookingApplyForm";
+import Pricing from './Pages/Pricing'; 
+import CheckOut from './Pages/CheckOut' 
 
 function App() {
   const location = useLocation();
@@ -71,6 +73,7 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} />
         <Route path="/subscription" element={<Subscription />} />
+        <Route path="/checkout" element={<CheckOut/>} />
 
 
         {/* Admin Routes with Layout - Wrapped with OrderProvider */}
@@ -91,7 +94,7 @@ function App() {
         <Route path="/order-tracking" element={<OrderTracking />} />
 
         <Route path="/bookingapplyform" element={<BookingApplyForm/>}/>
-
+      <Route path="/pricing" element={<Pricing/>} />
 
 
 

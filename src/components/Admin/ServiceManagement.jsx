@@ -1,180 +1,224 @@
 import React, { useState, useEffect } from "react";
-
 import {
-  Search,
-  Plus,
-  Eye,
-  Edit,
-  Trash2,
-  ChevronLeft,
-  ChevronRight,
-  Package,
-  IndianRupee,
-  Clock,
-  CheckCircle,
-  XCircle,
-  Shirt,
-  Sofa,
-  BrushCleaning,
-} from "lucide-react";
+  Search, Plus, Eye,Edit, Trash2, ChevronLeft, ChevronRight,Package, IndianRupee,
+   Clock,CheckCircle, XCircle, Shirt, Sofa, BrushCleaning,ArrowLeft,Tag,} from "lucide-react";
+import AddService from '../AddService'
+import {MOCK_SERVICES} from '../../Data/LaundaryData.js'
+import {Link} from 'react-router-dom'
 
 
-// ======================================================
-// MOCK SERVICES DATA
-// ======================================================
+// Detail view component
 
-const MOCK_SERVICES = [
-  {
-    id: "SRV001",
-    name: "Laundry",
-    category: "Clothes",
-    price: 120,
-    duration: "24 Hours",
-    status: "Active",
-    description:
-      "Professional wash, dry and fold service for everyday clothes.",
-    createdDate: "2026-06-20",
-  },
-
-  {
-    id: "SRV002",
-    name: "Dry Cleaning",
-    category: "Premium",
-    price: 250,
-    duration: "48 Hours",
-    status: "Active",
-    description:
-      "Premium dry cleaning for delicate garments.",
-    createdDate: "2026-06-19",
-  },
-
-  {
-    id: "SRV003",
-    name: "Ironing",
-    category: "Clothes",
-    price: 80,
-    duration: "12 Hours",
-    status: "Active",
-    description:
-      "Steam ironing for wrinkle free clothes.",
-    createdDate: "2026-06-18",
-  },
-
-  {
-    id: "SRV004",
-    name: "Carpet Cleaning",
-    category: "Home Care",
-    price: 650,
-    duration: "72 Hours",
-    status: "Active",
-    description:
-      "Deep carpet cleaning with stain removal.",
-    createdDate: "2026-06-17",
-  },
-
-  {
-    id: "SRV005",
-    name: "Curtain Cleaning",
-    category: "Home Care",
-    price: 550,
-    duration: "48 Hours",
-    status: "Inactive",
-    description:
-      "Dust removal and deep cleaning for curtains.",
-    createdDate: "2026-06-16",
-  },
-
-  {
-    id: "SRV006",
-    name: "Shoe Cleaning",
-    category: "Accessories",
-    price: 300,
-    duration: "24 Hours",
-    status: "Active",
-    description:
-      "Premium shoe cleaning and polishing.",
-    createdDate: "2026-06-15",
-  },
-
-
-];
-
-
-// ======================================================
-// DETAIL VIEW COMPONENT
-// ======================================================
 
 function ServiceDetail({ service, onBack }) {
-  return (
-    <div className="bg-white rounded-xl shadow-sm p-8">
+  return(
+  <div className=" rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+      {/* Header */}
+      <div className="flex items-center justify-between px-6 py-5 border-b">
+        <div className="flex items-center gap-4">
+          <button 
+          onClick={onBack}
+          className="p-2 rounded-full hover:bg-gray-100">
+            <ArrowLeft size={20} />
+          </button>
 
-      <button
-        onClick={onBack}
-        className="flex items-center gap-2 text-blue-600 mb-6"
-      >
-        <ChevronLeft className="w-5 h-5" />
+          <div>
+            <h1 className="text-4xl font-bold text-blue-600">
+              {service.name}
+            </h1>
 
-        Back
-      </button>
-
-      <h1 className="text-3xl font-bold text-gray-900">
-        {service.name}
-      </h1>
-
-      <p className="text-gray-500 mt-2">
-        {service.description}
-      </p>
-
-      <div className="grid md:grid-cols-2 gap-5 mt-8">
-
-        <div className="bg-gray-50 p-5 rounded-xl">
-
-          <p className="text-gray-500 text-sm">
-            Category
-          </p>
-
-          <p className="font-semibold">
-            {service.category}
-          </p>
-
+            <p className="text-gray-500">
+              Service ID: {service.id}
+            </p>
+          </div>
         </div>
 
-        <div className="bg-gray-50 p-5 rounded-xl">
+        
+      </div>
 
-          <p className="text-gray-500 text-sm">
-            Price
-          </p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+        {/* LEFT SIDE */}
+        <div>
+          <h2 className="text-gray-600 font-semibold uppercase tracking-wide mb-4">
+            Service Information
+          </h2>
 
-          <p className="font-semibold">
-            ₹{service.price}
-          </p>
+          <div className="space-y-4">
+            <div className="bg-gray-200 rounded-xl p-4">
+              <div className="flex items-center gap-3">
+                <Tag className="text-blue-600" size={20} />
+                <div>
+                  <p className="text-sm text-gray-500">Category</p>
+                  <p className="font-semibold">{service.category}</p>
+                </div>
+              </div>
+            </div>
 
+            <div className="bg-gray-200 rounded-xl p-4">
+              <div className="flex items-center gap-3">
+                <IndianRupee className="text-blue-600" size={20} />
+                <div>
+                  <p className="text-sm text-gray-500">Price</p>
+                  <p className="font-semibold">
+                    ₹{service.price}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-200 rounded-xl p-4">
+              <div className="flex items-center gap-3">
+                <Clock className="text-blue-600" size={20} />
+                <div>
+                  <p className="text-sm text-gray-500">Duration</p>
+                  <p className="font-semibold">
+                    {service.duration}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-200 rounded-xl p-4">
+              <div className="flex items-center gap-3">
+                {/* <Calendar className="text-blue-600" size={20} /> */}
+                <div>
+                  <p className="text-sm text-gray-500">Created Date</p>
+                  <p className="font-semibold">
+                    {service.createdDate}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gray-200 rounded-xl p-4">
+              <p className="text-sm text-gray-500 mb-1">
+                Description
+              </p>
+              <p className="font-medium">
+                {service.description}
+              </p>
+            </div>
+
+            <div className="bg-gray-200 rounded-xl p-4">
+              <p className="text-sm text-gray-500 mb-1">
+                Status
+              </p>
+
+              <span
+                className={`font-semibold ${
+                  service.status === "Active"
+                    ? "text-green-600"
+                    : "text-red-600"
+                }`}
+              >
+                {service.status}
+              </span>
+            </div>
+          </div>
         </div>
 
-        <div className="bg-gray-50 p-5 rounded-xl">
+        {/* RIGHT SIDE */}
+        <div>
+          <h2 className="text-gray-600 font-semibold uppercase tracking-wide mb-4">
+            Service Analytics
+          </h2>
 
-          <p className="text-gray-500 text-sm">
-            Duration
-          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-blue-100 rounded-xl p-4">
+              <p className="text-sm text-gray-500">
+                Total Orders
+              </p>
 
-          <p className="font-semibold">
-            {service.duration}
-          </p>
+              <div className="flex items-center gap-2 mt-2">
+                <Package
+                  className="text-blue-600"
+                  size={18}
+                />
+                <h3 className="text-3xl font-bold text-blue-600">
+                  {service.totalOrders}
+                </h3>
+              </div>
+            </div>
 
+            <div className="bg-green-100 rounded-xl p-4">
+              <p className="text-sm text-gray-500">
+                Completed
+              </p>
+
+              <div className="flex items-center gap-2 mt-2">
+                <CheckCircle
+                  className="text-green-600"
+                  size={18}
+                />
+                <h3 className="text-3xl font-bold text-green-600">
+                  {service.completedOrders}
+                </h3>
+              </div>
+            </div>
+
+            <div className="bg-red-100 rounded-xl p-4">
+              <p className="text-sm text-gray-500">
+                Cancelled
+              </p>
+
+              <div className="flex items-center gap-2 mt-2">
+                <XCircle
+                  className="text-red-600"
+                  size={18}
+                />
+                <h3 className="text-3xl font-bold text-red-600">
+                  {service.cancelledOrders}
+                </h3>
+              </div>
+            </div>
+
+            <div className="bg-purple-100 rounded-xl p-4">
+              <p className="text-sm text-gray-500">
+                Revenue
+              </p>
+
+              <div className="flex items-center gap-2 mt-2">
+                <IndianRupee
+                  className="text-purple-600"
+                  size={18}
+                />
+                <h3 className="text-3xl font-bold text-purple-600">
+                  ₹{service.totalEarnings}
+                </h3>
+              </div>
+            </div>
+          </div>
+
+          {/* Additional Insights */}
+          <div className="mt-4 bg-yellow-100 rounded-xl p-4">
+            <p className="text-sm text-gray-500">
+              Success Rate
+            </p>
+
+            <h3 className="text-2xl font-bold text-yellow-600 mt-1">
+              {Math.round(
+                (service.completedOrders /
+                  service.totalOrders) *
+                  100
+              )}
+              %
+            </h3>
+          </div>
+
+          <div className="mt-4 bg-gray-100 rounded-xl p-4">
+            <p className="text-sm text-gray-500">
+              Average Revenue Per Order
+            </p>
+
+            <h3 className="text-2xl font-bold text-blue-900 mt-1">
+              ₹
+              {Math.round(
+                service.totalEarnings /
+                  service.totalOrders
+              )}
+            </h3>
+          </div>
         </div>
-
-        <div className="bg-gray-50 p-5 rounded-xl">
-
-          <p className="text-gray-500 text-sm">
-            Status
-          </p>
-
-          <p className="font-semibold">
-            {service.status}
-          </p>
-
-        </div>
-
       </div>
     </div>
   );
@@ -182,62 +226,38 @@ function ServiceDetail({ service, onBack }) {
 
 
 
-// ======================================================
-// MAIN COMPONENT
-// ======================================================
-const ServiceManagement=()=> {
 
-  const [services, setServices] =
-    useState(MOCK_SERVICES);
+const ServiceManagement = () => {
 
-  const [searchTerm, setSearchTerm] =
-    useState("");
-
-  const [filterCategory, setFilterCategory] =
-    useState("All");
-
-  const [currentPage, setCurrentPage] =
-    useState(1);
-
-  const [selectedService, setSelectedService] =
-    useState(null);
-
-  const [showDetail, setShowDetail] =
-    useState(false);
+  const [services, setServices] =useState(MOCK_SERVICES);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterCategory, setFilterCategory] = useState("All");
+  const [currentPage, setCurrentPage] =useState(1);
+  const [selectedService, setSelectedService] =useState(null);
+  const [showDetail, setShowDetail] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const itemsPerPage = 5;
 
-
-// ======================================================
-// STATS
-// ======================================================
-
+//stats
   const stats = {
 
     total: services.length,
 
     active: services.filter(
-      (s) => s.status === "Active"
-    ).length,
+      (s) => s.status === "Active" ).length,
 
     inactive: services.filter(
-      (s) => s.status === "Inactive"
-    ).length,
+      (s) => s.status === "Inactive" ).length,
 
     categories: new Set(
-      services.map((s) => s.category)
-    ).size,
+      services.map((s) => s.category) ).size,
 
-    revenue: services.reduce(
-      (sum, s) => sum + s.price,
-      0
-    ),
+    revenue: services.reduce((sum, s) => sum + s.price, 0 ),
   };
 
 
-// ======================================================
-// CATEGORY LIST
-// ======================================================
+  // Category list
 
   const categories = [
 
@@ -251,38 +271,15 @@ const ServiceManagement=()=> {
   ];
 
 
-// ======================================================
-// FILTER SERVICES
-// ======================================================
+//service filter
 
-  const filteredServices = services.filter(
-    (service) => {
+  const filteredServices = services.filter((service) => {
 
-      const matchesSearch =
-
-        service.name
-          .toLowerCase()
-          .includes(
-            searchTerm.toLowerCase()
-          )
-
-        ||
-
-        service.id
-          .toLowerCase()
-          .includes(
-            searchTerm.toLowerCase()
-          );
+      const matchesSearch = service.name.toLowerCase().includes(searchTerm.toLowerCase())||
+          service.id.toLowerCase().includes(searchTerm.toLowerCase());
 
 
-      const matchesCategory =
-
-        filterCategory === "All"
-
-        ||
-
-        service.category ===
-        filterCategory;
+      const matchesCategory =filterCategory === "All" || service.category ===filterCategory;
 
 
       return (
@@ -293,120 +290,196 @@ const ServiceManagement=()=> {
   );
 
 
-// ======================================================
-// PAGINATION
-// ======================================================
+ // pagination
 
-  const totalPages = Math.ceil(
-    filteredServices.length /
-    itemsPerPage
-  );
+  const totalPages = Math.ceil(filteredServices.length /itemsPerPage);
 
-  const paginatedServices =
-    filteredServices.slice(
+  const paginatedServices = filteredServices.slice((currentPage - 1)* itemsPerPage,
 
-      (currentPage - 1)
-      * itemsPerPage,
-
-      currentPage
-      * itemsPerPage
-    );
+      currentPage* itemsPerPage );
 
 
-// ======================================================
-// RESET PAGE
-// ======================================================
+// page reset
 
   useEffect(() => {
 
-    setCurrentPage(1);
-
+          setCurrentPage(1);
   }, [searchTerm, filterCategory]);
 
 
-// ======================================================
-// HANDLERS
-// ======================================================
+ // handlers
 
-const handleView = (service) => {
+  const handleView = (service) => {
 
-  setSelectedService(service);
+    setSelectedService(service);
 
-  setShowDetail(true);
+    setShowDetail(true);
 
-};
+  };
 
 
-const handleBack = () => {
+  const handleBack = () => {
 
-  setSelectedService(null);
+    setSelectedService(null);
 
-  setShowDetail(false);
+    setShowDetail(false);
 
-};
-
-
-const handleDelete = (id) => {
-
-  const confirmDelete = window.confirm(
-    "Delete this service?"
-  );
-
-  if (!confirmDelete) return;
-
-  setServices(
-    services.filter(
-      (service) => service.id !== id
-    )
-  );
-};
+  };
 
 
-const handleEdit = (id) => {
+  const handleDelete = (id) => {
 
-  alert(`Edit Service ${id}`);
+    const confirmDelete = window.confirm(
+      "Delete this service?"
+    );
 
-};
+    if (!confirmDelete) return;
+
+    setServices(
+      services.filter(
+        (service) => service.id !== id
+      )
+    );
+  };
 
 
-// ======================================================
-// STATUS BADGE
-// ======================================================
+  const handleEdit = (id) => {
 
-const getStatusBadge = (status) => {
+    alert(`Edit Service ${id}`);
 
-  if (status === "Active") {
+  };
+
+
+ // status
+
+  const getStatusBadge = (status) => {
+
+    if (status === "Active") {
+
+      return (
+
+        <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold flex items-center gap-1 w-fit">
+
+          <CheckCircle className="w-3 h-3" />
+
+          Active
+
+        </span>
+      );
+    }
 
     return (
 
-      <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold flex items-center gap-1 w-fit">
+      <span className="px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold flex items-center gap-1 w-fit">
 
-        <CheckCircle className="w-3 h-3" />
+        <XCircle className="w-3 h-3" />
 
-        Active
+        Inactive
 
       </span>
     );
+  };
+
+
+ // service detail page
+
+  if (showDetail && selectedService) {
+
+    return (
+
+      <div className="min-h-screen bg-gray-50 p-6">
+
+        <div className="max-w-7xl mx-auto">
+
+          <ServiceDetail
+
+            service={selectedService}
+
+            onBack={handleBack}
+
+          />
+
+        </div>
+
+      </div>
+    );
   }
 
-  return (
 
-    <span className="px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold flex items-center gap-1 w-fit">
+  // card data
+  const statCards = [
 
-      <XCircle className="w-3 h-3" />
+    {
+      title: "Total",
 
-      Inactive
+      value: stats.total,
 
-    </span>
-  );
-};
+      icon: Package,
+
+      border: "border-blue-500",
+
+      text: "text-blue-600",
+    },
+
+    {
+      title: "Active",
+
+      value: stats.active,
+
+      icon: CheckCircle,
+
+      border: "border-green-500",
+
+      text: "text-green-600",
+    },
+
+    {
+      title: "Inactive",
+
+      value: stats.inactive,
+
+      icon: XCircle,
+
+      border: "border-red-500",
+
+      text: "text-red-600",
+    },
+
+    {
+      title: "Categories",
+
+      value: stats.categories,
+
+      icon: BrushCleaning,
+
+      border: "border-yellow-500",
+
+      text: "text-yellow-600",
+    },
 
 
-// ======================================================
-// DETAIL PAGE
-// ======================================================
 
-if (showDetail && selectedService) {
+  ];
+
+
+ //table header 
+
+  const tableHeaders = [
+
+    "Service ID",
+
+    "Service",
+
+    "Category",
+
+    "Price",
+
+    "Duration",
+
+    "Status",
+
+    "Action",
+  ];
 
   return (
 
@@ -414,189 +487,95 @@ if (showDetail && selectedService) {
 
       <div className="max-w-7xl mx-auto">
 
-        <ServiceDetail
+        {/* HEADER */}
 
-          service={selectedService}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
 
-          onBack={handleBack}
+          <div>
 
-        />
+            <h1 className="text-3xl font-bold text-gray-900">
 
-      </div>
+              Service Management
 
-    </div>
-  );
-}
+            </h1>
 
+            <p className="text-gray-500">
 
-// ======================================================
-// CARD DATA
-// ======================================================
+              Manage all laundry services
 
-const statCards = [
+            </p>
 
-  {
-    title: "Total",
+          </div>
 
-    value: stats.total,
+          <button 
+          onClick={() => setOpenModal(true)}
+          className="bg-blue-600 text-white px-5 py-3 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition">
 
-    icon: Package,
+            <Plus className="w-5 h-5" />
 
-    border: "border-blue-500",
+            Add Service
 
-    text: "text-blue-600",
-  },
+          </button>
 
-  {
-    title: "Active",
+           <AddService
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+      />
 
-    value: stats.active,
+        </div>
 
-    icon: CheckCircle,
 
-    border: "border-green-500",
+        {/* STATS */}
 
-    text: "text-green-600",
-  },
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
 
-  {
-    title: "Inactive",
+          {statCards.map((card, index) => {
 
-    value: stats.inactive,
+            const Icon = card.icon;
 
-    icon: XCircle,
+            return (
 
-    border: "border-red-500",
+              <div
 
-    text: "text-red-600",
-  },
+                key={index}
 
-  {
-    title: "Categories",
+                className={`bg-white border-l-4 ${card.border} rounded-xl p-5 shadow-sm`}
 
-    value: stats.categories,
+              >
 
-    icon: BrushCleaning,
+                <div className="flex items-center justify-between">
 
-    border: "border-yellow-500",
+                  <div>
 
-    text: "text-yellow-600",
-  },
+                    <p className="text-gray-500 text-sm">
 
+                      {card.title}
 
+                    </p>
 
-];
+                    <h2 className={`text-2xl font-bold ${card.text}`}>
 
+                      {card.value}
 
-// ======================================================
-// TABLE HEADERS
-// ======================================================
+                    </h2>
 
-const tableHeaders = [
+                  </div>
 
-  "Service ID",
+                  <Icon className={`w-7 h-7 ${card.text}`} />
 
-  "Service",
+                </div>
 
-  "Category",
+              </div>
 
-  "Price",
+            )
 
-  "Duration",
+          })}
 
-  "Status",
+        </div>
 
-  "Action",
-];
 
-return (
-
-<div className="min-h-screen bg-gray-50 p-6">
-
-<div className="max-w-7xl mx-auto">
-
-{/* HEADER */}
-
-<div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
-
-<div>
-
-<h1 className="text-3xl font-bold text-gray-900">
-
-Service Management
-
-</h1>
-
-<p className="text-gray-500">
-
-Manage all laundry services
-
-</p>
-
-</div>
-
-<button className="bg-blue-600 text-white px-5 py-3 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition">
-
-<Plus className="w-5 h-5" />
-
-Add Service
-
-</button>
-
-</div>
-
-
-{/* STATS */}
-
-<div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-
-{statCards.map((card,index)=>{
-
-const Icon=card.icon;
-
-return(
-
-<div
-
-key={index}
-
-className={`bg-white border-l-4 ${card.border} rounded-xl p-5 shadow-sm`}
-
->
-
-<div className="flex items-center justify-between">
-
-<div>
-
-<p className="text-gray-500 text-sm">
-
-{card.title}
-
-</p>
-
-<h2 className={`text-2xl font-bold ${card.text}`}>
-
-{card.value}
-
-</h2>
-
-</div>
-
-<Icon className={`w-7 h-7 ${card.text}`} />
-
-</div>
-
-</div>
-
-)
-
-})}
-
-</div>
-
-
-{/* TOOLBAR */}
-
+        {/* TOOLBAR */}
+        {/* 
 <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
 
 <div className="flex flex-col md:flex-row gap-4">
@@ -651,322 +630,203 @@ value={category}
 
 </div>
 
-</div>
+</div> */}
 
 
-{/* TABLE */}
+        {/* TABLE */}
 
-<div className="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
 
-<div className="overflow-x-auto">
+          <div className="overflow-x-auto">
 
-<table className="w-full">
+            <table className="w-full">
 
-<thead className="bg-gray-100">
+              <thead className="bg-gray-100">
 
-<tr>
+                <tr>
 
-{tableHeaders.map((header)=>(
+                  {tableHeaders.map((header) => (
 
-<th
+                    <th
 
-key={header}
+                      key={header}
 
-className="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase"
+                      className="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase"
 
->
+                    >
 
-{header}
+                      {header}
 
-</th>
+                    </th>
 
-))}
+                  ))}
 
-</tr>
+                </tr>
 
-</thead>
+              </thead>
 
 
-<tbody>
+              <tbody>
 
-{paginatedServices.map((service)=>(
+                {paginatedServices.map((service) => (
 
-<tr
+                  <tr
 
-key={service.id}
+                    key={service.id}
 
-className="border-t hover:bg-gray-50 transition"
+                    className="border-t hover:bg-blue-100 transition font-semibold text-gray-900 text-md"
 
->
+                  >
 
-<td className="px-5 py-4 text-blue-600 font-semibold">
+                    <td className="px-5 py-4 text-blue-600 ">
 
-{service.id}
+                      {service.id}
 
-</td>
+                    </td>
 
-<td className="px-5 py-4">
+                    <td className="px-5 py-4 ">
 
-{service.name}
+                      {service.name}
 
-</td>
+                    </td>
 
-<td className="px-5 py-4">
+                    <td className="px-5 py-4 ">
 
-{service.category}
+                      {service.category}
 
-</td>
+                    </td>
 
-<td className="px-5 py-4">
+                    <td className="px-5 py-4 ">
 
-₹{service.price}
+                      ₹{service.price}
 
-</td>
+                    </td>
 
-<td className="px-5 py-4">
+                    <td className="px-5 py-4 ">
 
-<div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2">
 
-<Clock className="w-4 h-4 text-gray-400"/>
+                        <Clock className="w-4 h-4 text-gray-400" />
 
-{service.duration}
+                        {service.duration}
 
-</div>
+                      </div>
 
-</td>
+                    </td>
 
-<td className="px-5 py-4">
+                    <td className="px-5 py-4">
 
-{getStatusBadge(service.status)}
+                      {getStatusBadge(service.status)}
 
-</td>
+                    </td>
 
-<td className="px-5 py-4">
+                    <td className="px-5 py-4">
 
-<div className="flex gap-2">
+                      <div className="flex gap-2">
 
-<button
+                        <button
+                          onClick={() => handleView(service)}
+                          className="p-2 rounded hover:bg-blue-100"
 
-onClick={()=>handleView(service)}
+                        >
+                          <Eye className="w-4 h-4 text-blue-600" />
+                        </button>
 
-className="p-2 rounded hover:bg-blue-100"
+                        <button
+                          onClick={() => handleEdit(service.id)}
+                          className="p-2 rounded hover:bg-yellow-100" >
 
->
+                       
+                          <Edit className="w-4 h-4 text-yellow-600" />
+                        </button>
 
-<Eye className="w-4 h-4 text-blue-600"/>
+                        <button
+                          onClick={() => handleDelete(service.id)}
+                          className="p-2 rounded hover:bg-red-100" >
+                          <Trash2 className="w-4 h-4 text-red-600" />
+                        </button>
+                    </div>
+                    </td>
+                  </tr>
+                ))}
 
-</button>
+              </tbody>
+            </table>
+          </div>
 
-<button
 
-onClick={()=>handleEdit(service.id)}
+          {/* EMPTY STATE */}
 
-className="p-2 rounded hover:bg-yellow-100"
+          {filteredServices.length === 0 && (
 
->
+            <div className="text-center py-12">
 
-<Edit className="w-4 h-4 text-yellow-600"/>
+              <Package className="w-14 h-14 text-gray-300 mx-auto mb-4" />
 
-</button>
+              <h2 className="text-lg font-semibold text-gray-700"> No Services Found</h2>
+            
+              <p className="text-gray-500">Try changing filters</p>
+                
+            </div>
 
-<button
+          )}
 
-onClick={()=>handleDelete(service.id)}
 
-className="p-2 rounded hover:bg-red-100"
+          {/* PAGINATION */}
 
->
+          {filteredServices.length > 0 && (
 
-<Trash2 className="w-4 h-4 text-red-600"/>
+            <div className="flex flex-col md:flex-row justify-between items-center p-5 border-t gap-4">
+              <p className="text-sm text-gray-500">
+                Showing
+                {" "}
+                {(currentPage - 1) * itemsPerPage + 1}
+                {" "}to{" "}
 
-</button>
+                {Math.min(currentPage * itemsPerPage,filteredServices.length)}
+                {" "}of{" "}
+                
+                {filteredServices.length}
+              </p>
 
-</div>
+              <div className="flex gap-2">
 
-</td>
+                <button
+                  onClick={() =>setCurrentPage( Math.max( currentPage - 1, 1) ) }
+                  disabled={currentPage === 1}
+                  className="border rounded px-3 py-2 disabled:opacity-50">
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
 
-</tr>
+                {Array.from({ length: totalPages },
 
-))}
+                  (_, i) => i + 1).map((page) => (
 
-</tbody>
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`px-4 py-2 rounded border
+                           ${currentPage === page ? "bg-blue-600 text-white" : ""  }`}>
+                    {page}
+                  </button>
+                ))}
 
-</table>
 
-</div>
+                <button
+                  onClick={() => setCurrentPage(  Math.min(currentPage + 1,totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="border rounded px-3 py-2 disabled:opacity-50" >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+            </div>
+            </div>
+          )}
 
+        </div>
+      </div>
+    </div>
 
-{/* EMPTY STATE */}
-
-{filteredServices.length===0 &&(
-
-<div className="text-center py-12">
-
-<Package className="w-14 h-14 text-gray-300 mx-auto mb-4"/>
-
-<h2 className="text-lg font-semibold text-gray-700">
-
-No Services Found
-
-</h2>
-
-<p className="text-gray-500">
-
-Try changing filters
-
-</p>
-
-</div>
-
-)}
-
-
-{/* PAGINATION */}
-
-{filteredServices.length>0 &&(
-
-<div className="flex flex-col md:flex-row justify-between items-center p-5 border-t gap-4">
-
-<p className="text-sm text-gray-500">
-
-Showing
-
-{" "}
-
-{(currentPage-1)*itemsPerPage+1}
-
-{" "}
-
-to
-
-{" "}
-
-{Math.min(
-
-currentPage*itemsPerPage,
-
-filteredServices.length
-
-)}
-
-{" "}
-
-of
-
-{" "}
-
-{filteredServices.length}
-
-</p>
-
-<div className="flex gap-2">
-
-<button
-
-onClick={()=>
-
-setCurrentPage(
-
-Math.max(
-
-currentPage-1,
-
-1
-
-)
-
-)
-
-}
-
-disabled={currentPage===1}
-
-className="border rounded px-3 py-2 disabled:opacity-50"
-
->
-
-<ChevronLeft className="w-4 h-4"/>
-
-</button>
-
-
-{Array.from(
-
-{length:totalPages},
-
-(_,i)=>i+1
-
-).map((page)=>(
-
-<button
-
-key={page}
-
-onClick={()=>setCurrentPage(page)}
-
-className={`px-4 py-2 rounded border
-
-${currentPage===page
-
-? "bg-blue-600 text-white"
-
-: ""
-
-}
-
-`}
-
->
-
-{page}
-
-</button>
-
-))}
-
-
-<button
-
-onClick={()=>
-
-setCurrentPage(
-
-Math.min(
-
-currentPage+1,
-
-totalPages
-
-)
-
-)
-
-}
-
-disabled={currentPage===totalPages}
-
-className="border rounded px-3 py-2 disabled:opacity-50"
-
->
-
-<ChevronRight className="w-4 h-4"/>
-
-</button>
-
-</div>
-
-</div>
-
-)}
-
-</div>
-
-</div>
-
-</div>
-
-);
-
+  );
 }
 
 export default ServiceManagement;
