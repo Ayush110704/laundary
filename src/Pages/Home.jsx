@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import manImg from '../assets/hero.webp'; 
+import manImg from '../assets/HomeHero.png'; 
+import Review from '../components/Review';
 import {
   features,
   statsData,
@@ -10,9 +11,10 @@ import {
   buttonTexts,
   colors
 } from '../Data/LaundaryData';
+ 
 import { Link } from 'react-router-dom';
 
-// Animated Heading Component with scroll trigger - Now plays every time
+// Animated Heading Component with scroll trigger  
 function AnimatedHeading({ isInView }) {
   const text = sectionTexts.services.heading;
   const words = text.split(" ");
@@ -83,8 +85,8 @@ function AnimatedHeading({ isInView }) {
     </div>
   );
 }
-
-// Counter Animation Component - Simplified
+ 
+// Counter  
 function AnimatedCounter({ end, duration = 2, suffix = '', prefix = '' }) {
   const [count, setCount] = useState(0);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -160,8 +162,9 @@ function AnimatedCounter({ end, duration = 2, suffix = '', prefix = '' }) {
     </div>
   );
 }
-
+ 
 function HomePage() {
+  // ==================== SECTION: State Declarations ====================
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isNearYouInView, setIsNearYouInView] = useState(false);
@@ -174,7 +177,7 @@ function HomePage() {
   const servicesRef = useRef(null);
   const howItWorksRef = useRef(null);
   const statsRef = useRef(null);
-
+ 
   // Check if mobile view
   useEffect(() => {
     const checkMobile = () => {
@@ -184,8 +187,8 @@ function HomePage() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  // Animation variants for characters
+ 
+  // Animation variants for characters (Near You )
   const charVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i) => ({
@@ -212,13 +215,12 @@ function HomePage() {
       }
     }
   };
-
-  // Text for "Near You"
+ 
+  // Split "Near You" 
   const nearYouText = sectionTexts.nearYou.text.split("");
 
   const totalServices = allServices.length;
-
-  // Get visible services based on screen size
+ 
   const getVisibleServices = () => {
     if (isMobile) {
       return [allServices[currentIndex]];
@@ -249,8 +251,8 @@ function HomePage() {
     setDirection(index > currentIndex ? 1 : -1);
     setCurrentIndex(index);
   };
-
-  // Intersection Observer for "Near You" section - Now triggers every time
+ 
+  // Intersection Observer for "Near You"  
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -277,7 +279,7 @@ function HomePage() {
     };
   }, []);
 
-  // Intersection Observer for "Our Services" section - Now triggers every time
+  // Intersection Observer for "Our Services" section  
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -304,7 +306,7 @@ function HomePage() {
     };
   }, []);
 
-  // Intersection Observer for "How It Works" section - Now triggers every time (only underline)
+  // Intersection Observer for "How It Works" section  
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -356,7 +358,7 @@ function HomePage() {
       }
     };
   }, [hasStatsAnimated]);
-
+ 
   // Slide variants for carousel
   const slideVariants = {
     enter: (direction) => ({
@@ -383,9 +385,69 @@ function HomePage() {
       }
     })
   };
-
+ 
   return (
-    <>
+    <> 
+{/* __________________Hero Section__________________ */}
+<div 
+  className="min-h-screen flex items-center py-12 md:py-20 relative overflow-hidden"
+  style={{
+    backgroundImage: `url(${manImg})`,
+    backgroundSize: '100% 100%',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+  }}
+>
+  {/* Soap Bubbles  */}
+  <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    {[...Array(30)].map((_, i) => {
+      const size = 15 + Math.random() * 35;
+      const startX = Math.random() * 100;
+      const duration = 6 + Math.random() * 8;
+      const delay = Math.random() * 15;
+      
+      return (
+        <motion.div
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            width: `${size}px`,
+            height: `${size}px`,
+            left: `${startX}%`,
+            bottom: '-20px',
+            background: 'radial-gradient(circle at 35% 35%, rgba(255,255,255,0.9), rgba(200, 230, 255, 0.3) 60%, rgba(255,255,255,0.05))',
+            boxShadow: 'inset 0 -10px 20px rgba(255,255,255,0.5), 0 0 30px rgba(100, 200, 255, 0.2)',
+            border: '2px solid rgba(255,255,255,0.5)',
+          }}
+          animate={{
+            y: ['0vh', '-120vh'],
+            x: [0, Math.random() * 100 - 50, 0],
+            scale: [0.8, 1.2, 0.8],
+          }}
+          transition={{
+            y: {
+              duration: duration,
+              repeat: Infinity,
+              ease: "linear",
+              delay: delay,
+            },
+            x: {
+              duration: duration * 0.7,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: delay,
+            },
+            scale: {
+              duration: duration * 0.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: delay,
+            }
+          }}
+        />
+      );
+    })}
+  </div> 
       {/* __________________Hero Section__________________ */}
       <div className="min-h-screen bg-gradient-to-b from-sky-100 to-sky-200 flex items-center py-12 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -490,52 +552,203 @@ function HomePage() {
                   <Link  to="/pricing">{buttonTexts.secondary}</Link>
                   
                 </motion.button>
-              </motion.div>
+              </motion.div> 
 
-              {/* Features Section */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.2, duration: 0.6 }}
-                className="mt-12 grid grid-cols-3 gap-6 max-w-md mx-auto lg:mx-0"
+  {/* Shining Motion Effect  */}
+  <motion.div
+    className="absolute inset-0 pointer-events-none"
+    style={{
+      background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.15) 45%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0.15) 55%, transparent 70%)",
+    }}
+    animate={{
+      x: ["-100%", "200%"],
+    }}
+    transition={{
+      duration: 4,
+      repeat: Infinity,
+      ease: "easeInOut",
+    }}
+  />
+  
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+    <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+      
+      {/* Left Content */}
+      <div className="flex-1 text-center lg:text-left"> 
+        <motion.h1 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 leading-tight font-serif"
+        >
+          <span className="block">{sectionTexts.hero.title}</span>
+        </motion.h1>
+        
+        {/* Authenura Badge */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="mt-2 inline-block relative overflow-hidden"
+        >
+          <span className="text-xs sm:text-sm md:text-base font-semibold text-blue-600 bg-white/50 px-3 py-1 rounded-full backdrop-blur-sm relative inline-block"> 
+            <motion.span
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/70 to-transparent"
+              animate={{
+                x: ["-100%", "200%"],
+              }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.5
+              }}
+            />
+            <span className="relative z-10">{sectionTexts.hero.badge}</span>
+          </span>
+        </motion.div>
+        
+        {/*  "Near You"  */}
+        <div ref={nearYouRef} className="mt-3">
+          <motion.div
+            initial="hidden"
+            animate={isNearYouInView ? "visible" : "hidden"}
+            className="flex flex-wrap justify-center lg:justify-start gap-0"
+          >
+            {nearYouText.map((char, index) => (
+              <motion.span
+                key={index}
+                custom={index}
+                variants={charVariants}
+                className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-600 inline-block font-serif"
               >
-                {features.map((feature, index) => (
-                  <motion.div
-                    key={index}
-                    whileHover={{ 
-                      scale: 1.05,
-                      transition: { duration: 0.2 }
-                    }}
-                    className="flex flex-col items-center justify-center p-4 transition-all duration-300 cursor-pointer group relative"
-                  >
-                    <div className="w-14 h-14 flex items-center justify-center mb-2 transition-transform duration-300 group-hover:scale-110">
-                      <img 
-                        src={feature.icon} 
-                        alt={feature.alt} 
-                        loading="lazy"
-                        className="w-12 h-12 object-contain"
-                      />
-                    </div>
-                    <h3 className="text-xs font-semibold text-gray-700 text-center leading-tight">
-                      {feature.title}
-                    </h3>
-                    <div className="absolute inset-0 rounded-xl border-2 border-sky-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-
-            {/* Right Image */}
-            <div className="flex-1 flex justify-center lg:justify-end self-end lg:self-auto">
-              <img 
-                src={manImg} 
-                alt="Laundry Service" 
-                className="w-full max-w-sm md:max-w-md lg:max-w-lg object-contain h-[400px] lg:h-[500px]"
+                {char === ' ' ? '\u00A0' : char}
+              </motion.span>
+            ))}
+          </motion.div>
+          
+          {/* Underline */}
+          <div className="flex justify-center lg:justify-start mt-1">
+            <svg
+              width="160"
+              height="20"
+              viewBox="0 0 500 150"
+              preserveAspectRatio="none"
+              className="w-40 sm:w-48 md:w-52"
+            >
+              <motion.path
+                d="M7.7,145.6C109,125,299.9,116.2,401,121.3C42.1,2.2,87.6,11.8,87.3,25.7"
+                stroke={colors.primaryLight}
+                strokeWidth="4"
+                fill="none"
+                strokeLinecap="round"
+                initial="hidden"
+                animate={isNearYouInView ? "visible" : "hidden"}
+                variants={underlineVariants}
               />
-            </div>
+            </svg>
           </div>
         </div>
+        
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8, duration: 0.6 }}
+          className="text-sm sm:text-base text-gray-600 mt-3 max-w-lg mx-auto lg:mx-0"
+        >
+          {sectionTexts.hero.subtitle}
+        </motion.p>
+
+        {/* CTA Buttons with Shine */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1, duration: 0.6 }}
+          className="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start"
+        >
+          <motion.a 
+            href="#" 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-md transition duration-200 text-center text-sm sm:text-base overflow-hidden group"
+          >
+            {/* primary button */}
+            <motion.span
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+              animate={{
+                x: ["-100%", "200%"],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.3
+              }}
+            />
+            <span className="relative z-10">{buttonTexts.primary}</span>
+          </motion.a>
+          
+          <motion.a 
+            href="#" 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative px-6 py-2.5 bg-white hover:bg-gray-50 text-gray-800 font-semibold rounded-full shadow-md transition duration-200 text-center text-sm sm:text-base border border-sky-200 overflow-hidden group"
+          >
+            {/*  secondary button */}
+            <motion.span
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-sky-200/50 to-transparent"
+              animate={{
+                x: ["-100%", "200%"],
+              }}
+              transition={{
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.8
+              }}
+            />
+            <span className="relative z-10">{buttonTexts.secondary}</span>
+          </motion.a>
+        </motion.div>
+
+        {/* Features Section   */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.6 }}
+          className="mt-8 grid grid-cols-3 gap-4 max-w-sm mx-auto lg:mx-0"
+        >
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              whileHover={{ 
+                scale: 1.05,
+                transition: { duration: 0.2 }
+              }}
+              className="flex flex-col items-center justify-center p-3 transition-all duration-300 cursor-pointer group relative bg-white/60 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-md overflow-hidden"
+            > 
+              <div className="w-10 h-10 flex items-center justify-center mb-1 transition-transform duration-300 group-hover:scale-110 relative z-10">
+                <img 
+                  src={feature.icon} 
+                  alt={feature.alt} 
+                  loading="lazy"
+                  className="w-8 h-8 object-contain"
+                />
+              </div>
+              <h3 className="text-[10px] sm:text-xs font-semibold text-gray-700 text-center leading-tight relative z-10">
+                {feature.title}
+              </h3>
+              <div className="absolute inset-0 rounded-xl border-2 border-sky-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
+ 
+      <div className="flex-1 flex justify-center lg:justify-end self-end lg:self-auto"> 
+      </div>
+    </div>
+  </div>
+</div>
 
       {/* __________________Our Services Section__________________ */}
       <section ref={servicesRef} className="py-16 md:py-20 bg-white">
@@ -628,7 +841,7 @@ function HomePage() {
       </section>
 
       {/* __________________How It Works Section__________________ */}
-<section ref={howItWorksRef} className="py-16 md:py-20 bg-gray-50">
+<section ref={howItWorksRef} className="py-16 md:py-20 bg-gray-50 overflow-hidden">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -679,17 +892,70 @@ function HomePage() {
       {sectionTexts.howItWorks.description}
     </motion.p>
 
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 relative">
+      {/* Train track line */}
+      <motion.div 
+        className="absolute top-1/2 left-0 right-0 h-0.5 bg-blue-200 hidden lg:block"
+        initial={{ scaleX: 0 }}
+        animate={isHowItWorksInView ? { scaleX: 1 } : { scaleX: 0 }}
+        transition={{ duration: 1.5, delay: 0.3, ease: "easeInOut" }}
+        style={{ transformOrigin: "left center" }}
+      />
+
       {howItWorksSteps.map((step, index) => (
-        <div
+        <motion.div
           key={index}
-          className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-6 text-center group"
+          initial={{ 
+            opacity: 0, 
+            x: -100,
+            scale: 0.8 
+          }}
+          animate={isHowItWorksInView ? { 
+            opacity: 1, 
+            x: 0, 
+            scale: 1 
+          } : { 
+            opacity: 0, 
+            x: -100, 
+            scale: 0.8 
+          }}
+          transition={{ 
+            duration: 0.8, 
+            delay: 0.4 + (index * 0.25),
+            ease: [0.25, 0.1, 0.25, 1],
+            type: "spring",
+            stiffness: 100,
+            damping: 15
+          }}
+          whileHover={{ 
+            y: -8,
+            scale: 1.05,
+            transition: { duration: 0.3 }
+          }}
+          className="relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 p-6 text-center group z-10"
         >
-          <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+          <motion.div 
+            className="absolute -top-4 left-1/2 -translate-x-1/2"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={isHowItWorksInView ? { 
+              scale: 1, 
+              rotate: 0 
+            } : { 
+              scale: 0, 
+              rotate: -180 
+            }}
+            transition={{ 
+              duration: 0.6, 
+              delay: 0.5 + (index * 0.25),
+              type: "spring",
+              stiffness: 200,
+              damping: 12
+            }}
+          >
             <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
               {index + 1}
             </div>
-          </div>
+          </motion.div>
 
           <div className="mt-4">
             <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">
@@ -701,14 +967,30 @@ function HomePage() {
             {step.title}
           </h3>
 
+          {/* Train connector between cards */}
           {index < howItWorksSteps.length - 1 && (
-            <div className="hidden lg:block absolute -right-4 top-1/2 -translate-y-1/2">
-              <svg className="w-8 h-8 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <motion.div 
+              className="hidden lg:block absolute -right-4 top-1/2 -translate-y-1/2 z-0"
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={isHowItWorksInView ? { 
+                opacity: 1, 
+                scaleX: 1 
+              } : { 
+                opacity: 0, 
+                scaleX: 0 
+              }}
+              transition={{ 
+                duration: 0.5, 
+                delay: 0.6 + (index * 0.25),
+                ease: "easeOut"
+              }}
+            >
+              <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
       ))}
     </div>
 
@@ -801,6 +1083,10 @@ function HomePage() {
       </section>
 
       <div className="w-full h-1 bg-[#1A1A4E]"></div>
+
+    {/* Reviews Section */}
+    <Review />
+
     </>
   );
 }

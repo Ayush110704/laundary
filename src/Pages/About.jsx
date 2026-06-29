@@ -5,14 +5,19 @@ import {
   FaShieldAlt,
   FaCheckCircle,
   FaStar,
+  FaBullseye,
+  FaEye,
+  FaGem,
 } from "react-icons/fa";
+import { motion } from "framer-motion";
 
-import heroImg from "../assets/1stimg.png";
-import storyImg from "../assets/3rdimg.png";
-import team1 from "../assets/FirstImg.png";
-import team2 from "../assets/2ndimg.png";
-import team3 from "../assets/3rdimg.png";
-import team4 from "../assets/Lastimg.png";
+import heroImg from "../assets/About-Section/About-Hero.png";
+import storyImg from  "../assets/About-Section/AboutStory.png";
+import whoWeAreImg from "../assets/About-Section/WhoWeWere-section.png";
+import team1 from "../assets/About-Section/PersonFirst.png";
+import team2 from  "../assets/About-Section/PersonSecond.png";
+import team3 from  '../assets/About-Section/PersonThird.png';
+import team4 from  "../assets/About-Section/PersonFourth.png";
 
 const values = [
   {
@@ -32,28 +37,38 @@ const values = [
   },
 ];
 
-const teamMembers = [
+const whoWeAreCards = [
   {
-    img: team1,
-    name: "Sarah Chen",
-    role: "Operations Director",
+    icon: <FaBullseye className="text-white text-lg" />,
+    title: "Our Mission",
+    desc: "To deliver premium laundry care with clinical hygiene, seamless pickup and delivery, and a customer experience built on trust, precision, and consistency.",
+    color: "bg-[#0B4EA2]",
   },
   {
-    img: team2,
-    name: "Marcus Miller",
-    role: "Master Textile Specialist",
+    icon: <FaGem className="text-white text-lg" />,
+    title: "Our Focus",
+    desc: "We focus on fabric-safe cleaning, eco-conscious processes, and dependable service that saves time while keeping every garment fresh, soft, and expertly maintained.",
+    color: "bg-[#00A6A6]",
   },
   {
-    img: team3,
-    name: "Elena Rodriguez",
-    role: "Customer Success Lead",
-  },
-  {
-    img: team4,
-    name: "David Park",
-    role: "Logistics Coordinator",
+    icon: <FaEye className="text-white text-lg" />,
+    title: "Our Vision Ahead",
+    desc: "To become the most trusted modern laundry brand by combining smart technology, sustainable care, and a premium experience in every city we serve.",
+    color: "bg-[#0B4EA2]",
   },
 ];
+
+const teamMembers = [
+  { img: team1, name: "Sarah Chen", role: "Operations Director" },
+  { img: team2, name: "Marcus Miller", role: "Master Textile Specialist" },
+  { img: team3, name: "Elena Rodriguez", role: "Customer Success Lead" },
+  { img: team4, name: "David Park", role: "Logistics Coordinator" },
+];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+};
 
 const About = () => {
   return (
@@ -66,10 +81,8 @@ const About = () => {
           className="w-full h-full object-cover"
         />
 
-        {/* overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0b4ea2]/35 via-[#0b4ea2]/10 to-black/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0b4ea2]/35 via-[#0b4ea2]/10 to-black/30" />
 
-        {/* hero content */}
         <div className="absolute inset-0 flex items-center justify-center px-6">
           <div className="text-center max-w-4xl text-white">
             <h2 className="text-5xl md:text-7xl font-serif font-semibold mb-4 tracking-wide">
@@ -85,7 +98,6 @@ const About = () => {
           </div>
         </div>
 
-        {/* stats card */}
         <div className="absolute right-8 bottom-10 md:right-16 md:bottom-16 bg-white rounded-2xl shadow-2xl p-6 w-[230px]">
           <h3 className="text-4xl font-extrabold text-[#0B4EA2] mb-2">1M+</h3>
           <p className="text-gray-700 leading-7 text-[15px]">
@@ -98,8 +110,13 @@ const About = () => {
       <section className="bg-[#F4F5F8] py-20 md:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid lg:grid-cols-2 gap-14 items-center">
-            {/* left */}
-            <div>
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="whileInView"
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.7 }}
+            >
               <p className="text-[#0B4EA2] font-semibold uppercase tracking-[0.18em] text-sm mb-4">
                 Our Story
               </p>
@@ -110,22 +127,27 @@ const About = () => {
 
               <p className="text-gray-700 leading-8 text-lg mb-6">
                 Founded in 2024, Athenura started with a simple observation:
-                the modern professional deserves more than just “clean”
-                laundry. They deserve precision. Their belief banked on every
-                single day. We combined high-tech logistics with artisanal
-                genius to create a seamless experience for those who take pride
-                in the little things.
+                the modern professional deserves more than just “clean” laundry.
+                They deserve precision. We combined high-tech logistics with
+                artisanal garment care to create a seamless experience for those
+                who value convenience, hygiene, and quality in every detail.
               </p>
 
               <p className="text-gray-700 leading-8 text-lg">
-                Today, we operate across 12 cities, maintaining the same
-                rigorous standards of clinical hygiene and environmental
-                responsibility that we started with in our first micro-hub.
+                Today, we continue to raise the standard of laundry care with
+                dependable service, fabric-specific expertise, and a commitment
+                to making premium garment care effortless for every household.
               </p>
-            </div>
+            </motion.div>
 
-            {/* right image */}
-            <div className="flex justify-center lg:justify-end">
+            <motion.div
+              className="flex justify-center lg:justify-end"
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="whileInView"
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+            >
               <div className="rounded-2xl overflow-hidden shadow-xl max-w-[560px]">
                 <img
                   src={storyImg}
@@ -133,7 +155,87 @@ const About = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-            </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* WHO WE ARE */}
+      <section className="relative bg-gradient-to-br from-[#EEF4FB] via-white to-[#F7FBFF] py-20 md:py-24 overflow-hidden">
+        <div className="absolute -top-10 -left-10 w-52 h-52 bg-[#0B4EA2]/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-[#00A6A6]/10 rounded-full blur-3xl" />
+
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <div className="grid lg:grid-cols-2 gap-14 items-center">
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="whileInView"
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.7 }}
+            >
+              <p className="text-[#0B4EA2] font-semibold uppercase tracking-[0.18em] text-sm mb-4">
+                Who We Are
+              </p>
+
+              <h2 className="text-4xl md:text-5xl font-extrabold text-[#0C3C88] leading-tight mb-6">
+                More than a laundry service — a promise of care.
+              </h2>
+
+              <p className="text-gray-700 leading-8 text-lg mb-10 max-w-2xl">
+                At Athenura, we are a modern garment-care brand built on trust,
+                precision, and convenience. We don’t just wash clothes — we
+                preserve fabrics, protect quality, and simplify daily life for
+                our customers. From doorstep pickup to careful cleaning and
+                professional finishing, every step is designed to give your
+                garments premium care while giving you more time for what truly
+                matters.
+              </p>
+
+              <div className="grid md:grid-cols-3 gap-5">
+                {whoWeAreCards.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    className="bg-white border border-[#E4EAF2] rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300"
+                    initial={{ opacity: 0, y: 35 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.2 }}
+                    transition={{ duration: 0.55, delay: index * 0.12 }}
+                    whileHover={{ y: -6 }}
+                  >
+                    <div
+                      className={`w-12 h-12 rounded-xl ${item.color} flex items-center justify-center shadow-md mb-5`}
+                    >
+                      {item.icon}
+                    </div>
+                    <h3 className="text-xl font-bold text-[#0B4EA2] mb-3">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-600 leading-7 text-[15px]">
+                      {item.desc}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="relative"
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="whileInView"
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+            >
+              <div className="relative rounded-[30px] overflow-hidden shadow-2xl border border-white/60">
+                <img
+                  src={whoWeAreImg}
+                  alt="Who We Are"
+                  className="w-full h-[650px] object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B4EA2]/20 via-transparent to-transparent" />
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -152,9 +254,14 @@ const About = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {values.map((item, index) => (
-              <div
+              <motion.div
                 key={index}
                 className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm hover:shadow-lg transition"
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.55, delay: index * 0.12 }}
+                whileHover={{ y: -6 }}
               >
                 <div className="w-14 h-14 rounded-xl bg-[#EDF4FF] flex items-center justify-center mb-6">
                   {item.icon}
@@ -171,7 +278,7 @@ const About = () => {
                 </h3>
 
                 <p className="text-gray-700 text-lg leading-8">{item.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -181,7 +288,13 @@ const About = () => {
       <section className="bg-white py-20 md:py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-12">
-            <div>
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="whileInView"
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.7 }}
+            >
               <p className="text-[#0B4EA2] font-semibold uppercase tracking-[0.18em] text-sm mb-3">
                 Our Team
               </p>
@@ -192,9 +305,16 @@ const About = () => {
                 Our staff undergoes 120+ hours of expert care training before
                 touching a single customer garment.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="flex flex-wrap gap-3">
+            <motion.div
+              className="flex flex-wrap gap-3"
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="whileInView"
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+            >
               <div className="px-4 py-2 rounded-full bg-[#F3F7FF] text-[#0B4EA2] font-semibold text-sm flex items-center gap-2">
                 <FaCheckCircle />
                 ISO Certified
@@ -203,12 +323,19 @@ const About = () => {
                 <FaStar />
                 5-Star Care
               </div>
-            </div>
+            </motion.div>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {teamMembers.map((member, index) => (
-              <div key={index} className="group">
+              <motion.div
+                key={index}
+                className="group"
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.6, delay: index * 0.12 }}
+              >
                 <div className="rounded-2xl overflow-hidden shadow-sm">
                   <img
                     src={member.img}
@@ -221,7 +348,7 @@ const About = () => {
                   {member.name}
                 </h3>
                 <p className="text-gray-600 text-lg mt-1">{member.role}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

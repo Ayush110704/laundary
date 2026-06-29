@@ -90,9 +90,9 @@ import turkish from '../assets/CarpetClean/turkish.webp'
 import wool from '../assets/CarpetClean/wool.webp'
 
 
+// Home Page 
 
-
-// Feature items with image icons
+// Feature items with image icons 
 export const features = [
   { icon: supportIcon, title: 'Customer Support', alt: 'Customer Support' },
   { icon: deliveryIcon, title: 'Super Fast Delivery', alt: 'Super Fast Delivery' },
@@ -113,43 +113,37 @@ export const allServices = [
     id: 1,
     title: 'Laundry',
     description: 'Enjoy fresh, clean, folded laundry – more time for what matters most.',
-    bgImage: laundryBg,
-    icon: '🧺'
+    bgImage: laundryBg, 
   },
   {
     id: 2,
     title: 'Dry Cleaning',
     description: 'Refresh your garments with our expert dry cleaning – book now!',
-    bgImage: dryCleanBg,
-    icon: '👔'
+    bgImage: dryCleanBg, 
   },
   {
     id: 3,
     title: 'Ironing',
     description: 'Get wrinkle-free perfection – expert ironing that keeps you looking sharp!',
-    bgImage: ironingBg,
-    icon: '👗'
+    bgImage: ironingBg, 
   },
   {
     id: 4,
     title: 'Wash & Fold',
     description: 'Convenient wash and fold service – save time and enjoy fresh clothes.',
-    bgImage: laundryBg,
-    icon: '🧦'
+    bgImage: laundryBg, 
   },
   {
     id: 5,
     title: 'Steam Cleaning',
     description: 'Gentle steam cleaning for delicate fabrics – safe and effective.',
-    bgImage: dryCleanBg,
-    icon: '♨️'
+    bgImage: dryCleanBg, 
   },
   {
     id: 6,
     title: 'Alterations',
     description: 'Professional alterations and repairs – perfect fit guaranteed.',
-    bgImage: ironingBg,
-    icon: '✂️'
+    bgImage: ironingBg, 
   }
 ];
 
@@ -220,6 +214,8 @@ export const colors = {
   primaryDark: '#1D4ED8',
   navy: '#1A1A4E'
 };
+
+// End Home Page
 
  
 
