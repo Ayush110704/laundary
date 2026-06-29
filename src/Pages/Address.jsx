@@ -1,73 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Navbar from '../components/Navbar';
+import AddressForm from '../components/AddressForm';
 
 const Address = () => {
   const navigate = useNavigate();
   const [addresses, setAddresses] = useState([]);
-  const [showAddAddressModal, setShowAddAddressModal] = useState(false);
-  const [showEditAddressModal, setShowEditAddressModal] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [userData, setUserData] = useState({});
-  const [formData, setFormData] = useState({
-    fullName: '',
-    phone: '',
-    addressLine1: '',
-    watermark: '',
-    city: '',
-    state: '',
-    pincode: '',
-    isDefault: false
-  });
-
-  const states = [
-    "Maharashtra", "Delhi", "Karnataka", "Gujarat", "Madhya Pradesh",
-    "Rajasthan", "Uttar Pradesh", "Tamil Nadu", "Telangana", "Punjab"
-  ];
-
-  const cities = {
-    Maharashtra: ["Nagpur", "Wardha", "Mumbai", "Pune", "Nashik", "Amravati"],
-    Delhi: ["New Delhi", "Dwarka", "Rohini"],
-    Karnataka: ["Bangalore", "Mysore"],
-    Gujarat: ["Ahmedabad", "Surat", "Vadodara"],
-    "Madhya Pradesh": ["Indore", "Bhopal"],
-    Rajasthan: ["Jaipur", "Udaipur"],
-    "Uttar Pradesh": ["Lucknow", "Noida"],
-    "Tamil Nadu": ["Chennai", "Coimbatore"],
-    Telangana: ["Hyderabad"],
-    Punjab: ["Ludhiana", "Amritsar"]
-  };
-
-  const areas = {
-    "Nagpur": ["Sadar", "Dharampeth", "Civil Lines", "Ramdaspeth", "Laxmi Nagar", "Manish Nagar", "Hingna", "Koradi", "Jaripatka", "Itwari"],
-    "Wardha": ["Civil Lines", "Gandhi Nagar", "Sewagram", "Nalwadi", "Dattapur"],
-    "Mumbai": ["Andheri", "Bandra", "Dadar", "Juhu", "Powai", "Colaba", "Worli", "Malad", "Borivali"],
-    "Pune": ["Koregaon Park", "Hinjewadi", "Viman Nagar", "Kothrud", "Deccan Gymkhana", "Shivajinagar"],
-    "Nashik": ["Panchavati", "College Road", "Gangapur Road", "Satpur", "Ambad"],
-    "Amravati": ["Rajapeth", "Badnera", "Camp Area", "Civil Lines"],
-    "New Delhi": ["Connaught Place", "Karol Bagh", "Lajpat Nagar", "South Extension", "Hauz Khas"],
-    "Dwarka": ["Sector 1-24", "Sector 12", "Sector 10", "Sector 6"],
-    "Rohini": ["Sector 1-28", "Sector 9", "Sector 11"],
-    "Bangalore": ["Indiranagar", "Koramangala", "Whitefield", "MG Road", "Jayanagar", "Electronic City"],
-    "Mysore": ["Gokulam", "Vijay Nagar", "Kuvempunagar", "Jayanagar"],
-    "Ahmedabad": ["Navrangpura", "Vastrapur", "Satellite", "Bodakdev", "Maninagar"],
-    "Surat": ["Vesu", "Adajan", "City Light", "Piplod", "Varachha"],
-    "Vadodara": ["Alkapuri", "Gotri", "Manjalpur", "Akota", "Fatehgunj"],
-    "Indore": ["Vijay Nagar", "Palasia", "Sapna Sangeeta", "Rajendra Nagar", "Rau"],
-    "Bhopal": ["Arera Colony", "MP Nagar", "BHEL", "Shahpura", "Kolar"],
-    "Jaipur": ["C Scheme", "Vaishali Nagar", "Malviya Nagar", "Mansarovar", "Jawahar Nagar"],
-    "Udaipur": ["City Palace Road", "Sector 11", "Bhopalpura", "Ambavgarh"],
-    "Lucknow": ["Hazratganj", "Gomti Nagar", "Indira Nagar", "Aliganj", "Charbagh"],
-    "Noida": ["Sector 18", "Sector 62", "Sector 50", "Sector 15", "Sector 16"],
-    "Chennai": ["T Nagar", "Adyar", "Anna Nagar", "Velachery", "OMR"],
-    "Coimbatore": ["RS Puram", "Gandhipuram", "Peelamedu", "Saravanampatti"],
-    "Hyderabad": ["Banjara Hills", "Jubilee Hills", "Gachibowli", "Hitech City", "Madhapur"],
-    "Ludhiana": ["Model Town", "Civil Lines", "Ferozepur Road", "Pakhowal Road"],
-    "Amritsar": ["Hall Bazaar", "Ranjit Avenue", "Mall Road", "Lawrence Road"]
-  };
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState(null);
 
   useEffect(() => {
     loadAddresses();
@@ -89,108 +34,85 @@ const Address = () => {
     setAddresses(addressList);
   };
 
-  const handleAddAddress = async () => {
-    if (!formData.fullName || !formData.phone || !formData.addressLine1 || 
-        !formData.city || !formData.state || !formData.pincode) {
-      Swal.fire({
-        title: 'Missing Fields',
-        text: 'Please fill in all required fields',
-        icon: 'warning',
-        confirmButtonColor: '#2563eb'
-      });
-      return;
-    }
-
+  const handleAddAddress = (formData) => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
+    setTimeout(() => {
+      const newAddress = {
+        id: Date.now(),
+        ...formData,
+        createdAt: new Date().toISOString()
+      };
 
-    const newAddress = {
-      id: Date.now(),
-      ...formData,
-      createdAt: new Date().toISOString()
-    };
-
-    let updatedAddresses = [...addresses];
-    if (formData.isDefault) {
-      updatedAddresses = updatedAddresses.map(addr => ({
-        ...addr,
-        isDefault: false
-      }));
-    }
-
-    updatedAddresses.push(newAddress);
-    saveAddresses(updatedAddresses);
-
-    setShowAddAddressModal(false);
-    resetForm();
-    setIsLoading(false);
-
-    Swal.fire({
-      title: 'Address Added! 🎉',
-      text: 'Your address has been added successfully!',
-      icon: 'success',
-      confirmButtonColor: '#2563eb',
-      timer: 2000,
-      timerProgressBar: true,
-      showConfirmButton: false,
-      background: '#ffffff',
-      customClass: {
-        popup: 'rounded-2xl'
+      let updatedAddresses = [...addresses];
+      if (formData.isDefault) {
+        updatedAddresses = updatedAddresses.map(addr => ({
+          ...addr,
+          isDefault: false
+        }));
       }
-    });
+
+      updatedAddresses.push(newAddress);
+      saveAddresses(updatedAddresses);
+
+      setShowAddModal(false);
+      setIsLoading(false);
+
+      Swal.fire({
+        title: 'Address Added! 🎉',
+        text: 'Your address has been added successfully!',
+        icon: 'success',
+        confirmButtonColor: '#2563eb',
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        background: '#ffffff',
+        customClass: {
+          popup: 'rounded-2xl'
+        }
+      });
+    }, 800);
   };
 
-  const handleEditAddress = async () => {
-    if (!formData.fullName || !formData.phone || !formData.addressLine1 || 
-        !formData.city || !formData.state || !formData.pincode) {
-      Swal.fire({
-        title: 'Missing Fields',
-        text: 'Please fill in all required fields',
-        icon: 'warning',
-        confirmButtonColor: '#2563eb'
-      });
-      return;
-    }
-
+  const handleEditAddress = (formData) => {
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 800));
+    setTimeout(() => {
+      let updatedAddresses = addresses.map(addr => {
+        if (addr.id === selectedAddress.id) {
+          return {
+            ...addr,
+            ...formData
+          };
+        }
+        return addr;
+      });
 
-    let updatedAddresses = addresses.map(addr => {
-      if (addr.id === selectedAddress.id) {
-        return {
+      if (formData.isDefault) {
+        updatedAddresses = updatedAddresses.map(addr => ({
           ...addr,
-          ...formData
-        };
+          isDefault: addr.id === selectedAddress.id
+        }));
       }
-      return addr;
-    });
 
-    if (formData.isDefault) {
-      updatedAddresses = updatedAddresses.map(addr => ({
-        ...addr,
-        isDefault: addr.id === selectedAddress.id
-      }));
-    }
+      saveAddresses(updatedAddresses);
 
-    saveAddresses(updatedAddresses);
+      setShowEditModal(false);
+      setSelectedAddress(null);
+      setIsLoading(false);
 
-    setShowEditAddressModal(false);
-    resetForm();
-    setIsLoading(false);
-
-    Swal.fire({
-      title: 'Address Updated! ✅',
-      text: 'Your address has been updated successfully!',
-      icon: 'success',
-      confirmButtonColor: '#2563eb',
-      timer: 2000,
-      timerProgressBar: true,
-      showConfirmButton: false,
-      background: '#ffffff',
-      customClass: {
-        popup: 'rounded-2xl'
-      }
-    });
+      Swal.fire({
+        title: 'Address Updated! ✅',
+        text: 'Your address has been updated successfully!',
+        icon: 'success',
+        confirmButtonColor: '#2563eb',
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+        background: '#ffffff',
+        customClass: {
+          popup: 'rounded-2xl'
+        }
+      });
+    }, 800);
   };
 
   const handleDeleteAddress = (address) => {
@@ -253,57 +175,6 @@ const Address = () => {
     });
   };
 
-  const resetForm = () => {
-    setFormData({
-      fullName: '',
-      phone: '',
-      addressLine1: '',
-      watermark: '',
-      city: '',
-      state: '',
-      pincode: '',
-      isDefault: false
-    });
-    setSelectedAddress(null);
-  };
-
-  const openEditModal = (address) => {
-    setSelectedAddress(address);
-    setFormData({
-      fullName: address.fullName || '',
-      phone: address.phone || '',
-      addressLine1: address.addressLine1 || '',
-      watermark: address.watermark || '',
-      city: address.city || '',
-      state: address.state || '',
-      pincode: address.pincode || '',
-      isDefault: address.isDefault || false
-    });
-    setShowEditAddressModal(true);
-  };
-
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.95, y: 20 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { type: 'spring', damping: 25, stiffness: 300 }
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.95,
-      y: 20,
-      transition: { duration: 0.2 }
-    }
-  };
-
-  const overlayVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-    exit: { opacity: 0 }
-  };
-
   const AddressCard = ({ address }) => (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -350,7 +221,10 @@ const Address = () => {
               </button>
             )}
             <button
-              onClick={() => openEditModal(address)}
+              onClick={() => {
+                setSelectedAddress(address);
+                setShowEditModal(true);
+              }}
               className="text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
             >
               <i className="fa-regular fa-pen-to-square mr-1"></i>
@@ -378,13 +252,6 @@ const Address = () => {
         {`
           input:focus, select:focus, textarea:focus {
             outline: none;
-          }
-          .modal-content {
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-          }
-          .modal-content::-webkit-scrollbar {
-            display: none;
           }
           .gradient-bg {
             background: linear-gradient(135deg, #ffffff 0%, #dbeafe 50%, #bfdbfe 100%);
@@ -415,10 +282,7 @@ const Address = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  resetForm();
-                  setShowAddAddressModal(true);
-                }}
+                onClick={() => setShowAddModal(true)}
                 className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2.5 rounded-lg flex items-center gap-2 shadow-md hover:shadow-lg transition-all w-full sm:w-auto justify-center"
                 style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600 }}
               >
@@ -443,10 +307,7 @@ const Address = () => {
                   Add your first delivery address to start shopping and get your orders delivered smoothly.
                 </p>
                 <button
-                  onClick={() => {
-                    resetForm();
-                    setShowAddAddressModal(true);
-                  }}
+                  onClick={() => setShowAddModal(true)}
                   className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-8 py-3 rounded-lg hover:shadow-lg transition-all flex items-center gap-2"
                   style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600 }}
                 >
@@ -474,418 +335,24 @@ const Address = () => {
         </div>
 
         {/* Add Address Modal */}
-        <AnimatePresence>
-          {showAddAddressModal && (
-            <>
-              <motion.div
-                variants={overlayVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[10000]"
-                onClick={() => {
-                  setShowAddAddressModal(false);
-                  resetForm();
-                }}
-              />
-              <motion.div
-                variants={modalVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="modal-content fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-3xl shadow-2xl w-[90%] max-w-md z-[10001] max-h-[90vh] overflow-y-auto"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 rounded-t-3xl z-10">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2" style={{ fontFamily: "'Playfair Display', serif" }}>
-                      <i className="fa-solid fa-plus text-white"></i>
-                      Add Address
-                    </h3>
-                    <button
-                      onClick={() => {
-                        setShowAddAddressModal(false);
-                        resetForm();
-                      }}
-                      className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition text-white text-xl"
-                    >
-                      ×
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-6 space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      <i className="fa-solid fa-user text-blue-600 mr-1"></i> Full Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter full name"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      <i className="fa-solid fa-phone text-blue-600 mr-1"></i> Phone Number <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      placeholder="10-digit mobile number"
-                      maxLength="10"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      <i className="fa-solid fa-location-dot text-blue-600 mr-1"></i> Address Line 1 <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="House number, building, street"
-                      value={formData.addressLine1}
-                      onChange={(e) => setFormData({ ...formData, addressLine1: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      <i className="fa-solid fa-water text-blue-400 mr-1"></i> Watermark (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Apartment, floor, landmark"
-                      value={formData.watermark}
-                      onChange={(e) => setFormData({ ...formData, watermark: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                        State <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={formData.state}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          state: e.target.value,
-                          city: ""
-                        })}
-                        className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
-                        style={{ fontFamily: "'Inter', sans-serif" }}
-                      >
-                        <option value="">Select State</option>
-                        {states.map((state, index) => (
-                          <option key={index} value={state}>{state}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                        City <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={formData.city}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          city: e.target.value
-                        })}
-                        disabled={!formData.state}
-                        className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition disabled:bg-gray-100 disabled:cursor-not-allowed bg-gray-50"
-                        style={{ fontFamily: "'Inter', sans-serif" }}
-                      >
-                        <option value="">{formData.state ? 'Select City' : 'Select state first'}</option>
-                        {formData.state && cities[formData.state]?.map((city, index) => (
-                          <option key={index} value={city}>{city}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      <i className="fa-solid fa-map-pin text-blue-600 mr-1"></i> Pincode <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="6-digit pincode"
-                      maxLength="6"
-                      value={formData.pincode}
-                      onChange={(e) => setFormData({ ...formData, pincode: e.target.value.replace(/\D/g, '') })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-2 pt-2">
-                    <input
-                      type="checkbox"
-                      id="isDefault"
-                      checked={formData.isDefault}
-                      onChange={(e) => setFormData({ ...formData, isDefault: e.target.checked })}
-                      className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                    />
-                    <label htmlFor="isDefault" className="text-sm text-gray-700 cursor-pointer" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      <i className="fa-regular fa-star text-green-600 mr-1"></i>
-                      Set as default address
-                    </label>
-                  </div>
-
-                  <div className="flex gap-3 pt-4">
-                    <button
-                      onClick={handleAddAddress}
-                      disabled={isLoading}
-                      className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                      style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600 }}
-                    >
-                      {isLoading ? (
-                        <>
-                          <i className="fa-solid fa-spinner fa-spin"></i>
-                          Adding...
-                        </>
-                      ) : (
-                        <>
-                          <i className="fa-solid fa-save"></i>
-                          Save Address
-                        </>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowAddAddressModal(false);
-                        resetForm();
-                      }}
-                      className="flex-1 border border-gray-200 py-3 rounded-xl font-medium hover:bg-gray-50 transition"
-                      style={{ fontFamily: "'Poppins', sans-serif" }}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
+        <AddressForm
+          isOpen={showAddModal}
+          onClose={() => setShowAddModal(false)}
+          onSave={handleAddAddress}
+          isLoading={isLoading}
+        />
 
         {/* Edit Address Modal */}
-        <AnimatePresence>
-          {showEditAddressModal && selectedAddress && (
-            <>
-              <motion.div
-                variants={overlayVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[10000]"
-                onClick={() => {
-                  setShowEditAddressModal(false);
-                  resetForm();
-                }}
-              />
-              <motion.div
-                variants={modalVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="modal-content fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-3xl shadow-2xl w-[90%] max-w-md z-[10001] max-h-[90vh] overflow-y-auto"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 rounded-t-3xl">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2" style={{ fontFamily: "'Playfair Display', serif" }}>
-                      <i className="fa-solid fa-pen text-white"></i>
-                      Edit Address
-                    </h3>
-                    <button
-                      onClick={() => {
-                        setShowEditAddressModal(false);
-                        resetForm();
-                      }}
-                      className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition text-white text-xl"
-                    >
-                      ×
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-6 space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      <i className="fa-solid fa-user text-blue-600 mr-1"></i> Full Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Enter full name"
-                      value={formData.fullName}
-                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      <i className="fa-solid fa-phone text-blue-600 mr-1"></i> Phone Number <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      placeholder="10-digit mobile number"
-                      maxLength="10"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      <i className="fa-solid fa-location-dot text-blue-600 mr-1"></i> Address Line 1 <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="House number, building, street"
-                      value={formData.addressLine1}
-                      onChange={(e) => setFormData({ ...formData, addressLine1: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      <i className="fa-solid fa-water text-blue-400 mr-1"></i> Watermark (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="Apartment, floor, landmark"
-                      value={formData.watermark}
-                      onChange={(e) => setFormData({ ...formData, watermark: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                        State <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={formData.state}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          state: e.target.value,
-                          city: ""
-                        })}
-                        className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
-                        style={{ fontFamily: "'Inter', sans-serif" }}
-                      >
-                        <option value="">Select State</option>
-                        {states.map((state, index) => (
-                          <option key={index} value={state}>{state}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                        City <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={formData.city}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          city: e.target.value
-                        })}
-                        disabled={!formData.state}
-                        className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition disabled:bg-gray-100 disabled:cursor-not-allowed bg-gray-50"
-                        style={{ fontFamily: "'Inter', sans-serif" }}
-                      >
-                        <option value="">{formData.state ? 'Select City' : 'Select state first'}</option>
-                        {formData.state && cities[formData.state]?.map((city, index) => (
-                          <option key={index} value={city}>{city}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      <i className="fa-solid fa-map-pin text-blue-600 mr-1"></i> Pincode <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="6-digit pincode"
-                      maxLength="6"
-                      value={formData.pincode}
-                      onChange={(e) => setFormData({ ...formData, pincode: e.target.value.replace(/\D/g, '') })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
-                      style={{ fontFamily: "'Inter', sans-serif" }}
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-2 pt-2">
-                    <input
-                      type="checkbox"
-                      id="isDefaultEdit"
-                      checked={formData.isDefault}
-                      onChange={(e) => setFormData({ ...formData, isDefault: e.target.checked })}
-                      className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                    />
-                    <label htmlFor="isDefaultEdit" className="text-sm text-gray-700 cursor-pointer" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      <i className="fa-regular fa-star text-green-600 mr-1"></i>
-                      Set as default address
-                    </label>
-                  </div>
-
-                  <div className="flex gap-3 pt-4">
-                    <button
-                      onClick={handleEditAddress}
-                      disabled={isLoading}
-                      className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                      style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600 }}
-                    >
-                      {isLoading ? (
-                        <>
-                          <i className="fa-solid fa-spinner fa-spin"></i>
-                          Updating...
-                        </>
-                      ) : (
-                        <>
-                          <i className="fa-solid fa-save"></i>
-                          Update Address
-                        </>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowEditAddressModal(false);
-                        resetForm();
-                      }}
-                      className="flex-1 border border-gray-200 py-3 rounded-xl font-medium hover:bg-gray-50 transition"
-                      style={{ fontFamily: "'Poppins', sans-serif" }}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
+        <AddressForm
+          isOpen={showEditModal}
+          onClose={() => {
+            setShowEditModal(false);
+            setSelectedAddress(null);
+          }}
+          onSave={handleEditAddress}
+          address={selectedAddress}
+          isLoading={isLoading}
+        />
       </div>
     </>
   );
