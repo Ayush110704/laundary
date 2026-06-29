@@ -38,7 +38,14 @@ import {
   Building,
   RotateCcw,
   IndianRupee,
-  MessageSquare
+  MessageSquare,
+  ArrowRight,
+  ShoppingCart,
+  Scissors,
+  Sparkles,
+  Send,
+  CheckCheck,
+  CalendarDays
 } from 'lucide-react';
 
 // ============================================================
@@ -123,8 +130,8 @@ const MOCK_BOOKINGS = [
       { name: 'Cotton Trousers', quantity: 1, price: 150 }
     ],
     totalAmount: 1250,
-    status: 'Completed',
-    bookingDate: getDate(1), // 1 day ago
+    status: 'completed',
+    bookingDate: getDate(1),
     pickupDate: getDate(0),
     deliveryDate: getFutureDate(1),
     notes: 'Handle with care - silk items',
@@ -132,7 +139,8 @@ const MOCK_BOOKINGS = [
     paymentMethod: 'Online',
     refundStatus: null,
     refundDate: null,
-    refundAmount: null
+    refundAmount: null,
+    statusUpdateHistory: []
   },
   {
     id: 'BK002',
@@ -148,8 +156,8 @@ const MOCK_BOOKINGS = [
       { name: 'Trousers', quantity: 2, price: 100 }
     ],
     totalAmount: 800,
-    status: 'Active',
-    bookingDate: getDate(2), // 2 days ago
+    status: 'processing',
+    bookingDate: getDate(2),
     pickupDate: getDate(1),
     deliveryDate: getFutureDate(1),
     notes: 'Use gentle detergent',
@@ -157,7 +165,8 @@ const MOCK_BOOKINGS = [
     paymentMethod: 'COD',
     refundStatus: null,
     refundDate: null,
-    refundAmount: null
+    refundAmount: null,
+    statusUpdateHistory: []
   },
   {
     id: 'BK003',
@@ -171,8 +180,8 @@ const MOCK_BOOKINGS = [
       { name: 'Formal Shirts', quantity: 3, price: 150 }
     ],
     totalAmount: 450,
-    status: 'Pending',
-    bookingDate: getDate(3), // 3 days ago
+    status: 'pickup',
+    bookingDate: getDate(3),
     pickupDate: getDate(2),
     deliveryDate: null,
     notes: 'Extra starch on shirts',
@@ -180,7 +189,8 @@ const MOCK_BOOKINGS = [
     paymentMethod: 'COD',
     refundStatus: null,
     refundDate: null,
-    refundAmount: null
+    refundAmount: null,
+    statusUpdateHistory: []
   },
   {
     id: 'BK004',
@@ -195,8 +205,8 @@ const MOCK_BOOKINGS = [
       { name: 'Cotton Blouse', quantity: 1, price: 250 }
     ],
     totalAmount: 600,
-    status: 'Active',
-    bookingDate: getDate(4), // 4 days ago
+    status: 'cleaning',
+    bookingDate: getDate(4),
     pickupDate: getDate(3),
     deliveryDate: null,
     notes: 'Red wine stain on white shirt',
@@ -204,7 +214,8 @@ const MOCK_BOOKINGS = [
     paymentMethod: 'Online',
     refundStatus: null,
     refundDate: null,
-    refundAmount: null
+    refundAmount: null,
+    statusUpdateHistory: []
   },
   {
     id: 'BK005',
@@ -221,8 +232,8 @@ const MOCK_BOOKINGS = [
       { name: 'Silk Skirt', quantity: 1, price: 150 }
     ],
     totalAmount: 1100,
-    status: 'Completed',
-    bookingDate: getDate(5), // 5 days ago
+    status: 'out_for_delivery',
+    bookingDate: getDate(5),
     pickupDate: getDate(4),
     deliveryDate: getDate(3),
     notes: 'Wedding dress - very delicate',
@@ -230,7 +241,8 @@ const MOCK_BOOKINGS = [
     paymentMethod: 'Online',
     refundStatus: null,
     refundDate: null,
-    refundAmount: null
+    refundAmount: null,
+    statusUpdateHistory: []
   },
   {
     id: 'BK006',
@@ -246,8 +258,8 @@ const MOCK_BOOKINGS = [
       { name: 'Shirts', quantity: 2, price: 150 }
     ],
     totalAmount: 1020,
-    status: 'Active',
-    bookingDate: getDate(6), // 6 days ago
+    status: 'completed',
+    bookingDate: getDate(6),
     pickupDate: getDate(5),
     deliveryDate: getDate(4),
     notes: 'Separate whites and colors',
@@ -255,7 +267,8 @@ const MOCK_BOOKINGS = [
     paymentMethod: 'Online',
     refundStatus: null,
     refundDate: null,
-    refundAmount: null
+    refundAmount: null,
+    statusUpdateHistory: []
   },
   {
     id: 'BK007',
@@ -270,16 +283,17 @@ const MOCK_BOOKINGS = [
       { name: 'Trousers', quantity: 2, price: 100 }
     ],
     totalAmount: 800,
-    status: 'Pending',
-    bookingDate: getDate(0), // Today
+    status: 'pickup',
+    bookingDate: getDate(0),
     pickupDate: getFutureDate(1),
     deliveryDate: null,
     notes: 'Need same day delivery',
-    paymentStatus: 'Paid', // ✅ CHANGED from 'Pending' to 'Paid'
+    paymentStatus: 'Paid',
     paymentMethod: 'COD',
     refundStatus: null,
     refundDate: null,
-    refundAmount: null
+    refundAmount: null,
+    statusUpdateHistory: []
   },
   {
     id: 'BK008',
@@ -293,8 +307,8 @@ const MOCK_BOOKINGS = [
       { name: 'Leather Jacket', quantity: 1, price: 300 }
     ],
     totalAmount: 300,
-    status: 'Cancelled',
-    bookingDate: getDate(7), // 7 days ago
+    status: 'cancelled',
+    bookingDate: getDate(7),
     pickupDate: getDate(6),
     deliveryDate: null,
     notes: 'Oil stain on jacket',
@@ -302,7 +316,8 @@ const MOCK_BOOKINGS = [
     paymentMethod: 'Online',
     refundStatus: 'Completed',
     refundDate: getDate(6),
-    refundAmount: 300
+    refundAmount: 300,
+    statusUpdateHistory: []
   },
   {
     id: 'BK009',
@@ -318,8 +333,8 @@ const MOCK_BOOKINGS = [
       { name: 'Dupatta', quantity: 1, price: 100 }
     ],
     totalAmount: 750,
-    status: 'Completed',
-    bookingDate: getDate(8), // 8 days ago (outside 7 days)
+    status: 'completed',
+    bookingDate: getDate(8),
     pickupDate: getDate(7),
     deliveryDate: getDate(6),
     notes: 'Saree - handle carefully',
@@ -327,7 +342,8 @@ const MOCK_BOOKINGS = [
     paymentMethod: 'Online',
     refundStatus: null,
     refundDate: null,
-    refundAmount: null
+    refundAmount: null,
+    statusUpdateHistory: []
   },
   {
     id: 'BK010',
@@ -342,8 +358,8 @@ const MOCK_BOOKINGS = [
       { name: 'Jeans', quantity: 2, price: 120 }
     ],
     totalAmount: 480,
-    status: 'Pending',
-    bookingDate: getDate(9), // 9 days ago (outside 7 days)
+    status: 'processing',
+    bookingDate: getDate(9),
     pickupDate: getDate(8),
     deliveryDate: null,
     notes: 'First time customer',
@@ -351,7 +367,8 @@ const MOCK_BOOKINGS = [
     paymentMethod: 'COD',
     refundStatus: null,
     refundDate: null,
-    refundAmount: null
+    refundAmount: null,
+    statusUpdateHistory: []
   }
 ];
 
@@ -480,26 +497,296 @@ function RefundModal({ booking, onClose, onConfirm }) {
 }
 
 // ============================================================
+// STATUS NOTE MODAL COMPONENT WITH TIME PICKER
+// ============================================================
+function StatusNoteModal({ status, onClose, onConfirm, booking }) {
+  const [note, setNote] = useState('');
+  const [pickupDate, setPickupDate] = useState('');
+  const [pickupTime, setPickupTime] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  // Set default date and time when modal opens
+  useEffect(() => {
+    if (status === 'pickup') {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      
+      // Format date as YYYY-MM-DD
+      const dateStr = tomorrow.toISOString().split('T')[0];
+      // Format time as HH:mm
+      const timeStr = '10:00'; // Default to 10 AM
+      
+      setPickupDate(dateStr);
+      setPickupTime(timeStr);
+    }
+  }, [status]);
+
+  const statusConfig = {
+    'pickup': { 
+      label: 'Schedule Pickup', 
+      icon: ShoppingCart, 
+      color: 'bg-blue-500',
+      placeholder: 'Enter pickup details (e.g., Items location, Special instructions, etc.)',
+      showTimePicker: true
+    },
+    'processing': { 
+      label: 'Processing', 
+      icon: Package, 
+      color: 'bg-purple-500',
+      placeholder: 'Enter processing details (e.g., Items being prepared, Estimated time, etc.)',
+      showTimePicker: false
+    },
+    'cleaning': { 
+      label: 'Cleaning', 
+      icon: Sparkles, 
+      color: 'bg-indigo-500',
+      placeholder: 'Enter cleaning details (e.g., Cleaning method, Special treatments, etc.)',
+      showTimePicker: false
+    },
+    'out_for_delivery': { 
+      label: 'Out for Delivery', 
+      icon: Send, 
+      color: 'bg-orange-500',
+      placeholder: 'Enter delivery details (e.g., Delivery person, Expected time, etc.)',
+      showTimePicker: false
+    },
+    'completed': { 
+      label: 'Completed', 
+      icon: CheckCheck, 
+      color: 'bg-green-500',
+      placeholder: 'Enter completion details (e.g., Delivery confirmed, Customer feedback, etc.)',
+      showTimePicker: false
+    },
+    'cancelled': { 
+      label: 'Cancelled', 
+      icon: XCircle, 
+      color: 'bg-red-500',
+      placeholder: 'Enter cancellation reason (e.g., Customer request, Payment issue, etc.)',
+      showTimePicker: false
+    }
+  };
+
+  const config = statusConfig[status];
+  const Icon = config?.icon || Package;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!note.trim()) {
+      alert('Please enter a note for this status update');
+      return;
+    }
+    
+    // Validate pickup date and time if status is pickup
+    if (status === 'pickup') {
+      if (!pickupDate) {
+        alert('Please select a pickup date');
+        return;
+      }
+      if (!pickupTime) {
+        alert('Please select a pickup time');
+        return;
+      }
+    }
+    
+    setLoading(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      let fullNote = note;
+      let pickupDateTime = null;
+      
+      if (status === 'pickup') {
+        pickupDateTime = new Date(`${pickupDate}T${pickupTime}`);
+        fullNote = `Pickup scheduled for ${pickupDate} at ${pickupTime}. ${note}`;
+      }
+      
+      onConfirm({
+        note: fullNote,
+        pickupDateTime: pickupDateTime,
+        pickupDate: pickupDate,
+        pickupTime: pickupTime
+      });
+    } catch (error) {
+      console.error('Failed to save note:', error);
+      alert('Failed to save note. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-fadeIn">
+      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center p-6 border-b border-gray-200">
+          <h2 className="text-xl font-bold flex items-center gap-2 text-gray-800">
+            <Icon className={`w-5 h-5 ${config?.color.replace('bg-', 'text-')}`} />
+            {config?.label} Status Note
+          </h2>
+          <button 
+            onClick={onClose} 
+            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+            type="button"
+          >
+            <X className="w-5 h-5 text-gray-500" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {status === 'pickup' && (
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Pickup Date <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <CalendarDays className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type="date"
+                    value={pickupDate}
+                    onChange={(e) => setPickupDate(e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Pickup Time <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <input
+                    type="time"
+                    value={pickupTime}
+                    onChange={(e) => setPickupTime(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Note <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              rows={4}
+              placeholder={config?.placeholder || 'Enter a note for this status update...'}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+              required
+            />
+            <p className="text-xs text-gray-400 mt-1">This note will be added to the order history</p>
+          </div>
+
+          <div className="flex gap-3 pt-4 border-t border-gray-200">
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700"
+              disabled={loading}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Check className="w-4 h-4" />
+                  {status === 'pickup' ? 'Schedule Pickup' : 'Save Note & Update'}
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
 // BOOKING DETAIL VIEW COMPONENT
 // ============================================================
-function BookingDetailView({ booking, onBack, onRefund }) {
+function BookingDetailView({ booking, onBack, onRefund, onStatusUpdate }) {
+  const [selectedStatus, setSelectedStatus] = useState(booking.status);
+  const [showStatusNote, setShowStatusNote] = useState(false);
+  const [pendingStatus, setPendingStatus] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  
   const statusConfig = {
-    'Completed': { color: 'bg-green-100 text-green-800', icon: CheckCircle },
-    'Active': { color: 'bg-blue-100 text-blue-800', icon: Package },
-    'Pending': { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-    'Cancelled': { color: 'bg-red-100 text-red-800', icon: XCircle }
+    'pickup': { 
+      label: 'Pickup', 
+      icon: ShoppingCart, 
+      color: 'bg-blue-500',
+      textColor: 'text-blue-600',
+      borderColor: 'border-blue-500',
+      bgColor: 'bg-blue-50',
+      badgeColor: 'bg-blue-100 text-blue-800'
+    },
+    'processing': { 
+      label: 'Processing', 
+      icon: Package, 
+      color: 'bg-purple-500',
+      textColor: 'text-purple-600',
+      borderColor: 'border-purple-500',
+      bgColor: 'bg-purple-50',
+      badgeColor: 'bg-purple-100 text-purple-800'
+    },
+    'cleaning': { 
+      label: 'Cleaning', 
+      icon: Sparkles, 
+      color: 'bg-indigo-500',
+      textColor: 'text-indigo-600',
+      borderColor: 'border-indigo-500',
+      bgColor: 'bg-indigo-50',
+      badgeColor: 'bg-indigo-100 text-indigo-800'
+    },
+    'out_for_delivery': { 
+      label: 'Out for Delivery', 
+      icon: Send, 
+      color: 'bg-orange-500',
+      textColor: 'text-orange-600',
+      borderColor: 'border-orange-500',
+      bgColor: 'bg-orange-50',
+      badgeColor: 'bg-orange-100 text-orange-800'
+    },
+    'completed': { 
+      label: 'Completed', 
+      icon: CheckCheck, 
+      color: 'bg-green-500',
+      textColor: 'text-green-600',
+      borderColor: 'border-green-500',
+      bgColor: 'bg-green-50',
+      badgeColor: 'bg-green-100 text-green-800'
+    },
+    'cancelled': { 
+      label: 'Cancelled', 
+      icon: XCircle, 
+      color: 'bg-red-500',
+      textColor: 'text-red-600',
+      borderColor: 'border-red-500',
+      bgColor: 'bg-red-50',
+      badgeColor: 'bg-red-100 text-red-800'
+    }
   };
 
   const paymentStatusConfig = {
     'Paid': { color: 'bg-green-100 text-green-800', icon: CheckCircle },
     'Pending': { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
     'Refunded': { color: 'bg-red-100 text-red-800', icon: AlertTriangle }
-  };
-
-  const refundStatusConfig = {
-    'Pending': { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-    'Completed': { color: 'bg-green-100 text-green-800', icon: CheckCircle },
-    'Failed': { color: 'bg-red-100 text-red-800', icon: XCircle }
   };
 
   const getPaymentMethodIcon = (method) => {
@@ -517,13 +804,14 @@ function BookingDetailView({ booking, onBack, onRefund }) {
     }
   };
 
-  const StatusIcon = statusConfig[booking.status]?.icon || CheckCircle;
+  const currentStatusConfig = statusConfig[booking.status] || statusConfig['pickup'];
+  const StatusIcon = currentStatusConfig.icon;
   const PaymentIcon = paymentStatusConfig[booking.paymentStatus]?.icon || CheckCircle;
 
   const totalItems = booking.itemsList?.reduce((sum, item) => sum + item.quantity, 0) || 0;
 
   const getDeliveryDisplay = () => {
-    if (booking.status === 'Cancelled') {
+    if (booking.status === 'cancelled') {
       return {
         icon: Ban,
         color: 'text-red-500',
@@ -531,20 +819,36 @@ function BookingDetailView({ booking, onBack, onRefund }) {
         message: 'Delivery Blocked',
         description: 'Order was cancelled'
       };
-    } else if (booking.status === 'Pending') {
+    } else if (booking.status === 'pickup') {
       return {
         icon: Clock,
         color: 'text-yellow-500',
         bgColor: 'bg-yellow-50',
-        message: 'Not Yet Scheduled',
+        message: 'Awaiting Pickup',
       };
-    } else if (booking.status === 'Active' || booking.status === 'Completed') {
+    } else if (booking.status === 'out_for_delivery') {
       return {
         icon: Truck,
+        color: 'text-orange-500',
+        bgColor: 'bg-orange-50',
+        message: 'On the way!',
+        description: 'Order is out for delivery'
+      };
+    } else if (booking.status === 'completed') {
+      return {
+        icon: CheckCheck,
         color: 'text-green-500',
         bgColor: 'bg-green-50',
-        message: new Date(booking.deliveryDate).toLocaleString(),
-        description: 'Scheduled delivery'
+        message: 'Delivered',
+        description: 'Order completed successfully'
+      };
+    } else if (booking.status === 'processing' || booking.status === 'cleaning') {
+      return {
+        icon: Package,
+        color: 'text-purple-500',
+        bgColor: 'bg-purple-50',
+        message: 'In Progress',
+        description: 'Order is being processed'
       };
     }
     return null;
@@ -552,7 +856,7 @@ function BookingDetailView({ booking, onBack, onRefund }) {
 
   const deliveryInfo = getDeliveryDisplay();
 
-  const canRefund = (booking.status === 'Active' || booking.status === 'Completed') && 
+  const canRefund = (booking.status === 'processing' || booking.status === 'cleaning' || booking.status === 'out_for_delivery' || booking.status === 'completed') && 
                     booking.paymentStatus === 'Paid' && 
                     booking.refundStatus !== 'Completed';
 
@@ -570,6 +874,104 @@ function BookingDetailView({ booking, onBack, onRefund }) {
         {status}
       </span>
     );
+  };
+
+  const getStatusBadge = (status) => {
+    const config = {
+      'pickup': { color: 'bg-blue-100 text-blue-800', icon: ShoppingCart },
+      'processing': { color: 'bg-purple-100 text-purple-800', icon: Package },
+      'cleaning': { color: 'bg-indigo-100 text-indigo-800', icon: Sparkles },
+      'out_for_delivery': { color: 'bg-orange-100 text-orange-800', icon: Send },
+      'completed': { color: 'bg-green-100 text-green-800', icon: CheckCheck },
+      'cancelled': { color: 'bg-red-100 text-red-800', icon: XCircle }
+    };
+    const { color, icon: Icon } = config[status] || config['pickup'];
+    const statusLabels = {
+      'pickup': 'Pickup',
+      'processing': 'Processing',
+      'cleaning': 'Cleaning',
+      'out_for_delivery': 'Out for Delivery',
+      'completed': 'Completed',
+      'cancelled': 'Cancelled'
+    };
+    return (
+      <span className={`px-2 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full ${color}`}>
+        <Icon className="w-3 h-3" />
+        {statusLabels[status] || status}
+      </span>
+    );
+  };
+
+  const handleStatusChange = (newStatus) => {
+    if (newStatus === selectedStatus) return;
+    setPendingStatus(newStatus);
+    setShowStatusNote(true);
+  };
+
+  const handleStatusNoteConfirm = (data) => {
+    if (!pendingStatus) return;
+    
+    setIsUpdating(true);
+    try {
+      const history = booking.statusUpdateHistory || [];
+      const newHistory = [...history, {
+        status: pendingStatus,
+        date: new Date().toISOString(),
+        note: data.note,
+        fromStatus: selectedStatus,
+        pickupDate: data.pickupDate || null,
+        pickupTime: data.pickupTime || null
+      }];
+
+      // Update pickup date if status is pickup
+      const updateData = {
+        status: pendingStatus,
+        statusUpdateHistory: newHistory,
+        notes: data.note ? `${booking.notes || ''} | ${data.note}` : booking.notes
+      };
+
+      // If status is pickup and we have pickup date/time, update it
+      if (pendingStatus === 'pickup' && data.pickupDateTime) {
+        updateData.pickupDate = data.pickupDateTime.toISOString();
+      }
+
+      onStatusUpdate(booking.id, updateData);
+
+      setSelectedStatus(pendingStatus);
+      setShowStatusNote(false);
+      setPendingStatus(null);
+      
+      const statusLabel = statusConfig[pendingStatus]?.label || pendingStatus;
+      const message = pendingStatus === 'pickup' 
+        ? `Pickup scheduled for ${data.pickupDate} at ${data.pickupTime}`
+        : `Order ${booking.id} status updated to ${statusLabel} successfully!`;
+      
+      alert(message);
+    } catch (error) {
+      console.error('Status update failed:', error);
+      alert('Failed to update status. Please try again.');
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  // Status options with their labels and icons
+  const statusOptions = [
+    { value: 'pickup', label: 'Pickup', icon: ShoppingCart, color: 'bg-blue-500' },
+    { value: 'processing', label: 'Processing', icon: Package, color: 'bg-purple-500' },
+    { value: 'cleaning', label: 'Cleaning', icon: Sparkles, color: 'bg-indigo-500' },
+    { value: 'out_for_delivery', label: 'Out for Delivery', icon: Send, color: 'bg-orange-500' },
+    { value: 'completed', label: 'Completed', icon: CheckCheck, color: 'bg-green-500' },
+    { value: 'cancelled', label: 'Cancelled', icon: XCircle, color: 'bg-red-500' }
+  ];
+
+  // Get status history with notes
+  const getStatusHistory = () => {
+    const history = booking.statusUpdateHistory || [];
+    return history.map(update => ({
+      ...update,
+      label: statusConfig[update.status]?.label || update.status
+    }));
   };
 
   return (
@@ -702,10 +1104,10 @@ function BookingDetailView({ booking, onBack, onRefund }) {
                 </div>
               </div>
               <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="flex flex-wrap gap-2">
-                  <div className={`px-2 py-1 rounded-full text-xs font-semibold ${statusConfig[booking.status]?.color || 'bg-gray-100 text-gray-800'}`}>
-                    <StatusIcon className="w-3 h-3 inline mr-1" />
-                    {booking.status}
+                <div className="flex flex-col gap-2 w-full">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-500">Current Status</span>
+                    {getStatusBadge(booking.status)}
                   </div>
                 </div>
               </div>
@@ -801,6 +1203,104 @@ function BookingDetailView({ booking, onBack, onRefund }) {
           </div>
         </div>
       </div>
+
+      {/* STATUS BAR AT THE BOTTOM */}
+      <div className="border-t border-gray-200 bg-gray-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-3">
+            <h4 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+              <StatusIcon className={`w-4 h-4 ${currentStatusConfig?.textColor || 'text-gray-600'}`} />
+              Update Order Status
+            </h4>
+            <p className="text-xs text-gray-500">Click a status below to update the order</p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {statusOptions.map((option) => {
+              const isSelected = selectedStatus === option.value;
+              const Icon = option.icon;
+              const isDisabled = isUpdating || isSelected;
+              
+              return (
+                <button
+                  key={option.value}
+                  onClick={() => !isDisabled && handleStatusChange(option.value)}
+                  disabled={isDisabled}
+                  className={`
+                    px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                    flex items-center gap-2
+                    ${isSelected 
+                      ? `${option.color} text-white shadow-md ring-2 ring-offset-2 ring-${option.value}-500` 
+                      : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
+                    }
+                    ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                    hover:scale-105 transform
+                  `}
+                >
+                  <Icon className="w-4 h-4" />
+                  {option.label}
+                  {isSelected && <Check className="w-3 h-3 ml-1" />}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Status History Display */}
+          {booking.statusUpdateHistory && booking.statusUpdateHistory.length > 0 && (
+            <div className="mt-4">
+              <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                <Clock className="w-3 h-3" />
+                <span className="font-medium">Status History</span>
+              </div>
+              <div className="space-y-1 max-h-32 overflow-y-auto">
+                {getStatusHistory().slice().reverse().map((update, idx) => (
+                  <div key={idx} className="flex items-start gap-2 text-xs p-2 bg-white rounded-lg border border-gray-100">
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusConfig[update.status]?.badgeColor || 'bg-gray-100 text-gray-800'}`}>
+                      {update.label}
+                    </span>
+                    <span className="text-gray-600 flex-1">{update.note}</span>
+                    {update.pickupDate && update.pickupTime && (
+                      <span className="text-blue-600 whitespace-nowrap">
+                        📅 {update.pickupDate} at {update.pickupTime}
+                      </span>
+                    )}
+                    <span className="text-gray-400 whitespace-nowrap">
+                      {new Date(update.date).toLocaleString()}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Current Status Info */}
+          <div className="mt-3 flex items-center gap-3 text-xs text-gray-500">
+            <span className="font-medium">Current Status:</span>
+            <span className={`px-2 py-0.5 rounded-full font-medium ${currentStatusConfig?.badgeColor || 'bg-gray-100 text-gray-800'}`}>
+              {currentStatusConfig?.label || booking.status}
+            </span>
+            {booking.statusUpdateHistory && booking.statusUpdateHistory.length > 0 && (
+              <>
+                <span>•</span>
+                <span>Last updated: {new Date(booking.statusUpdateHistory[booking.statusUpdateHistory.length - 1].date).toLocaleString()}</span>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Status Note Modal */}
+      {showStatusNote && pendingStatus && (
+        <StatusNoteModal
+          status={pendingStatus}
+          booking={booking}
+          onClose={() => {
+            setShowStatusNote(false);
+            setPendingStatus(null);
+          }}
+          onConfirm={handleStatusNoteConfirm}
+        />
+      )}
     </div>
   );
 }
@@ -821,12 +1321,23 @@ function OrderManagement() {
   const [refundBooking, setRefundBooking] = useState(null);
   const itemsPerPage = 5;
 
+  const statusLabels = {
+    'pickup': 'Pickup',
+    'processing': 'Processing',
+    'cleaning': 'Cleaning',
+    'out_for_delivery': 'Out for Delivery',
+    'completed': 'Completed',
+    'cancelled': 'Cancelled'
+  };
+
   const stats = {
     total: bookings.length,
-    active: bookings.filter(b => b.status === 'Active').length,
-    completed: bookings.filter(b => b.status === 'Completed').length,
-    pending: bookings.filter(b => b.status === 'Pending').length,
-    cancelled: bookings.filter(b => b.status === 'Cancelled').length,
+    pickup: bookings.filter(b => b.status === 'pickup').length,
+    processing: bookings.filter(b => b.status === 'processing').length,
+    cleaning: bookings.filter(b => b.status === 'cleaning').length,
+    out_for_delivery: bookings.filter(b => b.status === 'out_for_delivery').length,
+    completed: bookings.filter(b => b.status === 'completed').length,
+    cancelled: bookings.filter(b => b.status === 'cancelled').length,
     totalRevenue: bookings.reduce((sum, b) => sum + b.totalAmount, 0),
   };
 
@@ -837,7 +1348,7 @@ function OrderManagement() {
                           booking.customerEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           booking.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           booking.customerPhone.includes(searchTerm);
-    const matchesStatus = filterStatus === 'All' || booking.status === filterStatus;
+    const matchesStatus = filterStatus === 'All' || (statusLabels[booking.status] === filterStatus);
     const matchesService = filterService === 'All' || booking.service === filterService;
     return matchesSearch && matchesStatus && matchesService;
   });
@@ -871,7 +1382,7 @@ function OrderManagement() {
     if (!refundBooking) return;
     
     updateBooking(refundBooking.id, {
-      status: 'Cancelled',
+      status: 'cancelled',
       paymentStatus: 'Refunded',
       refundStatus: 'Completed',
       refundDate: refundData.date,
@@ -882,7 +1393,7 @@ function OrderManagement() {
     if (selectedBooking?.id === refundBooking.id) {
       setSelectedBooking({
         ...selectedBooking,
-        status: 'Cancelled',
+        status: 'cancelled',
         paymentStatus: 'Refunded',
         refundStatus: 'Completed',
         refundDate: refundData.date,
@@ -896,18 +1407,58 @@ function OrderManagement() {
     alert(`Refund of ₹${refundData.amount} processed successfully! Order ${refundBooking.id} has been cancelled.`);
   };
 
+  const handleStatusUpdate = (bookingId, statusData) => {
+    const booking = bookings.find(b => b.id === bookingId);
+    if (!booking) return;
+
+    const history = booking.statusUpdateHistory || [];
+    const newHistory = [...history, {
+      status: statusData.status,
+      date: new Date().toISOString(),
+      note: statusData.note,
+      fromStatus: statusData.fromStatus || booking.status,
+      pickupDate: statusData.pickupDate || null,
+      pickupTime: statusData.pickupTime || null
+    }];
+
+    const updateData = {
+      status: statusData.status,
+      statusUpdateHistory: newHistory,
+      notes: statusData.note ? `${booking.notes || ''} | ${statusData.note}` : booking.notes
+    };
+
+    // If status is pickup and we have pickup date, update it
+    if (statusData.status === 'pickup' && statusData.pickupDate) {
+      updateData.pickupDate = statusData.pickupDate;
+    }
+
+    updateBooking(bookingId, updateData);
+
+    if (selectedBooking?.id === bookingId) {
+      setSelectedBooking({
+        ...selectedBooking,
+        status: statusData.status,
+        statusUpdateHistory: newHistory,
+        notes: statusData.note ? `${selectedBooking.notes || ''} | ${statusData.note}` : selectedBooking.notes,
+        pickupDate: statusData.pickupDate || selectedBooking.pickupDate
+      });
+    }
+  };
+
   const getStatusBadge = (status) => {
     const config = {
-      'Completed': { color: 'bg-green-100 text-green-800', icon: CheckCircle },
-      'Active': { color: 'bg-blue-100 text-blue-800', icon: Package },
-      'Pending': { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-      'Cancelled': { color: 'bg-red-100 text-red-800', icon: XCircle }
+      'pickup': { color: 'bg-blue-100 text-blue-800', icon: ShoppingCart, label: 'Pickup' },
+      'processing': { color: 'bg-purple-100 text-purple-800', icon: Package, label: 'Processing' },
+      'cleaning': { color: 'bg-indigo-100 text-indigo-800', icon: Sparkles, label: 'Cleaning' },
+      'out_for_delivery': { color: 'bg-orange-100 text-orange-800', icon: Send, label: 'Out for Delivery' },
+      'completed': { color: 'bg-green-100 text-green-800', icon: CheckCheck, label: 'Completed' },
+      'cancelled': { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Cancelled' }
     };
-    const { color, icon: Icon } = config[status] || config.Pending;
+    const { color, icon: Icon, label } = config[status] || config['pickup'];
     return (
       <span className={`px-2 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full ${color}`}>
         <Icon className="w-3 h-3" />
-        {status}
+        {label}
       </span>
     );
   };
@@ -935,6 +1486,7 @@ function OrderManagement() {
             booking={selectedBooking} 
             onBack={handleBackToList}
             onRefund={handleRefundClick}
+            onStatusUpdate={handleStatusUpdate}
           />
         </div>
         {showRefundModal && refundBooking && (
@@ -975,30 +1527,34 @@ function OrderManagement() {
           </button>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-blue-500 hover:shadow-md transition">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 mb-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-gray-500 hover:shadow-md transition">
             <p className="text-sm text-gray-500">Total</p>
             <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-blue-500 hover:shadow-md transition">
-            <p className="text-sm text-gray-500">Active</p>
-            <p className="text-2xl font-bold text-blue-600">{stats.active}</p>
+            <p className="text-sm text-gray-500">Pickup</p>
+            <p className="text-2xl font-bold text-blue-600">{stats.pickup}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-purple-500 hover:shadow-md transition">
+            <p className="text-sm text-gray-500">Processing</p>
+            <p className="text-2xl font-bold text-purple-600">{stats.processing}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-indigo-500 hover:shadow-md transition">
+            <p className="text-sm text-gray-500">Cleaning</p>
+            <p className="text-2xl font-bold text-indigo-600">{stats.cleaning}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-orange-500 hover:shadow-md transition">
+            <p className="text-sm text-gray-500">Out for Delivery</p>
+            <p className="text-2xl font-bold text-orange-600">{stats.out_for_delivery}</p>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-green-500 hover:shadow-md transition">
             <p className="text-sm text-gray-500">Completed</p>
             <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-yellow-500 hover:shadow-md transition">
-            <p className="text-sm text-gray-500">Pending</p>
-            <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
-          </div>
           <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-red-500 hover:shadow-md transition">
             <p className="text-sm text-gray-500">Cancelled</p>
             <p className="text-2xl font-bold text-red-600">{stats.cancelled}</p>
-          </div>
-          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-purple-500 hover:shadow-md transition">
-            <p className="text-sm text-gray-500">Revenue</p>
-            <p className="text-2xl font-bold text-purple-600">₹{stats.totalRevenue}</p>
           </div>
         </div>
 
@@ -1021,9 +1577,11 @@ function OrderManagement() {
               onChange={(e) => setFilterStatus(e.target.value)}
             >
               <option value="All">All Status</option>
-              <option value="Active">Active</option>
+              <option value="Pickup">Pickup</option>
+              <option value="Processing">Processing</option>
+              <option value="Cleaning">Cleaning</option>
+              <option value="Out for Delivery">Out for Delivery</option>
               <option value="Completed">Completed</option>
-              <option value="Pending">Pending</option>
               <option value="Cancelled">Cancelled</option>
             </select>
 
