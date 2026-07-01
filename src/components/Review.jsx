@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Star, Minus } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -63,186 +63,149 @@ const Review = () => {
     }
   ];
 
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition:
-        { staggerChildren: 0.12, },
-    },
-  };
+  // Create duplicates for seamless infinite scroll
+  const duplicatedReviews = [...reviews, ...reviews, ...reviews];
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50, },
-    visible: {
-      opacity: 1, y: 0,
-      transition: { duration: 0.7, },
-    },
-  };
-
+  const [isPaused, setIsPaused] = useState(false);
   const scrollContainerRef = useRef(null);
 
+  // Auto-scroll with pause on hover
   useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (!scrollContainer) return;
+    const container = scrollContainerRef.current;
+    if (!container) return;
 
-    let scrollInterval;
-    let isHovering = false;
+    let animationId;
+    let startTime;
+    const speed = 0.8; // Adjust for scroll speed
+    let scrollPosition = 0;
 
-    const startAutoScroll = () => {
-      scrollInterval = setInterval(() => {
-        if (!isHovering && scrollContainer) {
-          // Scroll by one card width
-          const cardWidth = scrollContainer.querySelector('.review-card')?.offsetWidth || 0;
-          const gap = 24; // gap-6 = 24px
-          const scrollAmount = cardWidth + gap;
-          
-          // Check if we've reached the end
-          if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 10) {
-            // Smooth scroll back to start
-            scrollContainer.scrollTo({
-              left: 0,
-              behavior: 'smooth'
-            });
-          } else {
-            scrollContainer.scrollBy({
-              left: scrollAmount,
-              behavior: 'smooth'
-            });
-          }
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      
+      if (!isPaused) {
+        scrollPosition += speed;
+        
+        // Reset when reaching half the content width (since we have 3 copies)
+        const containerWidth = container.scrollWidth / 3;
+        if (scrollPosition >= containerWidth) {
+          scrollPosition = 0;
         }
-      }, 3000); // Scroll every 3 seconds
+        
+        container.style.transform = `translateX(-${scrollPosition}px)`;
+      }
+      
+      animationId = requestAnimationFrame(animate);
     };
 
-    const stopAutoScroll = () => {
-      clearInterval(scrollInterval);
-    };
+    animationId = requestAnimationFrame(animate);
 
-    // Pause scrolling on hover
-    const handleMouseEnter = () => {
-      isHovering = true;
-      stopAutoScroll();
-    };
-
-    const handleMouseLeave = () => {
-      isHovering = false;
-      startAutoScroll();
-    };
-
-    // Start auto-scrolling
-    startAutoScroll();
-
-    // Add event listeners
-    scrollContainer.addEventListener('mouseenter', handleMouseEnter);
-    scrollContainer.addEventListener('mouseleave', handleMouseLeave);
-
-    // Cleanup
     return () => {
-      stopAutoScroll();
-      scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
-      scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
     };
+  }, [isPaused]);
+
+  // Responsive card sizing
+  const [cardWidth, setCardWidth] = useState(320);
+
+  useEffect(() => {
+    const updateCardWidth = () => {
+      if (window.innerWidth >= 1280) setCardWidth(320);
+      else if (window.innerWidth >= 1024) setCardWidth(300);
+      else if (window.innerWidth >= 640) setCardWidth(280);
+      else setCardWidth(260);
+    };
+
+    updateCardWidth();
+    window.addEventListener('resize', updateCardWidth);
+    return () => window.removeEventListener('resize', updateCardWidth);
   }, []);
 
-  // Duplicate reviews for infinite scroll effect
-  const duplicatedReviews = [...reviews, ...reviews];
-
   return (
-    <>
-      <div className="w-full bg-blue-50 py-16 md:py-24 bg-linear-to-b from-white via-blue-50 to-blue-100">
-        <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
-          {/* Header */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-            <h1 className="text-3xl md:text-4xl font-semibold text-blue-950">
-              Customers Review
-            </h1>
+    <div className="w-full bg-gradient-to-b from-white via-blue-50 to-blue-100 py-16 md:py-24 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+          <h1 className="text-3xl md:text-5xl font-bold text-blue-950">
+            Customers Review
+          </h1>
+          <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-full shadow-md">
             <div className="flex items-center gap-1">
               {[...Array(5)].map((_, index) => (
                 <Star
                   key={index}
-                  className="h-5 w-5 fill-blue-900 text-blue-900"
+                  className="h-5 w-5 fill-yellow-400 text-yellow-400"
                 />
               ))}
-              <p className="ml-2 text-lg md:text-xl font-bold text-blue-900">
-                4.9/5
-              </p>
             </div>
+            <p className="text-lg font-bold text-blue-900">
+              4.9/5
+            </p>
           </div>
+        </div>
 
-          {/* Review Cards - Horizontal Scrolling */}
-          <div 
-            ref={scrollContainerRef}
-            className="mt-12 overflow-x-auto scrollbar-hide cursor-grab"
-            style={{ 
-              scrollbarWidth: 'none', 
-              msOverflowStyle: 'none',
-              WebkitOverflowScrolling: 'touch'
-            }}
-          >
-            <motion.div 
-              className="flex gap-6"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              style={{ width: 'max-content' }}
+        {/* Infinite Scroll Carousel */}
+        <div 
+          className="relative px-4 md:px-8"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {/* Scroll Container with overflow hidden */}
+          <div className="overflow-hidden">
+            <div 
+              ref={scrollContainerRef}
+              className="flex gap-6 will-change-transform"
+              style={{ width: 'fit-content' }}
             >
               {duplicatedReviews.map((review, index) => (
                 <motion.div
                   key={`${review.id}-${index}`}
-                  className="review-card bg-white border border-gray-300 rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col"
-                  variants={cardVariants}
-                  style={{ width: '280px', flexShrink: 0 }}
+                  className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col flex-shrink-0 border border-gray-100"
+                  style={{ 
+                    width: `${cardWidth}px`,
+                    minHeight: '280px'
+                  }}
+                  whileHover={{
+                    scale: 1.03,
+                    y: -8,
+                    boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                    transition: { duration: 0.2 }
+                  }}
                 >
                   {/* Stars */}
                   <div className="flex gap-1 mb-4">
-                    {Array.from({ length: review.rating }).map((_, index) => (
+                    {Array.from({ length: 5 }).map((_, i) => (
                       <Star
-                        key={index}
-                        className="h-4 w-4 fill-blue-900 text-blue-900"
-                      />
-                    ))}
-                    {/* Empty stars for ratings less than 5 */}
-                    {Array.from({ length: 5 - review.rating }).map((_, index) => (
-                      <Star
-                        key={`empty-${index}`}
-                        className="h-4 w-4 text-gray-300"
+                        key={i}
+                        className={`h-5 w-5 ${
+                          i < review.rating 
+                            ? 'fill-yellow-400 text-yellow-400' 
+                            : 'text-gray-300 fill-gray-300'
+                        }`}
                       />
                     ))}
                   </div>
 
-                  {/* Review */}
-                  <p className="italic text-base md:text-lg text-gray-700 leading-7 flex-grow">
-                    {review.review}
+                  {/* Review Text */}
+                  <p className="text-gray-700 leading-relaxed flex-grow text-base">
+                    "{review.review}"
                   </p>
 
-                  {/* Name - Footer */}
-                  <div className="mt-6 pt-4 border-t border-gray-200">
-                    <p className="flex items-center font-medium text-blue-950">
-                      <Minus className="h-4 w-4 mr-2" />
-                      {review.name}
+                  {/* Customer Name */}
+                  <div className="mt-6 pt-4 border-t border-gray-100">
+                    <p className="font-semibold text-blue-950 text-lg">
+                      — {review.name}
                     </p>
                   </div>
                 </motion.div>
               ))}
-            </motion.div>
-          </div>
-
-          {/* Scroll Indicator */}
-          <div className="mt-8 flex justify-center gap-2">
-            <div className="h-2 w-8 bg-blue-900 rounded-full"></div>
-            <div className="h-2 w-2 bg-blue-300 rounded-full"></div>
-            <div className="h-2 w-2 bg-blue-300 rounded-full"></div>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Hide scrollbar styles */}
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
-    </>
-  )
-}
+    </div>
+  );
+};
 
 export default Review;

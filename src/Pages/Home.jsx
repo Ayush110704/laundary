@@ -399,7 +399,7 @@ function HomePage() {
   }}
 >
   {/* Soap Bubbles  */}
-  <div className="absolute inset-0 pointer-events-none overflow-hidden">
+  {/* <div className="absolute inset-0 pointer-events-none overflow-hidden">
     {[...Array(30)].map((_, i) => {
       const size = 15 + Math.random() * 35;
       const startX = Math.random() * 100;
@@ -447,7 +447,7 @@ function HomePage() {
         />
       );
     })}
-  </div> 
+  </div>  */}
   
   {/* Shining Motion Effect  */}
   <motion.div
