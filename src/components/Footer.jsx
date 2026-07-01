@@ -67,159 +67,167 @@ const gradientVariants = {
   },
 };
 
-// Water drop particle component
-const WaterDrop = ({ x, y, size, delay, duration, color }) => {
-  return (
-    <motion.div
-      className="absolute rounded-full pointer-events-none"
-      style={{
-        width: size,
-        height: size,
-        left: x,
-        top: y,
-        background: `radial-gradient(circle at 30% 30%, ${color}40, ${color}10)`,
-        boxShadow: `0 0 ${size * 2}px ${color}20, inset 0 0 ${size}px ${color}30`,
-      }}
-      initial={{ opacity: 0, y: 0, scale: 0.5 }}
-      animate={{
-        opacity: [0, 0.8, 0.6, 0.8, 0],
-        y: [0, -30, -60, -90, -120],
-        x: [0, 10, -5, 8, -10],
-        scale: [0.5, 1.2, 1, 0.8, 0.3],
-      }}
-      transition={{
-        duration: duration,
-        delay: delay,
-        repeat: Infinity,
-        ease: "easeOut",
-      }}
-    >
-      {/* Inner glow */}
-      <motion.div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background: `radial-gradient(circle at 40% 30%, ${color}80, transparent 70%)`,
-        }}
-        animate={{
-          scale: [1, 1.3, 1],
-          opacity: [0.3, 0.6, 0.3],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-    </motion.div>
-  );
-};
+// ============================================
+// WATER EFFECT COMPONENTS 
+// ============================================
 
-// Water ripple effect
-const WaterRipple = ({ x, y, size, delay }) => {
-  return (
-    <motion.div
-      className="absolute rounded-full pointer-events-none border border-blue-400/20"
-      style={{
-        width: size,
-        height: size,
-        left: x - size / 2,
-        top: y - size / 2,
-      }}
-      initial={{ scale: 0, opacity: 0.8 }}
-      animate={{
-        scale: [0, 1.5, 3],
-        opacity: [0.8, 0.4, 0],
-        borderWidth: [2, 1, 0.5],
-      }}
-      transition={{
-        duration: 4,
-        delay: delay,
-        repeat: Infinity,
-        ease: "easeOut",
-      }}
-    />
-  );
-};
+// // Water drop particle component
+// const WaterDrop = ({ x, y, size, delay, duration, color }) => {
+//   return (
+//     <motion.div
+//       className="absolute rounded-full pointer-events-none"
+//       style={{
+//         width: size,
+//         height: size,
+//         left: x,
+//         top: y,
+//         background: `radial-gradient(circle at 30% 30%, ${color}40, ${color}10)`,
+//         boxShadow: `0 0 ${size * 2}px ${color}20, inset 0 0 ${size}px ${color}30`,
+//       }}
+//       initial={{ opacity: 0, y: 0, scale: 0.5 }}
+//       animate={{
+//         opacity: [0, 0.8, 0.6, 0.8, 0],
+//         y: [0, -30, -60, -90, -120],
+//         x: [0, 10, -5, 8, -10],
+//         scale: [0.5, 1.2, 1, 0.8, 0.3],
+//       }}
+//       transition={{
+//         duration: duration,
+//         delay: delay,
+//         repeat: Infinity,
+//         ease: "easeOut",
+//       }}
+//     >
+//       {/* Inner glow */}
+//       <motion.div
+//         className="absolute inset-0 rounded-full"
+//         style={{
+//           background: `radial-gradient(circle at 40% 30%, ${color}80, transparent 70%)`,
+//         }}
+//         animate={{
+//           scale: [1, 1.3, 1],
+//           opacity: [0.3, 0.6, 0.3],
+//         }}
+//         transition={{
+//           duration: 2,
+//           repeat: Infinity,
+//           ease: "easeInOut",
+//         }}
+//       />
+//     </motion.div>
+//   );
+// };
 
-// Water splash effect
-const WaterSplash = ({ x, y, delay }) => {
-  const droplets = 8;
-  return (
-    <>
-      {[...Array(droplets)].map((_, i) => {
-        const angle = (i / droplets) * Math.PI * 2;
-        const distance = 20 + Math.random() * 30;
-        const dx = Math.cos(angle) * distance;
-        const dy = Math.sin(angle) * distance - 20;
+// // Water ripple effect
+// const WaterRipple = ({ x, y, size, delay }) => {
+//   return (
+//     <motion.div
+//       className="absolute rounded-full pointer-events-none border border-blue-400/20"
+//       style={{
+//         width: size,
+//         height: size,
+//         left: x - size / 2,
+//         top: y - size / 2,
+//       }}
+//       initial={{ scale: 0, opacity: 0.8 }}
+//       animate={{
+//         scale: [0, 1.5, 3],
+//         opacity: [0.8, 0.4, 0],
+//         borderWidth: [2, 1, 0.5],
+//       }}
+//       transition={{
+//         duration: 4,
+//         delay: delay,
+//         repeat: Infinity,
+//         ease: "easeOut",
+//       }}
+//     />
+//   );
+// };
+
+// // Water splash effect
+// const WaterSplash = ({ x, y, delay }) => {
+//   const droplets = 8;
+//   return (
+//     <>
+//       {[...Array(droplets)].map((_, i) => {
+//         const angle = (i / droplets) * Math.PI * 2;
+//         const distance = 20 + Math.random() * 30;
+//         const dx = Math.cos(angle) * distance;
+//         const dy = Math.sin(angle) * distance - 20;
         
-        return (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-blue-300/40 pointer-events-none"
-            style={{
-              left: x,
-              top: y,
-            }}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{
-              opacity: [0, 1, 0],
-              scale: [0, 2, 0.5],
-              x: [0, dx],
-              y: [0, dy],
-            }}
-            transition={{
-              duration: 1.5,
-              delay: delay + (i * 0.05),
-              repeat: Infinity,
-              repeatDelay: 3,
-              ease: "easeOut",
-            }}
-          />
-        );
-      })}
-    </>
-  );
-};
+//         return (
+//           <motion.div
+//             key={i}
+//             className="absolute w-1 h-1 rounded-full bg-blue-300/40 pointer-events-none"
+//             style={{
+//               left: x,
+//               top: y,
+//             }}
+//             initial={{ opacity: 0, scale: 0 }}
+//             animate={{
+//               opacity: [0, 1, 0],
+//               scale: [0, 2, 0.5],
+//               x: [0, dx],
+//               y: [0, dy],
+//             }}
+//             transition={{
+//               duration: 1.5,
+//               delay: delay + (i * 0.05),
+//               repeat: Infinity,
+//               repeatDelay: 3,
+//               ease: "easeOut",
+//             }}
+//           />
+//         );
+//       })}
+//     </>
+//   );
+// };
 
 function Footer() {
   const services = ["Wash & Fold", "Dry Cleaning", "Shoe Cleaning", "Steam Ironing", "Express Delivery"];
   const companyLinks = ["About Us", "Terms & Conditions", "FAQs"];
 
-  // Generate random water drops
-  const waterDrops = [
-    { x: "5%", y: "10%", size: 12, delay: 0, duration: 4, color: "#60A5FA" },
-    { x: "15%", y: "30%", size: 8, delay: 1, duration: 5, color: "#93C5FD" },
-    { x: "25%", y: "60%", size: 15, delay: 2, duration: 4.5, color: "#3B82F6" },
-    { x: "35%", y: "80%", size: 10, delay: 0.5, duration: 5.5, color: "#60A5FA" },
-    { x: "45%", y: "20%", size: 6, delay: 1.5, duration: 4, color: "#93C5FD" },
-    { x: "55%", y: "50%", size: 14, delay: 3, duration: 4.8, color: "#3B82F6" },
-    { x: "65%", y: "70%", size: 9, delay: 0.8, duration: 5.2, color: "#60A5FA" },
-    { x: "75%", y: "15%", size: 11, delay: 2.5, duration: 4.2, color: "#93C5FD" },
-    { x: "85%", y: "45%", size: 7, delay: 1.8, duration: 5.8, color: "#3B82F6" },
-    { x: "92%", y: "85%", size: 13, delay: 3.5, duration: 4.6, color: "#60A5FA" },
-    { x: "10%", y: "90%", size: 8, delay: 4, duration: 5, color: "#93C5FD" },
-    { x: "50%", y: "10%", size: 10, delay: 2.2, duration: 4.3, color: "#3B82F6" },
-    { x: "70%", y: "90%", size: 6, delay: 3.8, duration: 5.5, color: "#60A5FA" },
-    { x: "30%", y: "40%", size: 9, delay: 1.2, duration: 4.7, color: "#93C5FD" },
-    { x: "88%", y: "30%", size: 12, delay: 2.8, duration: 4.9, color: "#3B82F6" },
-  ];
+  // ============================================
+  // WATER EFFECT DATA 
+  // ============================================
+  
+  // // Generate random water drops
+  // const waterDrops = [
+  //   { x: "5%", y: "10%", size: 12, delay: 0, duration: 4, color: "#60A5FA" },
+  //   { x: "15%", y: "30%", size: 8, delay: 1, duration: 5, color: "#93C5FD" },
+  //   { x: "25%", y: "60%", size: 15, delay: 2, duration: 4.5, color: "#3B82F6" },
+  //   { x: "35%", y: "80%", size: 10, delay: 0.5, duration: 5.5, color: "#60A5FA" },
+  //   { x: "45%", y: "20%", size: 6, delay: 1.5, duration: 4, color: "#93C5FD" },
+  //   { x: "55%", y: "50%", size: 14, delay: 3, duration: 4.8, color: "#3B82F6" },
+  //   { x: "65%", y: "70%", size: 9, delay: 0.8, duration: 5.2, color: "#60A5FA" },
+  //   { x: "75%", y: "15%", size: 11, delay: 2.5, duration: 4.2, color: "#93C5FD" },
+  //   { x: "85%", y: "45%", size: 7, delay: 1.8, duration: 5.8, color: "#3B82F6" },
+  //   { x: "92%", y: "85%", size: 13, delay: 3.5, duration: 4.6, color: "#60A5FA" },
+  //   { x: "10%", y: "90%", size: 8, delay: 4, duration: 5, color: "#93C5FD" },
+  //   { x: "50%", y: "10%", size: 10, delay: 2.2, duration: 4.3, color: "#3B82F6" },
+  //   { x: "70%", y: "90%", size: 6, delay: 3.8, duration: 5.5, color: "#60A5FA" },
+  //   { x: "30%", y: "40%", size: 9, delay: 1.2, duration: 4.7, color: "#93C5FD" },
+  //   { x: "88%", y: "30%", size: 12, delay: 2.8, duration: 4.9, color: "#3B82F6" },
+  // ];
 
-  // Ripples
-  const ripples = [
-    { x: "20%", y: "30%", size: 40, delay: 0 },
-    { x: "50%", y: "70%", size: 50, delay: 2 },
-    { x: "80%", y: "25%", size: 35, delay: 4 },
-    { x: "35%", y: "85%", size: 45, delay: 1 },
-    { x: "65%", y: "40%", size: 30, delay: 3 },
-  ];
+  // // Ripples
+  // const ripples = [
+  //   { x: "20%", y: "30%", size: 40, delay: 0 },
+  //   { x: "50%", y: "70%", size: 50, delay: 2 },
+  //   { x: "80%", y: "25%", size: 35, delay: 4 },
+  //   { x: "35%", y: "85%", size: 45, delay: 1 },
+  //   { x: "65%", y: "40%", size: 30, delay: 3 },
+  // ];
 
-  // Splashes
-  const splashes = [
-    { x: "15%", y: "50%", delay: 0 },
-    { x: "40%", y: "20%", delay: 2 },
-    { x: "60%", y: "80%", delay: 4 },
-    { x: "85%", y: "55%", delay: 1 },
-  ];
+  // // Splashes
+  // const splashes = [
+  //   { x: "15%", y: "50%", delay: 0 },
+  //   { x: "40%", y: "20%", delay: 2 },
+  //   { x: "60%", y: "80%", delay: 4 },
+  //   { x: "85%", y: "55%", delay: 1 },
+  // ];
 
   return (
     <footer className="bg-[#0a1628] text-white relative overflow-hidden">
@@ -231,22 +239,25 @@ function Footer() {
         style={{ backgroundSize: "200% 200%" }}
       />
 
-      {/* Water drops layer */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* ========================================== */}
+      {/* WATER EFFECTS LAYER */}
+      {/* ========================================== */}
+      
+      {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {waterDrops.map((drop, index) => (
           <WaterDrop key={index} {...drop} />
         ))}
         
-        {/* Water ripples */}
+        Water ripples
         {ripples.map((ripple, index) => (
           <WaterRipple key={`ripple-${index}`} {...ripple} />
         ))}
         
-        {/* Water splashes */}
+        Water splashes
         {splashes.map((splash, index) => (
           <WaterSplash key={`splash-${index}`} {...splash} />
         ))}
-      </div>
+      </div> */}
 
       <div className="max-w-7xl mx-auto px-6 py-10 relative z-10">
         <motion.div
@@ -363,13 +374,13 @@ function Footer() {
             </ul>
           </motion.div>
 
-          {/* Company */}
+          {/* Quick Links */}
           <motion.div variants={itemVariants}>
             <motion.h3
               className="text-xl font-semibold text-white mb-4 relative inline-block"
               whileHover={{ scale: 1.02 }}
             >
-              Company
+              Quick Links
               <motion.span
                 className="absolute bottom-0 left-0 h-0.5 bg-blue-400"
                 initial={{ width: 0 }}

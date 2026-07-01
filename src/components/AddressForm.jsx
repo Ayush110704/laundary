@@ -1,223 +1,340 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Swal from 'sweetalert2';
 
-
-import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
-import { useState } from "react";
-import {getCheckoutData,saveCheckoutData,} from "../utils/checkoutStorage";
-
-const AddressForm =({ isOpen, onClose, onSave,}) =>{
+const AddressForm = ({ 
+  isOpen, 
+  onClose, 
+  onSave, 
+  address = null, 
+  isLoading = false 
+}) => {
   const [formData, setFormData] = useState({
-    type: "Home",
-    name: "",
-    phone: "",
-    address: "",
-    default: false,
+    fullName: '',
+    phone: '',
+    addressLine1: '',
+    watermark: '',
+    city: '',
+    state: '',
+    pincode: '',
+    isDefault: false
   });
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  // Update form data when address prop changes (for editing)
+  useEffect(() => {
+    if (address) {
+      setFormData({
+        fullName: address.fullName || '',
+        phone: address.phone || '',
+        addressLine1: address.addressLine1 || '',
+        watermark: address.watermark || '',
+        city: address.city || '',
+        state: address.state || '',
+        pincode: address.pincode || '',
+        isDefault: address.isDefault || false
+      });
+    } else {
+      // Reset form when adding new address
+      setFormData({
+        fullName: '',
+        phone: '',
+        addressLine1: '',
+        watermark: '',
+        city: '',
+        state: '',
+        pincode: '',
+        isDefault: false
+      });
+    }
+  }, [address]); // Re-run when address prop changes
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+  const states = [
+    "Maharashtra", "Delhi", "Karnataka", "Gujarat", "Madhya Pradesh",
+    "Rajasthan", "Uttar Pradesh", "Tamil Nadu", "Telangana", "Punjab"
+  ];
+
+  const cities = {
+    Maharashtra: ["Nagpur", "Wardha", "Mumbai", "Pune", "Nashik", "Amravati"],
+    Delhi: ["New Delhi", "Dwarka", "Rohini"],
+    Karnataka: ["Bangalore", "Mysore"],
+    Gujarat: ["Ahmedabad", "Surat", "Vadodara"],
+    "Madhya Pradesh": ["Indore", "Bhopal"],
+    Rajasthan: ["Jaipur", "Udaipur"],
+    "Uttar Pradesh": ["Lucknow", "Noida"],
+    "Tamil Nadu": ["Chennai", "Coimbatore"],
+    Telangana: ["Hyderabad"],
+    Punjab: ["Ludhiana", "Amritsar"]
   };
 
-  const handleSubmit = (e) => {
-  e.preventDefault();
-
-  const address = {id: Date.now(),...formData,};
-
-  // Existing callback
-  onSave(address);
-
-  // Save under current user
-  const users = JSON.parse(localStorage.getItem("Users")) || [];
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-
-  const updatedUsers = users.map((user) => {
-    if (user.Email === currentUser.Email) {
-      return {
-        ...user,
-        addresses: [...(user.addresses || []), address],
-      };
+  const handleSubmit = () => {
+    if (!formData.fullName || !formData.phone || !formData.addressLine1 || 
+        !formData.city || !formData.state || !formData.pincode) {
+      Swal.fire({
+        title: 'Missing Fields',
+        text: 'Please fill in all required fields',
+        icon: 'warning',
+        confirmButtonColor: '#2563eb'
+      });
+      return;
     }
 
-    return user;
-  });
-
-  localStorage.setItem("Users", JSON.stringify(updatedUsers));
-
-  const updatedCurrentUser = {
-    ...currentUser,
-    addresses: [...(currentUser.addresses || []), address],
+    onSave(formData);
   };
 
-  localStorage.setItem("currentUser", JSON.stringify(updatedCurrentUser));
+  const resetForm = () => {
+    setFormData({
+      fullName: '',
+      phone: '',
+      addressLine1: '',
+      watermark: '',
+      city: '',
+      state: '',
+      pincode: '',
+      isDefault: false
+    });
+  };
 
-  // Reset form
-  setFormData({
-    type: "Home",
-    name: "",
-    phone: "",
-    address: "",
-    default: false,
-  });
+  const modalVariants = {
+    hidden: { opacity: 0, scale: 0.95, y: 20 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: { type: 'spring', damping: 25, stiffness: 300 }
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.95,
+      y: 20,
+      transition: { duration: 0.2 }
+    }
+  };
 
-  onClose();
-};
+  const overlayVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0 }
+  };
 
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Overlay */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            variants={overlayVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[10000]"
             onClick={onClose}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
           />
-
-          {/* Modal */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 30 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="modal-content fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-3xl shadow-2xl w-[90%] max-w-md z-[10001] max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl bg-white shadow-2xl">
+            <style>
+              {`
+                .modal-content {
+                  scrollbar-width: none;
+                  -ms-overflow-style: none;
+                }
+                .modal-content::-webkit-scrollbar {
+                  display: none;
+                }
+                input:focus, select:focus, textarea:focus {
+                  outline: none;
+                }
+              `}
+            </style>
 
-              {/* Header */}
-              <div className="flex items-center justify-between border-b p-6">
-                <h2 className="text-2xl font-bold text-blue-900">
-                  Add New Address
-                </h2>
-
+            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4 rounded-t-3xl z-10">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-bold text-white flex items-center gap-2" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  <i className={`fa-solid ${address ? 'fa-pen' : 'fa-plus'} text-white`}></i>
+                  {address ? 'Edit Address' : 'Add Address'}
+                </h3>
                 <button
-                  onClick={onClose}
-                  className="rounded-full p-2 hover:bg-gray-100"
+                  onClick={() => {
+                    onClose();
+                    resetForm();
+                  }}
+                  className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition text-white text-xl"
                 >
-                  <X size={22} />
+                  ×
                 </button>
               </div>
+            </div>
 
-              {/* Form */}
-              <form
-                onSubmit={handleSubmit}
-                className="p-6 space-y-5"
-              >
-                {/* Address Type */}
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                  <i className="fa-solid fa-user text-blue-600 mr-1"></i> Full Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter full name"
+                  value={formData.fullName}
+                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                  <i className="fa-solid fa-phone text-blue-600 mr-1"></i> Phone Number <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  placeholder="10-digit mobile number"
+                  maxLength="10"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value.replace(/\D/g, '') })}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                  <i className="fa-solid fa-location-dot text-blue-600 mr-1"></i> Address Line 1 <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="House number, building, street"
+                  value={formData.addressLine1}
+                  onChange={(e) => setFormData({ ...formData, addressLine1: e.target.value })}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                  <i className="fa-solid fa-water text-blue-400 mr-1"></i> Watermark (Optional)
+                </label>
+                <input
+                  type="text"
+                  placeholder="Apartment, floor, landmark"
+                  value={formData.watermark}
+                  onChange={(e) => setFormData({ ...formData, watermark: e.target.value })}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-medium text-gray-700">
-                    Address Type
+                  <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                    State <span className="text-red-500">*</span>
                   </label>
-
                   <select
-                    name="type"
-                    value={formData.type}
-                    onChange={handleChange}
-                    className="mt-2 w-full rounded-xl border p-3 focus:border-blue-600 outline-none"
+                    value={formData.state}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      state: e.target.value,
+                      city: ""
+                    })}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
+                    style={{ fontFamily: "'Inter', sans-serif" }}
                   >
-                    <option>Home</option>
-                    <option>Work</option>
-                    <option>Other</option>
+                    <option value="">Select State</option>
+                    {states.map((state, index) => (
+                      <option key={index} value={state}>{state}</option>
+                    ))}
                   </select>
                 </div>
-
-                {/* Name + Phone */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <label className="font-medium text-gray-700">
-                      Address Name
-                    </label>
-
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Address 1"
-                      className="mt-2 w-full rounded-xl border p-3 focus:border-blue-600 outline-none"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="font-medium text-gray-700">
-                      Phone Number
-                    </label>
-
-                    <input
-                      type="tel"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      placeholder="+91 9876543210"
-                      className="mt-2 w-full rounded-xl border p-3 focus:border-blue-600 outline-none"
-                      required
-                    />
-                  </div>
-                </div>
-
-                {/* Address */}
                 <div>
-                  <label className="font-medium text-gray-700">
-                    Full Address
+                  <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                    City <span className="text-red-500">*</span>
                   </label>
-
-                  <textarea
-                    rows={4}
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
-                    placeholder="Enter complete address..."
-                    className="mt-2 w-full rounded-xl border p-3 resize-none focus:border-blue-600 outline-none"
-                    required
-                  />
+                  <select
+                    value={formData.city}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      city: e.target.value
+                    })}
+                    disabled={!formData.state}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition disabled:bg-gray-100 disabled:cursor-not-allowed bg-gray-50"
+                    style={{ fontFamily: "'Inter', sans-serif" }}
+                  >
+                    <option value="">{formData.state ? 'Select City' : 'Select state first'}</option>
+                    {formData.state && cities[formData.state]?.map((city, index) => (
+                      <option key={index} value={city}>{city}</option>
+                    ))}
+                  </select>
                 </div>
+              </div>
 
-                {/* Default */}
-                <label className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    name="default"
-                    checked={formData.default}
-                    onChange={handleChange}
-                    className="h-5 w-5"
-                  />
-
-                  <span className="text-gray-700">
-                    Make this my default address
-                  </span>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                  <i className="fa-solid fa-map-pin text-blue-600 mr-1"></i> Pincode <span className="text-red-500">*</span>
                 </label>
+                <input
+                  type="text"
+                  placeholder="6-digit pincode"
+                  maxLength="6"
+                  value={formData.pincode}
+                  onChange={(e) => setFormData({ ...formData, pincode: e.target.value.replace(/\D/g, '') })}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition bg-gray-50"
+                  style={{ fontFamily: "'Inter', sans-serif" }}
+                />
+              </div>
 
-                {/* Buttons */}
-                <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="w-full sm:w-auto rounded-xl border px-6 py-3 font-medium hover:bg-gray-100"
-                  >
-                    Cancel
-                  </button>
+              <div className="flex items-center gap-2 pt-2">
+                <input
+                  type="checkbox"
+                  id="isDefault"
+                  checked={formData.isDefault}
+                  onChange={(e) => setFormData({ ...formData, isDefault: e.target.checked })}
+                  className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                />
+                <label htmlFor="isDefault" className="text-sm text-gray-700 cursor-pointer" style={{ fontFamily: "'Poppins', sans-serif" }}>
+                  <i className="fa-regular fa-star text-green-600 mr-1"></i>
+                  Set as default address
+                </label>
+              </div>
 
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto rounded-xl bg-blue-700 px-6 py-3 font-medium text-white hover:bg-blue-800"
-                  >
-                    Save Address
-                  </button>
-                </div>
-              </form>
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  style={{ fontFamily: "'Poppins', sans-serif", fontWeight: 600 }}
+                >
+                  {isLoading ? (
+                    <>
+                      <i className="fa-solid fa-spinner fa-spin"></i>
+                      {address ? 'Updating...' : 'Adding...'}
+                    </>
+                  ) : (
+                    <>
+                      <i className="fa-solid fa-save"></i>
+                      {address ? 'Update Address' : 'Save Address'}
+                    </>
+                  )}
+                </button>
+                <button
+                  onClick={() => {
+                    onClose();
+                    resetForm();
+                  }}
+                  className="flex-1 border border-gray-200 py-3 rounded-xl font-medium hover:bg-gray-50 transition"
+                  style={{ fontFamily: "'Poppins', sans-serif" }}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </motion.div>
         </>
       )}
     </AnimatePresence>
   );
-}
+};
 
-export default AddressForm
+export default AddressForm;
