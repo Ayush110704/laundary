@@ -26,7 +26,7 @@ import ServiceManagement from './components/Admin/ServiceManagement';
 import OrderTracking from "./components/OrderTracking";
 import BookingApplyForm from "./Pages/BookingApplyForm";   
 import UserLayout from "./Pages/UserLayout"; 
-import Checkout from "./Pages/Checkout";
+import CheckOut from "./Pages/CheckOut";
 import Address from "./Pages/Address"; 
 
 function App() {
@@ -62,7 +62,7 @@ function App() {
         <Route path="/user-dashboard" element={<UserDashboard />} />
         <Route path="/TermsCondition" element={<TermsConndition />} />
         <Route path="/FAQ" element={<FAQ />} />
-        <Route path="/checkout" element={<Checkout />} />  
+        <Route path="/checkout" element={<CheckOut />} />  
         
         <Route path="/address" element={<Address/>} /> 
         
