@@ -404,6 +404,7 @@ function Footer() {
             </motion.h3>
 
             <ul className="space-y-3 text-gray-300 text-sm">
+              <Link to="/About">
               <motion.li
                 className="hover:text-blue-400 cursor-pointer"
                 variants={slideInLeftVariants}
@@ -412,6 +413,7 @@ function Footer() {
               >
                 About Us
               </motion.li>
+              </Link>
               <Link to="/TermsCondition">
                 <motion.li
                   className="hover:text-blue-400 cursor-pointer mb-4"
