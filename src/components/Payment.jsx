@@ -50,7 +50,6 @@ useEffect(() => {
   );
 }, [paymentData, setCheckoutData]);
 
-
   return (
     <>
      <motion.div

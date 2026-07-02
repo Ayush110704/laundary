@@ -22,7 +22,6 @@ const OrderSummary = ({ Step, checkoutData }) => {
 
     }
 
-
     return (
         <>
             {/* Order Summary */}

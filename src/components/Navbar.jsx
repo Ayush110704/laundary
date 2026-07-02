@@ -145,7 +145,7 @@ const Navbar = () => {
                       </div>
                     </div>
                     <Link
-                      to="/user-dashboard"
+                      to="/profile"
                       onClick={() => setProfile(false)}
                       className="hover:text-blue-800 transition-all hover:scale-105"
                     >

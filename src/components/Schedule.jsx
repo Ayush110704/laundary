@@ -316,7 +316,6 @@ const isPastDate = currentDate < today;
         <h3 className="font-semibold text-lg">
           {day}
         </h3>
-
         <p
           className={`text-sm mt-1 ${
            

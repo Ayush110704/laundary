@@ -36,7 +36,6 @@ const CTA =( { type, headingtop, headingbottom,subHeading,})=> {
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 md:px-12 text-center ">
 
          
-         
           {/* Heading */}
 
           <motion.h2

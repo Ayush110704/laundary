@@ -173,7 +173,6 @@ const Services = () => {
               Expert Laundry <span className=" text-xl md:text-4xl text-[#f1f1fa]">&</span>
               <br />
                
-               
             </motion.h1>
             <motion.div
             initial={{ opacity: 0, scale: 1, y: 40 }}

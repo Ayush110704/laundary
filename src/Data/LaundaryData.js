@@ -813,7 +813,6 @@ ServiceOffered: [
       "Hand Wash",
     ],
   },
-  
   {
     id: 3,
     image: silkCarpet,

@@ -1,6 +1,5 @@
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import "./App.css"; 
-import { useLayoutEffect } from "react";
 import Contact from "./Pages/Contact";
 import Subscription from "./Pages/Subscription";
 import Footer from "./components/Footer";
@@ -23,20 +22,10 @@ import Payments from "./components/Admin/Payments";
 import Analytics from "./components/Admin/Analytics";
 import ServiceManagement from './components/Admin/ServiceManagement';
 import OrderTracking from "./components/OrderTracking";
-
-
-import BookingApplyForm from "./Pages/BookingApplyForm";  
-import Address from "./Pages/Address"; // ← IMPORT ADDRESS COMPONENT
-import UserLayout from "./Pages/UserLayout"; // ← NEW IMPORT: UserLayout component
-import CheckOut from './Pages/CheckOut';
-
- 
-
-
- 
+import BookingApplyForm from "./Pages/BookingApplyForm";   
 import UserLayout from "./Pages/UserLayout"; 
-
-
+import CheckOut from "./Pages/CheckOut";
+import Address from "./Pages/Address"; 
 import Pricing from "./Pages/Pricing";
 
 function App() {
@@ -71,17 +60,6 @@ function App() {
   // Check if we should show Navbar and Footer
   const showNavbarAndFooter = !hideLayout && !isAdminRoute && !isUserRoute;
 
-
-
-  const { pathname } = useLocation();
-
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
-
-
-
   return (
     <> 
       {/* Show Navbar for public routes only */}
@@ -97,9 +75,6 @@ function App() {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/TermsCondition" element={<TermsConndition />} />
         <Route path="/FAQ" element={<FAQ />} />
-
-        <Route path="/checkout" element={<CheckOut/>} />
-
         <Route path="/checkout" element={<CheckOut />} />  
         
         {/* Auth Routes */}
