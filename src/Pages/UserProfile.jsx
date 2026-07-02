@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+// Remove UserLayout import - it's now handled by routing
+// import UserLayout from './UserLayout'; // ← REMOVE THIS
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -112,7 +114,7 @@ const Profile = () => {
   const handleSaveProfile = async () => {
     setIsLoading(true);
     
-    //  API call
+    // API call simulation
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     const allUsers = JSON.parse(localStorage.getItem('Users')) || [];
@@ -282,145 +284,137 @@ const Profile = () => {
     </motion.div>
   );
 
+  // Main content - NO LONGER WRAPPED in UserLayout
   return (
-    <div className="min-h-screen bg-white pt-20 pb-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200"
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-200">
+      {/* Header */}
+      <div className="px-8 py-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-blue-50 to-white">
+        <div>
+          <h2 className="text-xl font-bold text-black flex items-center gap-2">
+            <i className="fas fa-user-circle text-blue-600 text-2xl"></i>
+            My Profile
+          </h2>
+          <p className="text-sm text-gray-600 mt-1">View and manage your personal details</p>
+        </div>
+        <motion.button 
+          whileHover={{ scale: 1.05, backgroundColor: "#1d4ed8" }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setShowEditProfileModal(true)} 
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl flex items-center gap-2 shadow-md hover:shadow-lg transition-all duration-200"
         >
-          {/* Header */}
-          <div className="px-8 py-6 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-blue-50 to-white">
-            <div>
-              <h2 className="text-xl font-bold text-black flex items-center gap-2">
-                <i className="fas fa-user-circle text-blue-600 text-2xl"></i>
-                My Profile
-              </h2>
-              <p className="text-sm text-gray-600 mt-1">View and manage your personal details</p>
-            </div>
-            <motion.button 
-              whileHover={{ scale: 1.05, backgroundColor: "#1d4ed8" }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowEditProfileModal(true)} 
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl flex items-center gap-2 shadow-md hover:shadow-lg transition-all duration-200"
-            >
-              <i className="fas fa-pen text-white text-sm"></i>
-              Edit Profile
-            </motion.button>
-          </div>
-            
-            {/* User Details */}
-          <div className="p-8 bg-gray-50">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FieldCard
-                icon="fas fa-user"
-                iconColor="text-blue-600"
-                label="Full Name"
-                value={userData.name}
-                field="name"
-                onClick={() => handleFieldClick('name')}
-              />
-              <FieldCard
-                icon="fas fa-calendar-alt"
-                iconColor="text-purple-600"
-                label="Joining Date"
-                value={userData.joiningDate}
-                field="joiningDate"
-                onClick={() => handleFieldClick('joiningDate')}
-              />
-              <FieldCard
-                icon="fas fa-envelope"
-                iconColor="text-red-600"
-                label="Email Address"
-                value={userData.email}
-                field="email"
-                onClick={() => handleFieldClick('email')}
-              />
-              <FieldCard
-                icon="fas fa-phone"
-                iconColor="text-green-600"
-                label="Mobile Number"
-                value={userData.mobile ? `+91 ${userData.mobile}` : '-'}
-                field="mobile"
-                onClick={() => handleFieldClick('mobile')}
-              />
-              <FieldCard
-                icon="fas fa-map-marker-alt"
-                iconColor="text-orange-600"
-                label="Address"
-                value={userData.address || 'Not specified'}
-                field="address"
-                onClick={() => handleFieldClick('address')}
-              />
-              <FieldCard
-                icon="fas fa-birthday-cake"
-                iconColor="text-pink-600"
-                label="Date of Birth"
-                value={userData.dob || 'Not specified'}
-                field="dob"
-                onClick={() => handleFieldClick('dob')}
-              />
-            </div>
+          <i className="fas fa-pen text-white text-sm"></i>
+          Edit Profile
+        </motion.button>
+      </div>
+        
+      {/* User Details */}
+      <div className="p-8 bg-gray-50">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FieldCard
+            icon="fas fa-user"
+            iconColor="text-blue-600"
+            label="Full Name"
+            value={userData.name}
+            field="name"
+            onClick={() => handleFieldClick('name')}
+          />
+          <FieldCard
+            icon="fas fa-calendar-alt"
+            iconColor="text-purple-600"
+            label="Joining Date"
+            value={userData.joiningDate}
+            field="joiningDate"
+            onClick={() => handleFieldClick('joiningDate')}
+          />
+          <FieldCard
+            icon="fas fa-envelope"
+            iconColor="text-red-600"
+            label="Email Address"
+            value={userData.email}
+            field="email"
+            onClick={() => handleFieldClick('email')}
+          />
+          <FieldCard
+            icon="fas fa-phone"
+            iconColor="text-green-600"
+            label="Mobile Number"
+            value={userData.mobile ? `+91 ${userData.mobile}` : '-'}
+            field="mobile"
+            onClick={() => handleFieldClick('mobile')}
+          />
+          <FieldCard
+            icon="fas fa-map-marker-alt"
+            iconColor="text-orange-600"
+            label="Address"
+            value={userData.address || 'Not specified'}
+            field="address"
+            onClick={() => handleFieldClick('address')}
+          />
+          <FieldCard
+            icon="fas fa-birthday-cake"
+            iconColor="text-pink-600"
+            label="Date of Birth"
+            value={userData.dob || 'Not specified'}
+            field="dob"
+            onClick={() => handleFieldClick('dob')}
+          />
+        </div>
 
-            {/* Quick Stats */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3"
-            >
-              <div className="bg-white rounded-xl p-3 border border-gray-200 text-center">
-                <p className="text-xs text-gray-500">Member Since</p>
-                <p className="text-sm font-semibold text-gray-800 mt-1">
-                  {userData.joiningDate || 'N/A'}
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-3 border border-gray-200 text-center">
-                <p className="text-xs text-gray-500">Profile Status</p>
-                <p className="text-sm font-semibold text-green-600 mt-1">
-                  <i className="fas fa-check-circle mr-1"></i> Active
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-4 border border-gray-200">
-                <div className="flex justify-between items-center mb-1">
-                  <p className="text-xs text-gray-500">Profile Complete</p>
-                  <span className={`text-sm font-bold ${profileCompletion === 100 ? 'text-green-600' : 'text-blue-600'}`}>
-                    {profileCompletion}%
-                  </span>
-                </div>
-                <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${profileCompletion}%` }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    className={`h-full ${getCompletionColor(profileCompletion)} rounded-full transition-all`}
-                  />
-                </div>
-              </div>
-            </motion.div>
+        {/* Quick Stats */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3"
+        >
+          <div className="bg-white rounded-xl p-3 border border-gray-200 text-center">
+            <p className="text-xs text-gray-500">Member Since</p>
+            <p className="text-sm font-semibold text-gray-800 mt-1">
+              {userData.joiningDate || 'N/A'}
+            </p>
           </div>
-
-          {/* Footer */}
-          <div className="px-8 py-3 bg-gray-50/80 border-t border-gray-100 flex justify-between items-center">
-            <button
-              onClick={() => navigate('/')}
-              className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 hover:gap-2 transition-all"
-            >
-              <i className="fas fa-arrow-left"></i> Back to Home
-            </button>
-            <button
-              onClick={() => window.location.reload()}
-              className="text-xs text-gray-500 hover:text-gray-700 font-medium flex items-center gap-1"
-            >
-              <i className="fas fa-sync-alt text-xs"></i> Refresh
-            </button>
+          <div className="bg-white rounded-xl p-3 border border-gray-200 text-center">
+            <p className="text-xs text-gray-500">Profile Status</p>
+            <p className="text-sm font-semibold text-green-600 mt-1">
+              <i className="fas fa-check-circle mr-1"></i> Active
+            </p>
+          </div>
+          <div className="bg-white rounded-xl p-4 border border-gray-200">
+            <div className="flex justify-between items-center mb-1">
+              <p className="text-xs text-gray-500">Profile Complete</p>
+              <span className={`text-sm font-bold ${profileCompletion === 100 ? 'text-green-600' : 'text-blue-600'}`}>
+                {profileCompletion}%
+              </span>
+            </div>
+            <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${profileCompletion}%` }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className={`h-full ${getCompletionColor(profileCompletion)} rounded-full transition-all`}
+              />
+            </div>
           </div>
         </motion.div>
       </div>
 
-      {/* Edit Profile */}
+      {/* Footer */}
+      <div className="px-8 py-3 bg-gray-50/80 border-t border-gray-100 flex justify-between items-center">
+        <button
+          onClick={() => navigate('/')}
+          className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 hover:gap-2 transition-all"
+        >
+          <i className="fas fa-arrow-left"></i> Back to Home
+        </button>
+        <button
+          onClick={() => window.location.reload()}
+          className="text-xs text-gray-500 hover:text-gray-700 font-medium flex items-center gap-1"
+        >
+          <i className="fas fa-sync-alt text-xs"></i> Refresh
+        </button>
+      </div>
+
+      {/* Edit Profile Modal */}
       <AnimatePresence>
         {showEditProfileModal && (
           <motion.div 

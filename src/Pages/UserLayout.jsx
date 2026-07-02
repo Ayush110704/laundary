@@ -1,69 +1,113 @@
 import React, { useState } from "react";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  FaHome,
+  FaUser,
   FaBoxOpen,
-  FaTruck,
   FaMapMarkerAlt,
-  FaUserCircle,
-  FaBell,
+  FaCrown,
+  FaRoute,
+  FaFileContract,
+  FaSignOutAlt,
   FaBars,
   FaTimes,
-  FaSignOutAlt,
-  FaChevronDown,
-  FaCircle,
-  FaUser
+  FaChevronRight,
 } from "react-icons/fa";
-import Navbar from "../components/Navbar"; 
 
-const UserLayout = ({ children, currentView, onViewChange, userProfile, alerts }) => {
+const UserLayout = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [newOrdersCount, setNewOrdersCount] = useState(3);
 
-  // Layout navigation item configuration with custom active tracking badges
-  const navigationMenus = [
-    { name: "Dashboard", icon: <FaHome />, id: "dashboard", badge: { type: "dot", value: true, color: "bg-emerald-500" } },
-    { name: "My Orders", icon: <FaBoxOpen />, id: "orders", badge: { type: "count", value: "14", color: "bg-slate-100 text-slate-700" } },
-    { name: "Live Tracking", icon: <FaTruck />, id: "tracking", badge: { type: "count", value: "3 Active", color: "bg-indigo-50 text-indigo-700 font-extrabold text-[9px] animate-pulse border border-indigo-100" } },
-    { name: "Manage Addresses", icon: <FaMapMarkerAlt />, id: "address", badge: null },
-    { name: "My Profile", icon: <FaUserCircle />, id: "profile", badge: null },
+  // --- NAVIGATION CONFIGURATION ---
+  const NAVIGATION_ITEMS = [
+    {
+      id: "profile",
+      name: "Profile",
+      description: "Account identity and security keys",
+      icon: <FaUser />,
+      path: "/user/profile",
+    },
+    {
+      id: "orders",
+      name: "My Orders",
+      description: "Live tracking and transaction history",
+      icon: <FaBoxOpen />,
+      path: "/user/orders",
+    },
+    {
+      id: "address",
+      name: "Saved Address",
+      description: "Geographic routing points",
+      icon: <FaMapMarkerAlt />,
+      path: "/user/address",
+    },
+    {
+      id: "subscription",
+      name: "Subscription",
+      description: "Tier variables and access caps",
+      icon: <FaCrown />,
+      path: "/user/subscription",
+    },
+    {
+      id: "tracking",
+      name: "Progress Tracking",
+      description: "Real-time pipeline telemetry",
+      icon: <FaRoute />,
+      path: "/user/tracking",
+    },
+    {
+      id: "terms",
+      name: "Terms & Conditions",
+      description: "Legal framework parameters",
+      icon: <FaFileContract />,
+      path: "/user/terms",
+    },
   ];
 
-  const renderBadge = (badge) => {
-    if (!badge) return null;
-    if (badge.type === "dot") {
-      return <span className={`w-2 h-2 rounded-full ${badge.color}`} />;
+  const activeItem = NAVIGATION_ITEMS.find((item) => item.path === location.pathname) || NAVIGATION_ITEMS[0];
+
+  const handleNavigation = (path, id) => {
+    navigate(path);
+    setMobileMenuOpen(false);
+    if (id === "orders") {
+      setNewOrdersCount(0);
     }
-    return (
-      <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${badge.color}`}>
-        {badge.value}
-      </span>
-    );
   };
 
-  return (
-    <div className="bg-[#f8fafc] min-h-screen font-sans antialiased text-slate-900 flex flex-col">
-      
-      {/* GLOBAL FIXED NAVBAR */}
-      <div className="w-full fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200/80 shadow-sm">
-        <Navbar />
-      </div>
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('currentUser');
+    navigate('/login');
+  };
 
-      <div className="flex-1 flex flex-col lg:flex-row pt-[72px] relative min-h-screen">
-        
-        {/* MOBILE LAYOUT SUB-HEADER BAR */}
-        <div className="lg:hidden bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between sticky top-[72px] z-40 shadow-sm w-full">
-          <span className="font-bold text-xs tracking-wider text-slate-400 uppercase">Workspace Menu</span>
+  const isActive = (path) => location.pathname === path;
+
+  return (
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col">
+      {/* Navbar is now rendered by App.jsx */}
+      {/* So we just need the main content with sidebar */}
+      
+      <div className="flex flex-1 pt-20 font-sans antialiased text-slate-900 select-none">
+        {/* MOBILE INTERFACE HEADER */}
+        <div className="lg:hidden w-full bg-white/80 backdrop-blur-md border-b border-slate-200/80 px-6 py-4 flex items-center justify-between fixed top-20 left-0 right-0 z-40 shadow-xs">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white font-black text-base shadow-sm shadow-indigo-600/20">
+              L
+            </div>
+            <span className="font-black tracking-tight text-slate-900 text-lg">LuxeClean</span>
+          </div>
           <button 
             onClick={() => setMobileMenuOpen(true)}
-            className="p-2 text-slate-600 bg-slate-50 border rounded-xl hover:bg-slate-100 transition"
+            className="p-2.5 text-slate-600 bg-slate-50 border border-slate-200/60 rounded-xl hover:bg-slate-100 active:scale-95 transition-all"
           >
-            <FaBars className="text-sm" />
+            <FaBars className="text-base" />
           </button>
         </div>
 
-        {/* MOBILE DRAWERS */}
+        {/* MOBILE INTERFACE DRAWER LAYER */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <>
@@ -71,177 +115,197 @@ const UserLayout = ({ children, currentView, onViewChange, userProfile, alerts }
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-slate-950/30 backdrop-blur-sm z-50 lg:hidden"
+                className="fixed inset-0 bg-slate-950/30 backdrop-blur-xs z-50 lg:hidden"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <motion.aside
                 initial={{ x: "-100%" }}
                 animate={{ x: 0 }}
                 exit={{ x: "-100%" }}
-                transition={{ type: "spring", bounce: 0, duration: 0.3 }}
-                className="fixed top-0 bottom-0 left-0 w-72 bg-white z-50 p-6 flex flex-col justify-between shadow-2xl lg:hidden"
+                transition={{ type: "spring", bounce: 0, duration: 0.35 }}
+                className="fixed top-0 bottom-0 left-0 w-80 bg-white z-50 p-6 flex flex-col justify-between shadow-2xl lg:hidden"
               >
-                <div className="space-y-6">
+                <div className="space-y-8">
                   <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-                    <span className="font-extrabold text-base text-slate-900 tracking-tight">Main Navigation</span>
-                    <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-slate-400 hover:bg-slate-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-black text-sm">
+                        L
+                      </div>
+                      <span className="font-black tracking-tight text-slate-900">Workspace</span>
+                    </div>
+                    <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-slate-400 hover:bg-slate-50 rounded-xl">
                       <FaTimes className="text-base" />
                     </button>
                   </div>
-                  <nav className="space-y-2">
-                    {navigationMenus.map((item) => {
-                      const isSelected = currentView === item.id;
+                  <nav className="space-y-1.5">
+                    {NAVIGATION_ITEMS.map((item) => {
+                      const isSelected = isActive(item.path);
                       return (
                         <button
                           key={item.id}
-                          onClick={() => {
-                            onViewChange(item.id);
-                            setMobileMenuOpen(false);
-                          }}
+                          onClick={() => handleNavigation(item.path, item.id)}
                           className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl font-bold text-sm transition-all ${
-                            isSelected ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/10" : "text-slate-600 hover:bg-slate-50"
+                            isSelected ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/15" : "text-slate-600 hover:bg-slate-50"
                           }`}
                         >
-                          <div className="flex items-center gap-4">
-                            {item.icon} {item.name}
+                          <div className="flex items-center gap-3.5">
+                            <span className={isSelected ? "text-white" : "text-slate-400"}>{item.icon}</span>
+                            {item.name}
                           </div>
-                          {renderBadge(item.badge)}
+                          {item.id === "orders" && newOrdersCount > 0 && (
+                            <span className="w-5 h-5 bg-rose-500 text-white font-bold text-[10px] rounded-full flex items-center justify-center animate-pulse">
+                              {newOrdersCount}
+                            </span>
+                          )}
                         </button>
                       );
                     })}
                   </nav>
+                </div>
+                <div className="pt-4 border-t border-slate-100">
+                  <button 
+                    onClick={() => { setMobileMenuOpen(false); setShowLogoutModal(true); }}
+                    className="w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl text-rose-600 hover:bg-rose-50 transition-all font-bold text-sm"
+                  >
+                    <FaSignOutAlt /> Terminate Session
+                  </button>
                 </div>
               </motion.aside>
             </>
           )}
         </AnimatePresence>
 
-        {/* DESKTOP SIDEBAR */}
-        <aside className="hidden lg:flex flex-col justify-between w-[270px] bg-white border-r border-slate-200/80 min-h-[calc(100vh-72px)] sticky top-[72px] shrink-0 select-none z-30">
-          <div className="p-4">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-4 block">Navigation</span>
-            <nav className="space-y-2">
-              {navigationMenus.map((item) => {
-                const isSelected = currentView === item.id;
+        {/* DESKTOP SIDEBAR PIPELINE */}
+        <aside className="hidden lg:flex flex-col justify-between w-[290px] bg-white border-r border-slate-200/60 h-[calc(100vh-80px)] sticky top-20 shrink-0 z-30">
+          <div className="p-6">
+            <div className="flex items-center gap-3 px-2 mb-8">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white font-black text-base shadow-sm shadow-indigo-600/20">
+                L
+              </div>
+              <span className="font-black text-xl tracking-tight bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                LuxeClean
+              </span>
+            </div>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3 mb-3 block">
+              Customer Workspace
+            </span>
+            <nav className="space-y-1">
+              {NAVIGATION_ITEMS.map((item) => {
+                const isSelected = isActive(item.path);
                 return (
                   <button
                     key={item.id}
-                    onClick={() => onViewChange(item.id)}
-                    className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl font-bold text-sm transition-all group ${
-                      isSelected ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/10" : "text-slate-600 hover:bg-slate-50/80 hover:text-slate-900"
+                    onClick={() => handleNavigation(item.path, item.id)}
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl font-bold text-sm transition-all relative group ${
+                      isSelected ? "text-white" : "text-slate-600 hover:bg-slate-50/80 hover:text-slate-900"
                     }`}
                   >
-                    <div className="flex items-center gap-3.5">
-                      <span className={`text-base ${isSelected ? "text-white" : "text-slate-400 group-hover:text-indigo-600 transition-colors"}`}>{item.icon}</span>
-                      {item.name}
+                    {isSelected && (
+                      <motion.div 
+                        layoutId="activeDesktopNav"
+                        className="absolute inset-0 bg-indigo-600 rounded-xl shadow-md shadow-indigo-600/10 z-0"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                    
+                    <div className="flex items-center gap-3.5 z-10">
+                      <span className={`text-base transition-colors duration-200 ${isSelected ? "text-white" : "text-slate-400 group-hover:text-indigo-600"}`}>
+                        {item.icon}
+                      </span>
+                      <span>{item.name}</span>
                     </div>
-                    {renderBadge(item.badge)}
+
+                    {item.id === "orders" && newOrdersCount > 0 && (
+                      <span className={`z-10 w-5 h-5 font-bold text-[10px] rounded-full flex items-center justify-center transition-colors shadow-xs ${
+                        isSelected ? "bg-white text-indigo-600" : "bg-rose-500 text-white animate-pulse"
+                      }`}>
+                        {newOrdersCount}
+                      </span>
+                    )}
                   </button>
                 );
               })}
             </nav>
           </div>
-          <div className="p-4 border-t border-slate-100">
-            <button className="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all font-bold text-sm">
-              <FaSignOutAlt className="text-base text-slate-400" /> Sign Out Session
+          <div className="p-4 border-t border-slate-100 bg-slate-50/50">
+            <button 
+              onClick={() => setShowLogoutModal(true)}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all font-bold text-sm group"
+            >
+              <FaSignOutAlt className="text-slate-400 transition-colors group-hover:text-rose-500" /> Logout
             </button>
           </div>
         </aside>
 
-        {/* CONTENT UTILITY ROUTER CONTAINER */}
-        <div className="flex-1 flex flex-col min-w-0 bg-[#f8fafc]">
-          <div className="hidden lg:flex items-center justify-between px-8 py-4 bg-white border-b border-slate-200/80 sticky top-[72px] z-20">
-            <div>
-              <h1 className="text-lg font-black text-slate-900 tracking-tight capitalize">
-                {currentView === 'orders' ? 'Order Management Matrix' : `${currentView} View`}
-              </h1>
-            </div>
-
-            <div className="flex items-center gap-4">
-              
-              {/* NOTIFICATION CENTER */}
-              <div className="relative">
-                <button 
-                  onClick={() => setNotificationsOpen(!notificationsOpen)}
-                  className="relative w-9 h-9 rounded-xl bg-slate-50 border border-slate-200/60 hover:bg-slate-100/80 transition flex items-center justify-center text-slate-600 focus:outline-none"
-                >
-                  <FaBell className="text-xs" />
-                  {alerts.length > 0 && <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-indigo-600 ring-2 ring-white" />}
-                </button>
-
-                <AnimatePresence>
-                  {notificationsOpen && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 8 }} 
-                      animate={{ opacity: 1, y: 0 }} 
-                      exit={{ opacity: 0, y: 8 }}
-                      className="absolute right-0 mt-2 w-96 bg-white border border-slate-200/80 shadow-xl rounded-2xl py-1 z-50 overflow-hidden"
-                    >
-                      <div className="px-4 py-3 border-b border-slate-100 flex justify-between items-center bg-slate-50/60">
-                        <span className="text-xs font-black text-slate-800">System Telemetry Log</span>
-                        <span className="text-[10px] font-black bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">{alerts.length} Pending</span>
-                      </div>
-                      <div className="max-h-80 overflow-y-auto divide-y divide-slate-100">
-                        {alerts.map((msg) => (
-                          <div key={msg.id} className="p-3.5 hover:bg-slate-50/80 transition-colors flex gap-3 items-start">
-                            <FaCircle className="text-indigo-600 text-[6px] mt-1.5 shrink-0" />
-                            <div>
-                              <p className="text-xs font-bold text-slate-700 leading-relaxed">{msg.text}</p>
-                              <span className="text-[10px] text-slate-400 font-medium block mt-1">{msg.time}</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {/* PROFILE DROPDOWN */}
-              <div className="relative pl-3 border-l border-slate-200">
-                <button 
-                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                  className="flex items-center gap-2.5 p-1 rounded-xl hover:bg-slate-50 transition text-left focus:outline-none"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-700 flex items-center justify-center text-xs font-bold">
-                    <FaUser />
-                  </div>
-                  <div className="hidden sm:block">
-                    <p className="text-xs font-black text-slate-800 leading-none">{userProfile.name}</p>
-                    <p className="text-[9px] font-bold text-indigo-600 uppercase tracking-wider mt-0.5">{userProfile.tier}</p>
-                  </div>
-                  <FaChevronDown className="text-slate-400 text-[10px] ml-1" />
-                </button>
-
-                <AnimatePresence>
-                  {profileDropdownOpen && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 8 }} 
-                      animate={{ opacity: 1, y: 0 }} 
-                      exit={{ opacity: 0, y: 8 }}
-                      className="absolute right-0 mt-2 w-52 bg-white border border-slate-200 shadow-xl rounded-xl py-1 z-50"
-                    >
-                      <button onClick={() => { onViewChange("profile"); setProfileDropdownOpen(false); }} className="w-full text-left px-4 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 transition flex items-center gap-2">
-                        <FaUserCircle className="text-slate-400" /> Account Settings
-                      </button>
-                      <div className="border-t border-slate-100 my-1" />
-                      <button className="w-full text-left px-4 py-2.5 text-xs font-black text-rose-600 hover:bg-rose-50 transition flex items-center gap-2">
-                        <FaSignOutAlt className="text-rose-400" /> End Session
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-            </div>
+        {/* DYNAMIC COMPONENT CANVAS OVERVIEW WITH OUTLET */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-10 max-w-6xl w-full mx-auto overflow-hidden flex flex-col gap-4">
+          {/* Breadcrumb Module */}
+          <div className="text-[11px] font-bold text-slate-400 flex items-center gap-2 px-1">
+            <span className="hover:text-slate-600 cursor-pointer transition">Workspace</span>
+            <FaChevronRight className="text-[8px]" />
+            <span className="text-indigo-600 capitalize">{activeItem?.name}</span>
           </div>
 
-          {/* MAIN CANVAS WRAPPER - Added pt-8 / space-y-8 to safely move contents slightly down */}
-          <main className="px-4 md:px-8 pt-8 pb-12 max-w-7xl w-full mx-auto flex-1 space-y-8">
-            {children}
-          </main>
-        </div>
+          {/* Clean White Workspace Canvas */}
+          <div className="flex-1 min-h-[520px] lg:min-h-[calc(100vh-210px)] bg-white border border-slate-200/70 rounded-2xl shadow-xs p-6 sm:p-10 flex flex-col relative overflow-hidden group/canvas">
+            {/* Subtle Modern Decorative Grid Background Layer */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-35 pointer-events-none" />
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="w-full h-full flex-1 flex flex-col z-10"
+              >
+                {/* OUTLET - This renders the child route components */}
+                <Outlet />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </main>
       </div>
+
+      {/* Footer is now rendered by App.jsx */}
+      {/* So we don't need Footer here */}
+
+      {/* CONFIRMATION LOGOUT MODAL MODULE */}
+      <AnimatePresence>
+        {showLogoutModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-slate-950/40 backdrop-blur-xs"
+              onClick={() => setShowLogoutModal(false)}
+            />
+            <motion.div 
+              initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.96, opacity: 0 }}
+              className="bg-white rounded-2xl max-w-sm w-full p-6 relative z-10 shadow-xl border border-slate-100"
+            >
+              <h3 className="text-lg font-black text-slate-900 tracking-tight">Confirm Sign Out</h3>
+              <p className="text-slate-500 text-xs mt-2 leading-relaxed">
+                Are you sure you want to terminate your current cleaning dashboard session?
+              </p>
+              <div className="flex items-center justify-end gap-3 mt-6">
+                <button 
+                  onClick={() => setShowLogoutModal(false)} 
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition"
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={handleLogout} 
+                  className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 transition shadow-xs"
+                >
+                  Logout
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -11,6 +11,11 @@ import {
   FaHandshake,
   FaAward,
   FaHistory,
+  FaTruck,
+  FaSoap,
+  FaClipboardCheck,
+  FaWind,
+  FaHome,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 
@@ -52,6 +57,39 @@ const whoWeAreCards = [
     title: "Elite Standards",
     desc: "Rigorous attention to detail on every stitch and seam.",
     color: "bg-teal-50 text-[#00A6A6]"
+  }
+];
+
+const processSteps = [
+  {
+    icon: <FaTruck className="text-xl text-[#0B4EA2]" />,
+    title: "Doorstep Pickup",
+    desc: "Book through our App/website or WhatsApp; our team collects your clothes safely and on schedule.",
+    borderColor: "hover:border-[#0B4EA2]"
+  },
+  {
+    icon: <FaSoap className="text-xl text-[#00A6A6]" />,
+    title: "Sorting & Washing",
+    desc: "Clothes are carefully sorted by color and fabric, cleaned with eco-detergents and German-grade machines for superior hygiene.",
+    borderColor: "hover:border-[#00A6A6]"
+  },
+  {
+    icon: <FaClipboardCheck className="text-xl text-[#0B4EA2]" />,
+    title: "Drying & Quality Check",
+    desc: "Temperature-controlled dryers and multi-stage inspections ensure wrinkle-free and odour-free results.",
+    borderColor: "hover:border-[#0B4EA2]"
+  },
+  {
+    icon: <FaWind className="text-xl text-[#00A6A6]" />,
+    title: "Steam Ironing",
+    desc: "Professional steam-press gives garments a crisp, ready-to-wear finish with zero fabric damage.",
+    borderColor: "hover:border-[#00A6A6]"
+  },
+  {
+    icon: <FaHome className="text-xl text-[#0B4EA2]" />,
+    title: "Doorstep Delivery",
+    desc: "On-time delivery with live tracking via our AI dashboard – freshness guaranteed.",
+    borderColor: "hover:border-[#0B4EA2]"
   }
 ];
 
@@ -143,14 +181,14 @@ const About = () => {
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent" />
       </section>
 
-      {/* UPDATED SECTION: OUR STORY */}
+      {/* OUR STORY */}
       <section className="relative bg-white py-28 overflow-hidden border-b border-gray-100">
         <div className="absolute top-1/4 right-0 w-72 h-72 bg-[#00A6A6]/5 rounded-full blur-3xl" />
         
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
           <div className="grid lg:grid-cols-12 gap-16 items-center">
             
-            {/* Image Column - Configured to display the entire image seamlessly */}
+            {/* Image Column */}
             <motion.div
               className="lg:col-span-5 order-2 lg:order-1 flex items-center justify-center relative"
               initial={{ opacity: 0, scale: 0.95 }}
@@ -266,6 +304,69 @@ const About = () => {
         </div>
       </section>
 
+      {/* NEW SECTION: OUR PROCESS (Based on Screenshot) */}
+      <section className="bg-sky-100 py-28 border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          
+          <div className="text-center max-w-4xl mx-auto mb-16">
+            <motion.p 
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-[#0B4EA2] font-bold uppercase tracking-[4px] text-xs mb-3"
+            >
+              How It Works
+            </motion.p>
+            <motion.h2 
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-3xl md:text-5xl font-serif font-bold text-[#0B2545] mb-6"
+            >
+              Our Process – How Athenura Delivers India's Best Laundry & Dry-Clean Experience
+            </motion.h2>
+            <motion.p 
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-gray-600 text-base md:text-lg leading-relaxed"
+            >
+              
+            </motion.p>
+          </div>
+
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={staggerContainer}
+          >
+            {processSteps.map((step, index) => (
+              <motion.div
+                key={index}
+                variants={fadeInUp}
+                whileHover={{ y: -8 }}
+                className={`bg-white border-2 border-gray-100/80 rounded-3xl p-6 shadow-sm ${step.borderColor} transition-all duration-300 flex flex-col items-center text-center`}
+              >
+                <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 shadow-sm border border-slate-100">
+                  {step.icon}
+                </div>
+                <h3 className="text-lg font-serif font-bold text-[#0B2545] mb-3">
+                  {step.title}
+                </h3>
+                <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">
+                  {step.desc}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
+
+        </div>
+      </section>
+
       {/* OUR PURPOSE */}
       <section className="py-28 bg-gradient-to-br from-[#0B2545] to-[#0B4EA2] text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]" />
@@ -307,7 +408,7 @@ const About = () => {
               <h3 className="text-2xl font-serif font-bold mb-4 text-white">Our Focus</h3>
               <p className="text-white/80 leading-relaxed font-light">
                 We focus on fabric-safe cleaning, eco-friendly processes,
-                punctual delivery, and providing customers with a seamless laundry experience.
+                punctional delivery, and providing customers with a seamless laundry experience.
               </p>
             </motion.div>
 
