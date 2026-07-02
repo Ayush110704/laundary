@@ -25,10 +25,15 @@ import Payments from "./components/Admin/Payments";
 import Analytics from "./components/Admin/Analytics";
 import ServiceManagement from './components/Admin/ServiceManagement';
 import OrderTracking from "./components/OrderTracking";
+
 import BookingApplyForm from "./Pages/BookingApplyForm";  
 import Address from "./Pages/Address"; // ← IMPORT ADDRESS COMPONENT
 import UserLayout from "./Pages/UserLayout"; // ← NEW IMPORT: UserLayout component
 import CheckOut from './Pages/CheckOut';
+
+ 
+
+
 
 function App() {
   const location = useLocation();
@@ -74,13 +79,18 @@ function App() {
         <Route path="/user-dashboard" element={<UserDashboard />} />
         <Route path="/TermsCondition" element={<TermsConndition />} />
         <Route path="/FAQ" element={<FAQ />} />
+
         <Route path="/checkout" element={<CheckOut/>} />
+
+        <Route path="/checkout" element={<CheckOut />} />  
+        
+        <Route path="/address" element={<Address/>} /> 
+        
         
         {/*  Auth Routes */}
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} /> 
         <Route path="/profile" element={<UserProfile/>} />  
-        <Route path="/address" element={<Address/>} />  {/* ← ADD ADDRESS ROUTE */}
         
         {/*  Other Routes   */}
         <Route path="/subscription" element={<Subscription />} />

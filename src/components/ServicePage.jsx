@@ -1,4 +1,4 @@
-import React from 'react'
+import React ,{useEffect,useState,useRef} from 'react'
 import { ServicesData } from '../Data/LaundaryData.js'
 import { useParams } from "react-router-dom"
 import { motion } from 'framer-motion'
@@ -8,6 +8,7 @@ import Eco from '../assets/Laundry-Service/Eco.webp';
 import Wool from '../assets/Laundry-Service/Wool.webp';
 import Product from '../assets/Laundry-Service/Product.webp';
 import FabSpecialist from '../assets/Laundry-Service/FabSpecialist.webp'
+import useEmblaCarousel from "embla-carousel-react"; 
 
 const ServicePage = () => {
 
@@ -42,7 +43,43 @@ const ServicePage = () => {
     },
   };
 
+const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    align: "center",
+    loop: true,
+    skipSnaps: false,
+  });
+  
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
+  useEffect(() => {
+    if (!emblaApi) return;
+    
+    const onSelect = () => {
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+    };
+    
+    emblaApi.on("select", onSelect);
+    onSelect();
+    
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
+  }, [emblaApi]);
+
+  // ADDED: Auto-scroll effect for mobile carousel
+  useEffect(() => {
+    if (!emblaApi) return;
+    
+    const interval = setInterval(() => {
+      if (!emblaApi.canScrollNext()) {
+        emblaApi.scrollTo(0);
+      } else {
+        emblaApi.scrollNext();
+      }
+    }, 3000);
+    
+    return () => clearInterval(interval);
+  }, [emblaApi]);
 
 
   return (
@@ -62,14 +99,7 @@ const ServicePage = () => {
         >
           <div className="flex items-center justify-center px-5 py-10 lg:py-0">
             <div className="w-full max-w-xl px-5 md:px-0">
-              <motion.h3
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="inline-block text-xs sm:text-sm md:text-base text-blue-600 py-2 px-4 rounded-full bg-gray-200 font-bold"
-              >
-                {Hero.HeroBadge}
-              </motion.h3>
+             
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -89,7 +119,7 @@ const ServicePage = () => {
                     hidden: { opacity: 0, y: 30 },
                     visible: { opacity: 1, y: 0, transition: { duration: 0.7 } },
                   }}
-                  className="text-4xl md:text-5xl lg:text-6xl mt-5 font-bold text-blue-950 font-serif " >
+                  className="text-4xl md:text-5xl lg:text-7xl  font-bold text-blue-950 font-serif " >
                   {Hero.HeroTitle}
                 </motion.h1>
 
@@ -98,7 +128,7 @@ const ServicePage = () => {
                     hidden: { opacity: 0, y: 30 },
                     visible: { opacity: 1, y: 0, transition: { duration: 0.7 } },
                   }}
-                  className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-600 mt-5 font-serif" >
+                  className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-600 mt-5 md:mt-10 font-serif" >
                   {Hero.HeroSub}
                 </motion.h2>
 
@@ -155,7 +185,7 @@ const ServicePage = () => {
               Types of {Servicetitle} We Offer
             </motion.h1>
 
-            <div className="w-full flex justify-center mt-12 px-5">
+            <div className="w-full hidden md:flex justify-center mt-12 px-5">
               <motion.div
                 variants={containerVariants}
                 initial="hidden"
@@ -232,6 +262,99 @@ const ServicePage = () => {
                 })}
               </motion.div>
             </div>
+
+          {/* Mobile Embla Carousel */}
+<div className="md:hidden mt-10">
+  <div className="overflow-hidden" ref={emblaRef}>
+    <div className="flex">
+      {ServiceOffered.map((item) => {
+        const Icon = item.icon;
+
+        return (
+          <div
+            key={item.id}
+            className="flex-[0_0_88%] px-2"
+          >
+            <motion.div
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.3 }}
+              className="group relative overflow-hidden rounded-3xl bg-white border border-blue-200 shadow-lg h-full"
+            >
+              {/* Image */}
+              <div className="relative p-3">
+                <div className="relative overflow-hidden rounded-2xl h-44">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </div>
+
+                {/* Badge */}
+                <span
+                  className={`absolute top-6 left-6 ${item.badgeColor} text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md`}
+                >
+                  {item.badge}
+                </span>
+              </div>
+
+              {/* Floating Icon */}
+              <div className="absolute left-1/2 top-[150px] -translate-x-1/2 z-10">
+                <div className="w-14 h-14 rounded-full bg-white border-4 border-blue-100 shadow-lg flex items-center justify-center transition-all duration-300 group-hover:rotate-6">
+                  <Icon size={24} className="text-blue-600" />
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="pt-5 px-5 pb-5">
+                <h2 className="text-2xl font-bold text-center text-blue-900">
+                  {item.title}
+                </h2>
+
+                <p className="mt-2 text-sm text-center text-gray-600 leading-6 line-clamp-2 min-h-[48px]">
+                  {item.desc}
+                </p>
+
+                <div className="mt-5 flex flex-wrap justify-center gap-2">
+                  {item.features.map((feature) => (
+                    <span
+                      key={feature}
+                      className="flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1.5 text-[11px] font-medium text-blue-700"
+                    >
+                      <CheckCircle2 size={12} />
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Bottom Line */}
+              <div className="h-1 w-0 bg-gradient-to-r from-blue-600 to-cyan-500 transition-all duration-500 group-hover:w-full" />
+            </motion.div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  {/* Dots */}
+  <div className="flex justify-center gap-2 mt-6">
+    {ServiceOffered.map((_, index) => (
+      <button
+        key={index}
+        onClick={() => emblaApi?.scrollTo(index)}
+        className={`transition-all duration-300 rounded-full ${
+          selectedIndex === index
+            ? "w-6 h-2 bg-blue-900"
+            : "w-2 h-2 bg-blue-300"
+        }`}
+      />
+    ))}
+  </div>
+</div>
+
           </section>
         )}
 
@@ -291,7 +414,7 @@ const ServicePage = () => {
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 80 }}
+              initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{

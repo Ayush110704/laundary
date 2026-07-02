@@ -35,27 +35,14 @@ const CTA =( { type, headingtop, headingbottom,subHeading,})=> {
 
         <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 md:px-12 text-center ">
 
-          {/* Badge */}
-
-          {/* <motion.div
-            initial={{ opacity: 0, y: -15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            animate={{y: [0, -4, 0],}}
-            className="mb-5 mt-4 flex items-center gap-2 rounded-full bg-white/10 px-5 py-2 text-[10px] md:text-xs font-semibold uppercase tracking-[2px] md:tracking-[3px] text-blue-100"
-          >
-
-            <ShieldCheck size={16} />
-            Premium {type} Services
-          </motion.div> */}
-
+         
           {/* Heading */}
 
           <motion.h2
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3,}}
-            className="max-w-5xl  text-2xl md:text-5xl font-bold leading-tight text-white"
+            className="max-w-5xl  text-2xl md:text-5xl font-bold leading-tight text-white mt-4"
           >
       {headingtop}
             

@@ -12,7 +12,7 @@ import ecoIcon from '../assets/freshandechofriendly.webp';
 
 // Laundry-Service Page Images
 
-import LaundryHeroBackground from '../assets/Laundry-Service/LaundryHeroBackground1.png'
+import LaundryHeroBackground from '../assets/Laundry-Service/LaundryHerobackground1.png'
 import LaundryHeroVector from '../assets/Laundry-Service/LaundryHeroVector.png'
 import baby from '../assets/Laundry-Service/baby.webp'
 import Curtain from '../assets/Laundry-Service/Curtain.webp'
@@ -33,11 +33,15 @@ import DryHeroBackground from '../assets/DryClean/DryHeroBackground2.png'
 import DryHeroVector from '../assets/DryClean/DryHeroVector.png'
 import bags from '../assets/DryClean/bags.webp'
 import Step from '../assets/DryClean/steps.webp'
+
 import gown from '../assets/DryClean/gown.jpeg'
 import leather from '../assets/DryClean/leather.jpeg'
 import kids from '../assets/DryClean/kids.webp'
 import MenWear from '../assets/DryClean/Menswear.jpeg'
 import WomenWear from '../assets/DryClean/WomenWear.jpeg'
+
+
+
 import shoe from '../assets/DryClean/shoe.webp'
 import Weeding from '../assets/DryClean/Weeding.webp'
 

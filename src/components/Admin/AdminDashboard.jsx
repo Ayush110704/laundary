@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom'; // NEW: Import useNavigate hook
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line
@@ -16,7 +17,9 @@ import {
 } from 'lucide-react';
 
 
-const AdminDashboard = () => {
+const AdminDashboard = () => { 
+  const navigate = useNavigate();
+
   // Real profit/loss data for weekly revenue
   const orderData = [
     { name: 'Mon', orders: 45, revenue: 12000, profit: 3600, loss: 0 },
@@ -66,14 +69,18 @@ const AdminDashboard = () => {
     { id: 5, initials: 'RK', name: 'Admin', action: 'Announcement updated', time: 'Yesterday' },
   ];
 
-  // Quick Actions Data - Navigation links
+  // Quick Actions Data  
   const quickActions = [
-    { id: 1, icon: Users, label: 'User Management', color: 'bg-blue-500' },
-    { id: 2, icon: ShoppingBag, label: 'Order Management', color: 'bg-green-500' },
-    { id: 3, icon: Wrench, label: 'Service Management', color: 'bg-yellow-500' },
-    { id: 4, icon: CreditCard, label: 'Payments', color: 'bg-purple-500' },
-    { id: 5, icon: BarChart3, label: 'Analytics', color: 'bg-red-500' },
+    { id: 1, icon: Users, label: 'User Management', color: 'bg-blue-500', path: '/admin-dashboard/user-management' },
+    { id: 2, icon: ShoppingBag, label: 'Order Management', color: 'bg-green-500', path: '/admin-dashboard/orders' },
+    { id: 3, icon: Wrench, label: 'Service Management', color: 'bg-yellow-500', path: '/admin-dashboard/services' },
+    { id: 4, icon: CreditCard, label: 'Payments', color: 'bg-purple-500', path: '/admin-dashboard/payments' },
+    { id: 5, icon: BarChart3, label: 'Analytics', color: 'bg-red-500', path: '/admin-dashboard/analytics' },
   ];
+ 
+  const handleNavigation = (path) => {
+    navigate(path);
+  };
 
   // Get current date and time for welcome message
   const currentHour = new Date().getHours();
@@ -139,8 +146,7 @@ const AdminDashboard = () => {
       </motion.div>
 
       {/* Recent Activity & Quick Actions Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        {/* Recent Activity - Takes 2 columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8"> 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -182,13 +188,13 @@ const AdminDashboard = () => {
           </div>
         </motion.div>
 
-        {/* Quick Actions - Takes 1 column with navigation links */}
+        {/* Quick Actions  */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 h-full">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 h-full ">
             <div className="flex items-center gap-2 mb-4">
               <Plus size={20} className="text-blue-600" />
               <h3 className="text-lg font-semibold text-gray-800">Quick Actions</h3>
@@ -207,7 +213,8 @@ const AdminDashboard = () => {
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                   }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-200 border border-transparent hover:border-gray-200"
+                  onClick={() => handleNavigation(action.path)}   navigation
+                  className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-200 border border-transparent hover:border-gray-200 cursor-pointer"
                 >
                   <div className={`${action.color} p-2 rounded-lg text-white`}>
                     <action.icon size={18} />
