@@ -36,7 +36,7 @@ import Step from '../assets/DryClean/steps.webp'
 
 import gown from '../assets/DryClean/gown.jpeg'
 import leather from '../assets/DryClean/leather.jpeg'
-import kids from '../assets/DryClean/kids.webp'
+import kids from '../assets/DryClean/Kids.webp'
 import MenWear from '../assets/DryClean/Menswear.jpeg'
 import WomenWear from '../assets/DryClean/WomenWear.jpeg'
 
