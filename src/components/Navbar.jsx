@@ -10,7 +10,7 @@ const Navbar = () => {
   const [hover, setHover] = useState(false);
   const [showServices, setShowServices] = useState(false);
   const [profile, setProfile] = useState(false);
-  const[userData,setUserData]= useState();
+  const [userData, setUserData] = useState();
 
   const navigate = useNavigate();
 
@@ -117,52 +117,52 @@ const Navbar = () => {
 
         {userlogin ? (
           <>
-           <div
-  className="relative"
-  onMouseEnter={() => setProfile(true)}
-  onMouseLeave={() => setProfile(false)}
->
-  <button
-    className="hidden md:flex items-center gap-2 py-1 px-4 bg-white border border-blue-600 rounded-3xl text-blue-700 cursor-pointer mr-15 font-semibold transition-all duration-500 hover:scale-105 hover:bg-blue-700 hover:text-white"
-  >
-    <User size={18} />
-    {userData.FirstName || "Profile"}
-  </button>
+            <div
+              className="relative"
+              onMouseEnter={() => setProfile(true)}
+              onMouseLeave={() => setProfile(false)}
+            >
+              <button
+                className="hidden md:flex items-center gap-2 py-1 px-4 bg-white border border-blue-600 rounded-3xl text-blue-700 cursor-pointer mr-15 font-semibold transition-all duration-500 hover:scale-105 hover:bg-blue-700 hover:text-white"
+              >
+                <User size={18} />
+                {userData.FirstName || "Profile"}
+              </button>
 
-  <AnimatePresence>
-    {profile && (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 10 }}
-        transition={{ duration: 0.2 }}
-        className="absolute top-full right-2 mt-2 shadow-lg rounded-xl p-4 grid space-y-2 w-50 z-50 bg-linear-to-b from-blue-50 to-blue-200 text-blue-600 font-semibold border border-blue-200 text-center"
-      >
-        <div className="flex justify-center">
-          <div>
-          <h3 className='flex items-center text-blue-500'><User size={18} />{userData.FirstName}</h3>
-          <h5 className='text-[12px]'>{userData.number}</h5>
-          </div>
-        </div>
-        <Link
-          to="/Dashboard"
-          onClick={() => setProfile(false)}
-          className="hover:text-blue-800 transition-all hover:scale-105"
-        >
-          Dashboard
-        </Link>
+              <AnimatePresence>
+                {profile && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full right-2 mt-2 shadow-lg rounded-xl p-4 grid space-y-2 w-50 z-50 bg-linear-to-b from-blue-50 to-blue-200 text-blue-600 font-semibold border border-blue-200 text-start"
+                  >
+                    <div className="flex justify-start">
+                      <div>
+                        <h3 className='text-start text-blue-500 gap-2'>Hello <span className="text-blue-600">{userData.FirstName}</span></h3>
+                        <h5 className='text-[12px]'>{userData.number}</h5>
+                      </div>
+                    </div>
+                    <Link
+                      to="/user-dashboard"
+                      onClick={() => setProfile(false)}
+                      className="hover:text-blue-800 transition-all hover:scale-105"
+                    >
+                      Dashboard
+                    </Link>
 
-        <button
-          onClick={handleLogout}
-          className="text-red-700 flex justify-center items-center gap-1 transition-all hover:scale-105"
-        >
-          <LogOut size={18} />
-          Logout
-        </button>
-      </motion.div>
-    )}
-  </AnimatePresence>
-</div>
+                    <button
+                      onClick={handleLogout}
+                      className="text-red-700 flex  items-center gap-1 transition-all hover:scale-105"
+                    >
+                      <LogOut size={18} />
+                      Logout
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </>
         ) : (
           <button
@@ -186,29 +186,39 @@ const Navbar = () => {
       <AnimatePresence>
         {mobileMenu && (
           <motion.div
-            initial={{ y: 0, opacity: 0 }}
-            animate={{ y: 45, opacity: 1 }}
-            exit={{ y: 0, opacity: 0 }}
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -40, opacity: 0 }}
             transition={{ duration: 0.35 }}
-            className="absolute top-0 left-0 w-full bg-white text-blue-500 font-semibold shadow-lg z-40 md:hidden rounded-b-2xl"
+            className="absolute top-10 left-0 w-full bg-blue-50 text-blue-950 font-semibold shadow-lg z-40 md:hidden rounded-b-2xl"
           >
             <ul className="flex flex-col items-center gap-5 py-6">
               {menu.map((item) => (
-                <li key={item.id} className="w-full text-center">
+                <li key={item.id} className="w-full text-start ml-20">
                   {item.dropdown ? (
                     <>
-                      <button
-                        onClick={() => setShowServices(!showServices)}
-                        className="flex items-center justify-center gap-2 w-full hover:text-blue-600"
-                      >
-                        {item.label}
-                        <ChevronDown
-                          size={18}
-                          className={`transition-transform duration-300 ${showServices ? "rotate-180" : ""}`}
-                        />
-                      </button>
+                      <div className="flex items-center justify-between  w-25">
+                        <Link
+                          to={item.path}
+                          onClick={() => setMobileMenu(false)}
+                          className="hover:text-blue-600"
+                        >
+                          {item.label}
+                        </Link>
+
+                        <button
+                          onClick={() => setShowServices(!showServices)}
+                          className="p-1  "
+                        >
+                          <ChevronDown
+                            size={18}
+                            className={`transition-transform duration-300 ${showServices ? "rotate-180" : ""
+                              }`}
+                          />
+                        </button>
+                      </div>
                       {showServices && (
-                        <div className="mt-3 flex flex-col rounded-2xl bg-gray-100 ">
+                        <div className="mt-3 flex flex-col rounded-2xl ">
                           {item.dropdown.map((service) => (
                             <Link
                               key={service.path}
@@ -217,7 +227,7 @@ const Navbar = () => {
                                 setMobileMenu(false);
                                 setShowServices(false);
                               }}
-                              className="py-3 hover:bg-blue-50 hover:text-blue-600"
+                              className="py-2 text-sm hover:bg-blue-50 hover:text-blue-600"
                             >
                               {service.label}
                             </Link>
@@ -237,15 +247,22 @@ const Navbar = () => {
                 </li>
               ))}
             </ul>
-            <div className="w-full flex justify-center mb-5">
+            <div className="w-75  flex justify-around mb-5">
               <button
                 onClick={() => {
-                  setUserLogin(!userlogin);
+                 navigate(userlogin ? "/user-dashboard" : "/Login")
                   setMobileMenu(false);
                 }}
                 className="py-1 px-3 bg-blue-600 rounded-3xl text-white cursor-pointer hover:bg-blue-700"
               >
-                {userlogin ? "Profile" : "Login"}
+                {userlogin ? userData.FirstName : "Login"}
+              </button>
+
+               <button
+                onClick={handleLogout}
+                className=" text-red-700 cursor-pointer hover:bg-blue-700"
+              >
+             Logout
               </button>
             </div>
           </motion.div>

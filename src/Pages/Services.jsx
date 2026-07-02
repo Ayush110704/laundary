@@ -81,12 +81,12 @@ const Services = () => {
   ];
 
   const services = [
-    { id: 1, title: "Laundry", desc: "Everyday wash & fold service for all your clothes.", image: WashingMachine, path: "/services/laundry-service" },
-    { id: 2, title: "Dry Cleaning", desc: " Gentle cleaning for formal, delicate & designer wear..", image: DryCleaning, path: "/services/dry-cleaning" },
-    { id: 3, title: "Shoe Cleaning", desc: "Deep cleaning & restoration for all types of footwear .", image: ShoeCleaning, path: "/services/shoe-cleaning" },
-    { id: 4, title: "Ironing", desc: " Steam ironing for crisp, wrinkle-free & perfect finish.", image: Iron, path: "/services/ironing" },
-    { id: 5, title: "Carpet Cleaning", desc: " Deep and  cleaning for carpets, rugs & mats.", image: CarpetCleaning, path: "/services/carpet-cleaning" },
-    { id: 6, title: "Curtain Cleaning", desc: " Professional cleaning for curtains, blinds & drapes.", image: Curtain, path: "/services/curtain-cleaning" },
+    { id: 1, title: "Laundry", desc: "Everyday wash & fold service for all your clothes.", image: WashingMachine, path: "/services/Laundry-service" },
+    { id: 2, title: "Dry Cleaning", desc: " Gentle cleaning for formal, delicate & designer wear..", image: DryCleaning, path: "/services/DryClean-service" },
+    { id: 3, title: "Shoe Cleaning", desc: "Deep cleaning & restoration for all types of footwear .", image: ShoeCleaning, path: "/services/ShoeCleaning-service" },
+    { id: 4, title: "Ironing", desc: " Steam ironing for crisp, wrinkle-free & perfect finish.", image: Iron, path: "/services/Ironing-service" },
+    { id: 5, title: "Carpet Cleaning", desc: " Deep and  cleaning for carpets, rugs & mats.", image: CarpetCleaning, path: "/services/CarpetCleaning-service" },
+    { id: 6, title: "Curtain Cleaning", desc: " Professional cleaning for curtains, blinds & drapes.", image: Curtain, path: "/services/CurtainCleaning-service" },
   ]
 
 
@@ -119,26 +119,19 @@ const Services = () => {
         }}
       >
         <div className="flex md:hidden absolute inset-0 md:mt-12 bg-black/70 z-10 min-h-screen"></div>
-        <div className="md:flex hidden absolute inset-0 md:mt-12 bg-black/30 z-10 min-h-screen"></div>
+        <div className="md:flex hidden absolute inset-0 md:mt-12 bg-black/10 z-10 min-h-screen"></div>
 
         <div className="relative z-20 min-h-screen flex items-center  text-center md:text-left">
           <div className="w-full max-w-3xl px-6 sm:px-10 lg:px-20 md:mt-0">
-            <motion.h3
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              className="inline-block text-xs sm:text-sm md:text-base text-blue-600 py-2 px-4 rounded-full bg-gray-200"
-            >
-              ✦ PREMIUM CARE
-            </motion.h3>
+           
 
             <motion.h1
               initial={{ opacity: 0, scale: 1, y: 40 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
 
-              className="mt-3 text-4xl sm:text-5xl lg:text-6xl font-bold text-white md:text-blue-800 leading-15">
-              Expert Laundry <span className=" text-xl md:text-4xl text-[#f1f1fa]">,</span>
+              className=" text-4xl sm:text-5xl lg:text-7xl font-bold text-white md:text-blue-600 leading-15">
+              Expert Laundry <span className=" text-xl md:text-4xl text-[#f1f1fa]">&</span>
               <br />
               
             </motion.h1>
@@ -162,7 +155,7 @@ const Services = () => {
               animate={{ opacity: 1, y: 0, scale: 1, }}
               transition={{ duration: 1, delay: 1 }}
             
-            className="group mt-8 md:mt-10 py-3 md:py-5 px-6 md:px-8 rounded-xl bg-blue-900 text-white font-semibold text-base md:text-xl">
+            className="group mt-8 md:mt-10 mb-5 py-3 md:py-5 px-6 md:px-8 rounded-xl bg-blue-900 text-white font-semibold text-base md:text-xl">
               <span className="flex items-center gap-2 transition-transform duration-300 group-hover:scale-105">
                 Book this Service
                 <MoveRight className="h-5 w-5 mt-1 transition-transform duration-300 group-hover:translate-x-1" />

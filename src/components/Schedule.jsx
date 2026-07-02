@@ -3,10 +3,11 @@ import {Sun,SunMedium,Moon,CircleCheckBig,CalendarDays, ChevronLeft, ChevronRigh
 import {motion} from 'framer-motion'
 import {getCheckoutData,saveCheckoutData,} from "../utils/checkoutStorage";
 
-const Schedule = () => {
+const Schedule = ({ checkoutData, setCheckoutData }) => {
 
-// const [date, setDate] = useState(new Date());
-const [selectedSlot, setSelectedSlot] = useState("");
+
+const [selectedPickupSlot, setSelectedPickupSlot] = useState( checkoutData.schedule?.time || "");
+const [selectedDeliverySlot, setSelectedDeliverySlot] = useState(checkoutData.schedule?.deliverySlot || null);
  const [startDate, setStartDate] = useState(() => {
     const today = new Date();
     const start = new Date(today);
@@ -14,7 +15,7 @@ const [selectedSlot, setSelectedSlot] = useState("");
     return start;
   });
 
-   const [selected, setSelected] = useState(new Date());
+   const [selected, setSelected] = useState( checkoutData.schedule?.date ? new Date(checkoutData.schedule.date) : new Date());
    
 
     const days = Array.from({ length: 14 }, (_, index) => {
@@ -30,26 +31,17 @@ const [selectedSlot, setSelectedSlot] = useState("");
   };
 
 useEffect(() => {
-  console.log("useEffect is running");
+  setCheckoutData((prev)=>{
+      const update = {...prev,schedule:{
+        date:selected.toLocaleDateString(),
+        slot:selectedPickupSlot,
+        deliverySlot: selectedDeliverySlot,
+      }};
+      saveCheckoutData(update);
+      return update;
+  })
+}, [selected, selectedPickupSlot,selectedDeliverySlot,setCheckoutData]);
 
-  const checkout = getCheckoutData();
-  console.log("Before Update:", checkout);
-
-  checkout.schedule = {
-    date: selected.toISOString(),
-    time: selectedSlot,
-  };
-
-  console.log("After Update:", checkout);
-
-  saveCheckoutData(checkout);
-
-  console.log("Saved to localStorage");
-}, [selected, selectedSlot]);
-
-useEffect(() => {
-  console.log("selectedSlot changed:", selectedSlot);
-}, [selectedSlot]);
 
 
  const slots = [
@@ -57,28 +49,69 @@ useEffect(() => {
     id: 1,
     title: "Morning",
     time: "8 AM - 11 AM",
+    endTime: 11 ,
     icon: Sun,
   },
   {
     id: 2,
     title: "Afternoon",
     time: "1 PM - 4 PM",
+    endTime: 16 ,
     icon: SunMedium,
   },
   {
     id: 3,
     title: "Night",
     time: "6 PM - 9 PM",
+    endTime:21,
     icon: Moon,
   },
 ];
+
+
+
+const DeliverySlots = [
+  {
+    id: 1,
+    time: "11 AM - 1 PM",
+    icon: Sun,
+     offset:1
+  },
+  {
+    id: 2,
+    time: "5 PM - 6 PM",
+    icon: SunMedium,
+    offset:2
+
+  },
+  {
+    id: 3,
+    time: "9 PM - 10 PM",
+    icon: Moon,
+    offset:3
+  },
+
+]
+
+
+
+const isSlotPassed = (slot) => {
+  const now = new Date();
+
+  // Only disable slots for today
+  if (selected.toDateString() !== now.toDateString()) {
+    return false;
+  }
+
+  return now.getHours() >= slot.endTime;
+};
 
   return (
     <>
      <motion.div
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
-          className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-6"
+          className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-2 md:p-6"
         >
           <h2 className="text-2xl font-bold text-blue-900 mb-5">
             Schedule Pickup
@@ -94,16 +127,16 @@ useEffect(() => {
         <div className="flex gap-2">
           <button
             onClick={() => changeWeek(-1)}
-            className="p-2 border rounded-lg hover:bg-blue-50"
+            className=" md:p-2 border rounded-lg hover:bg-blue-50"
           >
-            <ChevronLeft size={18} />
+            <ChevronLeft size={15} />
           </button>
 
           <button
             onClick={() => changeWeek(1)}
-            className="p-2 border rounded-lg hover:bg-blue-50"
+            className=" md:p-2 border rounded-lg hover:bg-blue-50"
           >
-            <ChevronRight size={18} />
+            <ChevronRight size={15} />
           </button>
         </div>
       </div>
@@ -125,21 +158,31 @@ useEffect(() => {
           const isCurrentMonth =
             date.getMonth() === new Date().getMonth();
 
+            const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const currentDate = new Date(date);
+currentDate.setHours(0, 0, 0, 0);
+
+const isPastDate = currentDate < today;
+
           return (
-            <button
-              key={index}
-              onClick={() => setSelected(date)}
-              className={`py-3 px-2 rounded-xl flex items-center justify-center font-medium transition-all duration-300
-                ${
-                  isSelected
-                    ? " bg-blue-800 text-white  font-bold"
-                    : isCurrentMonth
-                    ? "text-gray-800 hover:bg-blue-50"
-                    : "text-gray-300 hover:bg-gray-100"
-                }`}
-            >
-              {date.getDate()}
-            </button>
+           <button
+  key={index}
+  disabled={isPastDate}
+  onClick={() => !isPastDate && setSelected(date)}
+  className={`py-3 px-2 rounded-xl flex items-center justify-center font-medium transition-all duration-300
+    ${
+      isPastDate
+        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+        : isSelected
+        ? "bg-blue-800 text-white"
+        : "hover:bg-blue-50"
+    }
+  `}
+>
+  {date.getDate()}
+</button>
           );
         })}
       </div>
@@ -151,19 +194,24 @@ useEffect(() => {
 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
   {slots.map((slot) => {
     const Icon = slot.icon;
+    const disabled = isSlotPassed(slot);
 
     return (
       <button
         key={slot.id}
+        disabled={disabled}
         onClick={() => {
-          console.log("Clicked:", slot.time);
-          setSelectedSlot(slot.time)}
-        }
-        className={`relative p-5 rounded-2xl border text-left transition-all duration-300 hover:scale-105
+          if (!disabled) {
+            setSelectedPickupSlot(slot.time);
+          }
+        }}
+        className={`relative p-5 rounded-2xl border text-left transition-all duration-300
           ${
-            selectedSlot === slot.time
-              ? "bg-blue-900 text-white border-blue-900"
-              : "bg-blue-50 border-blue-200 text-blue-900 hover:bg-blue-100"
+            disabled
+              ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed opacity-70"
+              : selectedPickupSlot === slot.time
+              ? "bg-blue-900 text-white border-blue-900 hover:scale-105"
+              : "bg-blue-50 border-blue-200 text-blue-900 hover:bg-blue-100 hover:scale-105"
           }`}
       >
         {/* Selection Icon */}
@@ -171,7 +219,9 @@ useEffect(() => {
           <CircleCheckBig
             size={22}
             className={
-              selectedSlot === slot.time
+              disabled
+                ? "text-gray-400"
+                : selectedPickupSlot === slot.time
                 ? "text-white"
                 : "text-gray-300"
             }
@@ -186,17 +236,108 @@ useEffect(() => {
 
         <p
           className={`text-sm mt-1 ${
-            selectedSlot === slot.time
+            disabled
+              ? "text-gray-400"
+              : selectedPickupSlot === slot.time
               ? "text-blue-100"
               : "text-gray-600"
           }`}
         >
           {slot.time}
         </p>
+
+        {disabled && (
+          <span className="mt-2 inline-block text-xs font-medium text-red-500">
+            Slot Closed
+          </span>
+        )}
       </button>
     );
   })}
+</div> 
+
+<div className="mt-8">
+
+  <h2 className="font-semibold">Schedule Delivery</h2>
+  <div>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
+  {DeliverySlots.map((slot) => {
+    
+    const disabled = isSlotPassed(slot);
+
+     const date = new Date(selected);
+  date.setDate(date.getDate() + slot.offset);
+
+  const formattedDate = date.toLocaleDateString();
+  const day = date.toLocaleDateString("en-US", {
+    weekday: "long",
+  });
+
+
+    return (
+      <button
+        key={slot.id}
+        disabled={disabled}
+        onClick={() => {
+        
+            setSelectedDeliverySlot({
+               time: slot.time,
+               date: formattedDate,
+               day: day,
+            });
+          
+        }}
+        className={`relative p-5 rounded-2xl border text-left transition-all duration-300
+          ${
+            
+               selectedDeliverySlot?.time === slot.time
+              ? "bg-blue-900 text-white border-blue-900 hover:scale-105"
+              : "bg-blue-50 border-blue-200 text-blue-900 hover:bg-blue-100 hover:scale-105"
+          }`}
+      >
+        {/* Selection Icon */}
+        <div className="absolute top-3 right-3">
+          <CircleCheckBig
+            size={22}
+            className={
+          
+            
+                selectedDeliverySlot?.time === slot.time
+                ? "text-white"
+                : "text-gray-300"
+            }
+          />
+        </div>
+
+      
+
+<h3 className="font-semibold text-lg">
+          {formattedDate}
+        </h3>
+        <h3 className="font-semibold text-lg">
+          {day}
+        </h3>
+
+        <p
+          className={`text-sm mt-1 ${
+           
+               selectedDeliverySlot?.time === slot.time
+              ? "text-blue-100"
+              : "text-gray-600"
+          }`}
+        >
+          {slot.time}
+        </p>
+
+       
+      </button>
+    );
+  })}
+</div> 
+    </div>
+    
 </div>
+   
         </motion.div>
     
     </>

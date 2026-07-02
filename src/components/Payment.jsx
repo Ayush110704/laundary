@@ -3,7 +3,7 @@ import {CreditCard,ChevronDown,ChevronUp,Smartphone,Wallet} from 'lucide-react'
 import {motion,AnimatePresence} from 'framer-motion'
 import {getCheckoutData,saveCheckoutData,} from "../utils/checkoutStorage";
 
-const Payment = () => {
+const Payment = ({ checkoutData, setCheckoutData }) => {
 
      const [selectedMethod, setSelectedMethod] = useState("");
      const [openSection, setOpenSection] = useState("");
@@ -41,7 +41,14 @@ const handleChange = (e) => {
   }));
 };
 
-
+useEffect(() => {
+  setCheckoutData((prev) => {
+    const update = { ...prev, payment: paymentData };
+    saveCheckoutData(update);
+    return update;
+  }
+  );
+}, [paymentData, setCheckoutData]);
 
   return (
     <>

@@ -4,10 +4,14 @@ import {ShoppingBag } from 'lucide-react';
 import {getCheckoutData,saveCheckoutData,} from "../utils/checkoutStorage";
 import AddressForm from './AddressForm';
 
-const Address = () => {
+const Address = ({ checkoutData, setCheckoutData }) => {
 
-    const [selectedAddress, setSelectedAddress] = useState(1);
+
+
+    const [selectedAddress, setSelectedAddress] = useState( checkoutData.address?.id || 1);
     const [openModal, setOpenModal] = useState(false);
+
+    
     
 
      const initialAddresses = [
@@ -41,13 +45,13 @@ useEffect(() => {
 
   if (!selected) return;
 
-  const checkout = getCheckoutData();
+  const updateCheckoutData = {...checkoutData,address:selected};
 
-  checkout.address = selected;
+  setCheckoutData(updateCheckoutData);
 
-  saveCheckoutData(checkout);
+  saveCheckoutData(updateCheckoutData);
 
-  console.log("Selected Address Saved:", checkout);
+  console.log("Selected Address Saved:", updateCheckoutData);
 }, [selectedAddress, addresses]);
 
 const handleSaveAddress = (newAddress) => {

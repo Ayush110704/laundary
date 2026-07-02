@@ -3,7 +3,7 @@ import { ServicesData } from '../Data/LaundaryData.js'
 import { useParams } from "react-router-dom"
 import { motion } from 'framer-motion'
 import HeroCTA from './CTA.jsx'
-import { MoveRight } from 'lucide-react'
+import { MoveRight, CheckCircle2, ArrowRight } from 'lucide-react'
 import Eco from '../assets/Laundry-Service/Eco.webp';
 import Wool from '../assets/Laundry-Service/Wool.webp';
 import Product from '../assets/Laundry-Service/Product.webp';
@@ -14,7 +14,7 @@ const ServicePage = () => {
   const { service } = useParams();
   const data = ServicesData[service];
 
-  const { Hero, WhyUs, ServiceOffered, CTA, Servicetitle,ExpertService,ExpertTitle } = data;
+  const { Hero, WhyUs, ServiceOffered, CTA, Servicetitle, ExpertService, ExpertTitle } = data;
 
   console.log(data);
 
@@ -49,17 +49,19 @@ const ServicePage = () => {
     <>
       <div>
         {/* hero section */}
-        <section className='w-full min-h-screen  grid grid-cols-2 pt-25'
+        <section
+          className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-2 pt-20 md:pt-24"
+
           style={{
-            height: "100vh",
+
             backgroundImage: `url(${Hero.HeroBackground})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}
         >
-          <div className="  w-full flex justify-center  ">
-            <div className='h-75 min-w-xl '>
+          <div className="flex items-center justify-center px-5 py-10 lg:py-0">
+            <div className="w-full max-w-xl px-5 md:px-0">
               <motion.h3
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -87,7 +89,7 @@ const ServicePage = () => {
                     hidden: { opacity: 0, y: 30 },
                     visible: { opacity: 1, y: 0, transition: { duration: 0.7 } },
                   }}
-                  className="text-4xl md:text-5xl lg:text-6xl mt-5 font-bold text-blue-950 font-serif w-lg" >
+                  className="text-4xl md:text-5xl lg:text-6xl mt-5 font-bold text-blue-950 font-serif " >
                   {Hero.HeroTitle}
                 </motion.h1>
 
@@ -105,7 +107,7 @@ const ServicePage = () => {
                     hidden: { opacity: 0 },
                     visible: { opacity: 1, transition: { duration: 0.8 }, },
                   }}
-                  className="text-gray-700 text-md mt-8 md:mt-10 font-semibold" >
+                  className="mt-6 text-base md:text-lg text-gray-700 leading-7" >
                   {Hero.HeroPara}
                 </motion.p>
 
@@ -116,7 +118,7 @@ const ServicePage = () => {
                   }}
                   whileHover={{ y: -3, scale: 1.03, }}
                   whileTap={{ scale: 0.97, }}
-                  className="group mt-8 md:mt-10 py-3 md:py-5 px-6 md:px-8 rounded-xl bg-blue-900 text-white font-semibold text-base md:text-xl shadow-xl"  >
+                  className="mt-8 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-blue-900 text-white font-semibold shadow-xl" >
                   <span className="flex items-center gap-2">
                     Book this Service
                     <motion.div
@@ -132,66 +134,105 @@ const ServicePage = () => {
           </div>
           <img
             src={Hero.HeroVector}
-            className="h-full"
+            alt=""
+            className="hidden lg:block w-full h-full object-cover"
           />
         </section>
 
         {/* types of Service */}
 
-       {ServiceOffered.length >0 && (
-        <section
-          className="bg-linear-to-b from-blue-100 via-blue-300 to-white py-16 md:py-20"
-        >
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="text-center text-3xl md:text-4xl lg:text-5xl font-bold text-blue-950 px-4"
+        {ServiceOffered.length > 0 && (
+          <section
+            className="bg-linear-to-b from-blue-100 via-blue-300 to-white py-16 md:py-20"
           >
-            Types of {Servicetitle} Services We Offer
-          </motion.h1>
-
-          <div className="w-full flex justify-center mt-12 px-5">
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+              transition={{ duration: 0.7 }}
+              className="text-center text-3xl md:text-4xl lg:text-5xl font-bold text-blue-950 px-4"
             >
-              {ServiceOffered.map((item) => (
-                <motion.div
-                  key={item.id}
-                  variants={cardVariants}
-                  whileHover={{ y: -10, scale: 1.02 }}
-                  transition={{ duration: 0.25 }}
-                  className="group bg-white border border-blue-400 rounded-3xl overflow-hidden shadow-md hover:shadow-2xl"
-                >
-                  <div className="overflow-hidden h-56 sm:h-60 md:h-64">
-                    <motion.img
-                      src={item.image}
-                      alt={item.title}
-                      whileHover={{ scale: 1.08 }}
-                      transition={{ duration: 0.4 }}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
+              Types of {Servicetitle} We Offer
+            </motion.h1>
 
-                  <div className="p-6">
-                    <h2 className="text-2xl font-bold text-blue-950">
-                      {item.title}
-                    </h2>
+            <div className="w-full flex justify-center mt-12 px-5">
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+              >
+                {ServiceOffered.map((item) => {
+                  const Icon = item.icon;
 
-                    <p className="mt-4 text-gray-700 text-sm md:text-base leading-7">
-                      {item.desc}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
+                  return (
+                    <motion.div
+                      key={item.id}
+                      whileHover={{ y: -8 }}
+                      transition={{ duration: 0.3 }}
+                      className="group relative overflow-hidden rounded-3xl bg-white border border-blue-200 shadow-lg hover:shadow-2xl transition-shadow duration-300"
+                    >
+                      {/* Image */}
+                      <div className="relative p-3">
+                        <div className="relative overflow-hidden rounded-2xl h-44">
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+                          />
+
+
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        </div>
+
+                        {/* Badge */}
+                        <span
+                          className={`absolute top-6 left-6 ${item.badgeColor} text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md`}
+                        >
+                          {item.badge}
+                        </span>
+                      </div>
+
+                      {/* Floating Icon */}
+                      <div className="absolute left-1/2 top-[150px] -translate-x-1/2 z-10">
+                        <div className="w-14 h-14 rounded-full bg-white border-4 border-blue-100 shadow-lg flex items-center justify-center transition-all duration-300 group-hover:rotate-6">
+                          <Icon size={24} className="text-blue-600" />
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className="pt-5 px-5 pb-5">
+                        <h2 className="text-2xl font-bold text-center text-blue-900">
+                          {item.title}
+                        </h2>
+
+                        <p className="mt-2 text-sm text-center text-gray-600 leading-6 line-clamp-2 min-h-[48px]">
+                          {item.desc}
+                        </p>
+
+                        {/* Features */}
+                        <div className="mt-5 flex flex-wrap justify-center gap-2 overflow-x-auto whitespace-nowrap scrollbar-hide">
+                          {item.features.map((feature) => (
+                            <span
+                              key={feature}
+                              className="shrink-0 flex items-center gap-1 rounded-full bg-blue-50 px-3 py-1.5 text-[11px] font-medium text-blue-700"
+                            >
+                              <CheckCircle2 size={12} />
+                              {feature}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Bottom Hover Line */}
+                      <div className=" hidden md:flex h-1 w-0 bg-linear-to-r from-blue-600 to-cyan-500 transition-all duration-500 group-hover:w-full"></div>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            </div>
+          </section>
         )}
 
 
@@ -257,7 +298,7 @@ const ServicePage = () => {
                 duration: 0.8,
                 ease: "easeOut",
               }}
-              className="flex justify-center"
+              className="flex justify-center "
             >
               <motion.img
                 src={WhyUs.image}
@@ -271,10 +312,10 @@ const ServicePage = () => {
           </div>
         </div>
 
- 
+
 
         {/* Expert Service */}
-<section
+        <section
           className="bg-linear-to-b from-blue-100 via-blue-300 to-white py-16 md:py-20"
         >
           <motion.h1
@@ -284,7 +325,7 @@ const ServicePage = () => {
             transition={{ duration: 0.7 }}
             className="text-center text-3xl md:text-4xl lg:text-5xl font-bold text-blue-950 px-4"
           >
-           {ExpertTitle} 
+            {ExpertTitle}
           </motion.h1>
 
           <div className="w-full flex justify-center mt-12 px-5">
@@ -303,14 +344,17 @@ const ServicePage = () => {
                   transition={{ duration: 0.25 }}
                   className="group bg-white border border-blue-400 rounded-3xl overflow-hidden shadow-md hover:shadow-2xl"
                 >
-                  <div className="overflow-hidden h-56 sm:h-60 md:h-48">
-                    <motion.img
-                      src={item.image}
-                      alt={item.title}
-                      whileHover={{ scale: 1.08 }}
-                      transition={{ duration: 0.4 }}
-                      className="w-full h-full object-contain"
-                    />
+                  <div className="relative p-3">
+                    <div className="relative overflow-hidden rounded-2xl h-44">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-full object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
+                      />
+
+
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    </div>
                   </div>
 
                   <div className="p-6">
@@ -321,39 +365,41 @@ const ServicePage = () => {
                     <p className="mt-4 text-gray-700 text-sm md:text-sm leading-7">
                       {item.desc}
                     </p>
+                    
                   </div>
+                  <div className=" hidden md:flex h-1 w-0 bg-linear-to-r from-blue-600 to-cyan-500 transition-all duration-500 group-hover:w-full"></div>
                 </motion.div>
               ))}
             </motion.div>
-            
-           
-            
+
+
+
           </div>
-           <div className="w-full flex justify-center ">
-           <motion.button
-                  variants={{
-                    hidden: { opacity: 0, y: 25 },
-                    visible: { opacity: 1, y: 0, transition: { duration: 0.7 }, },
-                  }}
-                  whileHover={{ y: -3, scale: 1.03, }}
-                  whileTap={{ scale: 0.97, }}
-                  className="group mt-8 md:mt-10 py-3 md:py-5 px-6 md:px-8 rounded-full bg-linear-to-r from-blue-900 via-blue-600 to-blue-400 text-white font-semibold text-base md:text-xl shadow-xl"  >
-                  <span className="flex items-center gap-2">
-                    Schedule Pickup
-                    
-                  </span>
-                </motion.button>
-                </div>
+          <div className="w-full flex justify-center ">
+            <motion.button
+              variants={{
+                hidden: { opacity: 0, y: 25 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.7 }, },
+              }}
+              whileHover={{ y: -3, scale: 1.03, }}
+              whileTap={{ scale: 0.97, }}
+              className="group mt-8 md:mt-10 py-3 md:py-5 px-6 md:px-8 rounded-full bg-linear-to-r from-blue-900 via-blue-600 to-blue-400 text-white font-semibold text-base md:text-xl shadow-xl"  >
+              <span className="flex items-center gap-2">
+                Schedule Pickup
+
+              </span>
+            </motion.button>
+          </div>
         </section>
 
 
-<HeroCTA
-          
+        <HeroCTA
+
           headingtop={CTA.headingtop}
           headingbottom={CTA.headingbottom}
           subHeading={CTA.subHeading}
-         />
-       
+        />
+
       </div>
     </>
   )

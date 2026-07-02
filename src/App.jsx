@@ -1,5 +1,6 @@
 import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css"; 
+import { useLayoutEffect } from "react";
 import Contact from "./Pages/Contact";
 import Subscription from "./Pages/Subscription";
 import Footer from "./components/Footer";
@@ -27,6 +28,7 @@ import OrderTracking from "./components/OrderTracking";
 import BookingApplyForm from "./Pages/BookingApplyForm";  
 import Address from "./Pages/Address"; // ← IMPORT ADDRESS COMPONENT
 import UserLayout from "./Pages/UserLayout"; // ← NEW IMPORT: UserLayout component
+import CheckOut from './Pages/CheckOut';
 
 function App() {
   const location = useLocation();
@@ -47,6 +49,17 @@ function App() {
   const hideLayout = hideLayoutRoutes.includes(location.pathname);
   const isAdminRoute = adminRoutes.some(route => location.pathname.startsWith('/admin-dashboard'));
 
+
+
+  const { pathname } = useLocation();
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+
+
+
   return (
     <> 
       {!hideLayout && !isAdminRoute && <Navbar />}
@@ -61,6 +74,7 @@ function App() {
         <Route path="/user-dashboard" element={<UserDashboard />} />
         <Route path="/TermsCondition" element={<TermsConndition />} />
         <Route path="/FAQ" element={<FAQ />} />
+        <Route path="/checkout" element={<CheckOut/>} />
         
         {/*  Auth Routes */}
         <Route path="/login" element={<Login/>} />
