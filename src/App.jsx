@@ -14,7 +14,6 @@ import FAQ from "./Pages/FAQ";
 import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
 import UserProfile from './Pages/UserProfile';
-// import UserDashboard from "./Pages/UserDashboard";
 import AdminLayout from "./components/Admin/AdminLayout";
 import UserManagement from "./components/Admin/UserManagement";
 import OrderManagement, { MOCK_BOOKINGS, OrderProvider } from "./components/Admin/OrderManagement"; 
@@ -23,14 +22,25 @@ import Analytics from "./components/Admin/Analytics";
 import ServiceManagement from './components/Admin/ServiceManagement';
 import OrderTracking from "./components/OrderTracking";
 import BookingApplyForm from "./Pages/BookingApplyForm";   
-import UserLayout from "./Pages/UserLayout"; 
 import CheckOut from "./Pages/CheckOut";
 import Address from "./Pages/Address"; 
 import Pricing from "./Pages/Pricing";
+// Import user components
+// import UserOrders from "./Pages/UserOrders";
+import UserTracking from "./components/OrderTracking"; 
+import TermsCondition from "./Pages/TermsCondition";
+import { useLayoutEffect } from "react";
 
 function App() {
   const location = useLocation();
+
+  const { pathname } = useLocation();
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
    
+  // Only hide navbar/footer for login and signup pages
   const hideLayoutRoutes = ["/login", "/signup"];
   
   // ==================== Admin routes ====================
@@ -42,27 +52,15 @@ function App() {
     "/admin-dashboard/payments", 
     "/admin-dashboard/analytics"
   ];
-  
-  // ==================== User routes ====================
-  const userRoutes = [
-    "/user/profile",
-    "/user/orders",
-    "/user/address",
-    "/user/subscription",
-    "/user/tracking",
-    "/user/terms"
-  ];
    
   const hideLayout = hideLayoutRoutes.includes(location.pathname);
   const isAdminRoute = adminRoutes.some(route => location.pathname.startsWith('/admin-dashboard'));
-  const isUserRoute = userRoutes.some(route => location.pathname.startsWith('/user'));
 
-  // Check if we should show Navbar and Footer
-  const showNavbarAndFooter = !hideLayout && !isAdminRoute && !isUserRoute;
+  // Show Navbar and Footer for all routes except login, signup, and admin
+  const showNavbarAndFooter = !hideLayout && !isAdminRoute;
 
   return (
     <> 
-      {/* Show Navbar for public routes only */}
       {showNavbarAndFooter && <Navbar />}
 
       <Routes>
@@ -77,31 +75,22 @@ function App() {
         <Route path="/FAQ" element={<FAQ />} />
         <Route path="/checkout" element={<CheckOut />} />  
         
-        {/* Auth Routes */}
+        {/* Auth Routes - No Navbar/Footer */}
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} /> 
         
         {/* Other Routes */}
-        <Route path="/subscription" element={<Subscription />} />
-        <Route path="/order-tracking" element={<OrderTracking />} />
+        <Route path="/subscription" element={<Subscription />} /> 
         <Route path="/bookingapplyform" element={<BookingApplyForm/>} />
 
-        {/* Old Routes with Redirects */}
-        <Route path="/profile" element={<Navigate to="/user/profile" replace />} />
-        <Route path="/user-dashboard" element={<Navigate to="/user/orders" replace />} />
-        <Route path="/address" element={<Navigate to="/user/address" replace />} />
-
-        {/* ==================== USER ROUTES WITH USERLAYOUT ==================== */}
-        {/* UserLayout now includes its own Navbar and Footer */}
-        <Route path="/user" element={<UserLayout />}>
-          <Route index element={<Navigate to="/user/profile" replace />} />
-          <Route path="profile" element={<UserProfile />} />
-          {/* <Route path="orders" element={<UserDashboard />} /> */}
-          <Route path="address" element={<Address />} />
-          <Route path="subscription" element={<Subscription />} />
-          <Route path="tracking" element={<OrderTracking />} />
-          <Route path="terms" element={<TermsConndition />} />
-        </Route>
+        
+        {/* All these routes will show: Navbar + UserLayout (with sidebar) + Content + Footer */}
+        <Route path="/user-profile" element={<UserProfile />} />
+        <Route path="/user-address" element={<Address />} />
+        {/* <Route path="/user-orders" element={<UserOrders />} /> */}
+        <Route path="/user-subscription" element={<Subscription />} />
+        <Route path="/user-tracking" element={<OrderTracking />} />
+        <Route path="/user-terms" element={<TermsCondition />} />
 
         {/* ==================== ADMIN ROUTES WITH ADMINLAYOUT ==================== */}
         <Route
