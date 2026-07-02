@@ -186,7 +186,21 @@ const gradientVariants = {
 // };
 
 function Footer() {
-  const services = ["Wash & Fold", "Dry Cleaning", "Shoe Cleaning", "Steam Ironing", "Express Delivery"];
+  const services= [
+        { label: "Laundry Service", path: "/services/Laundry-service" },
+
+        { label: "Dry Cleaning", path: "/services/DryClean-service" },
+
+        { label: "Ironing", path: "/services/Ironing-service" },
+
+        { label: "Carpet Cleaning", path: "/services/CarpetCleaning-service" },
+
+        { label: "Shoe Cleaning", path: "/services/ShoeCleaning-service" },
+
+        { label: "Curtain Cleaning", path: "/services/CurtainCleaning-service" },
+
+      ];
+
   const companyLinks = ["About Us", "Terms & Conditions", "FAQs"];
 
   // ============================================
@@ -367,7 +381,7 @@ function Footer() {
                     whileHover={{ paddingLeft: "12px" }}
                     transition={{ duration: 0.3 }}
                   >
-                    {service}
+                    <Link to={service.path}>{service.label}</Link>
                   </motion.span>
                 </motion.li>
               ))}

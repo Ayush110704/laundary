@@ -28,7 +28,7 @@ const validateCheckout = () => {
         }
     }
 
-    if (!data.schedule.time) {
+    if (!data.schedule.slot) {
 
         return {
             success: false,

@@ -83,7 +83,10 @@ const CheckOut = () => {
             {/* Step Content */}
             {currentStep === 1 && (
               //           
-              <BookingApplyForm />
+              <BookingApplyForm 
+               checkoutData={checkoutData}
+  setCheckoutData={setCheckoutData}
+              />
             )}
 
             {currentStep === 2 && (

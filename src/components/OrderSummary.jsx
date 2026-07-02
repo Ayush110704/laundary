@@ -170,7 +170,7 @@ const OrderSummary = ({ Step, checkoutData }) => {
                                 onClick={handleConfirm}
                                 className="w-full flex justify-center items-center gap-2 rounded-xl bg-blue-900 py-3 text-white font-semibold hover:bg-blue-800 transition"
                             >
-                                Confirm Order
+                                {checkoutData.payment?.method === "cod" ? "Confirm Booking" : "Proceed to Pay"}
                                 <ArrowRight size={18} />
                             </motion.button>
                         )}
