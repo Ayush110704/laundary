@@ -130,6 +130,7 @@ const [emblaRef, emblaApi] = useEmblaCarousel({
                   }}
                   className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-600 mt-5 md:mt-10 font-serif" >
                   {Hero.HeroSub}
+                  
                 </motion.h2>
 
                 <motion.p

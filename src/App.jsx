@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import "./App.css"; 
 import { useLayoutEffect } from "react";
 import Contact from "./Pages/Contact";
@@ -8,16 +8,14 @@ import HomePage from "./Pages/Home";
 import Navbar from "./components/Navbar";
 import About from "./Pages/About";
 import Services from "./Pages/Services";
-import ServicePage from "./components/ServicePage"
-import Dashboard from "./Pages/UserDashboard";
+import ServicePage from "./components/ServicePage";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 import TermsConndition from "./Pages/TermsCondition";
 import FAQ from "./Pages/FAQ";
-import Login from './Pages/Login'
-import SignUp from './Pages/SignUp'
-//  Import UserProfile component 
-import UserProfile from './Pages/UserProfile'; // ← NEW IMPORT
-import UserDashboard from "./Pages/UserDashboard";
+import Login from './Pages/Login';
+import SignUp from './Pages/SignUp';
+import UserProfile from './Pages/UserProfile';
+// import UserDashboard from "./Pages/UserDashboard";
 import AdminLayout from "./components/Admin/AdminLayout";
 import UserManagement from "./components/Admin/UserManagement";
 import OrderManagement, { MOCK_BOOKINGS, OrderProvider } from "./components/Admin/OrderManagement"; 
@@ -25,6 +23,7 @@ import Payments from "./components/Admin/Payments";
 import Analytics from "./components/Admin/Analytics";
 import ServiceManagement from './components/Admin/ServiceManagement';
 import OrderTracking from "./components/OrderTracking";
+
 
 import BookingApplyForm from "./Pages/BookingApplyForm";  
 import Address from "./Pages/Address"; // ← IMPORT ADDRESS COMPONENT
@@ -34,6 +33,11 @@ import CheckOut from './Pages/CheckOut';
  
 
 
+ 
+import UserLayout from "./Pages/UserLayout"; 
+
+
+import Pricing from "./Pages/Pricing";
 
 function App() {
   const location = useLocation();
@@ -50,9 +54,22 @@ function App() {
     "/admin-dashboard/analytics"
   ];
   
+  // ==================== User routes ====================
+  const userRoutes = [
+    "/user/profile",
+    "/user/orders",
+    "/user/address",
+    "/user/subscription",
+    "/user/tracking",
+    "/user/terms"
+  ];
    
   const hideLayout = hideLayoutRoutes.includes(location.pathname);
   const isAdminRoute = adminRoutes.some(route => location.pathname.startsWith('/admin-dashboard'));
+  const isUserRoute = userRoutes.some(route => location.pathname.startsWith('/user'));
+
+  // Check if we should show Navbar and Footer
+  const showNavbarAndFooter = !hideLayout && !isAdminRoute && !isUserRoute;
 
 
 
@@ -67,16 +84,17 @@ function App() {
 
   return (
     <> 
-      {!hideLayout && !isAdminRoute && <Navbar />}
+      {/* Show Navbar for public routes only */}
+      {showNavbarAndFooter && <Navbar />}
 
       <Routes>
-        {/*  Public Routes  */}
+        {/* Public Routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/services" element={<Services />} />
         <Route path="/services/:service" element={<ServicePage key={location.pathname} />} />
-        <Route path="/user-dashboard" element={<UserDashboard />} />
+        <Route path="/pricing" element={<Pricing />} />
         <Route path="/TermsCondition" element={<TermsConndition />} />
         <Route path="/FAQ" element={<FAQ />} />
 
@@ -84,23 +102,33 @@ function App() {
 
         <Route path="/checkout" element={<CheckOut />} />  
         
-        <Route path="/address" element={<Address/>} /> 
-        
-        
-        {/*  Auth Routes */}
+        {/* Auth Routes */}
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} /> 
-        <Route path="/profile" element={<UserProfile/>} />  
         
-        {/*  Other Routes   */}
+        {/* Other Routes */}
         <Route path="/subscription" element={<Subscription />} />
         <Route path="/order-tracking" element={<OrderTracking />} />
         <Route path="/bookingapplyform" element={<BookingApplyForm/>} />
 
-        {/*  User Dashboard Route with UserLayout */}
-        <Route path="/user-dashboard" element={<UserLayout><UserDashboard /></UserLayout>} />
+        {/* Old Routes with Redirects */}
+        <Route path="/profile" element={<Navigate to="/user/profile" replace />} />
+        <Route path="/user-dashboard" element={<Navigate to="/user/orders" replace />} />
+        <Route path="/address" element={<Navigate to="/user/address" replace />} />
 
-        {/*  Admin Routes with Layout  */}
+        {/* ==================== USER ROUTES WITH USERLAYOUT ==================== */}
+        {/* UserLayout now includes its own Navbar and Footer */}
+        <Route path="/user" element={<UserLayout />}>
+          <Route index element={<Navigate to="/user/profile" replace />} />
+          <Route path="profile" element={<UserProfile />} />
+          {/* <Route path="orders" element={<UserDashboard />} /> */}
+          <Route path="address" element={<Address />} />
+          <Route path="subscription" element={<Subscription />} />
+          <Route path="tracking" element={<OrderTracking />} />
+          <Route path="terms" element={<TermsConndition />} />
+        </Route>
+
+        {/* ==================== ADMIN ROUTES WITH ADMINLAYOUT ==================== */}
         <Route
           path="/admin-dashboard" 
           element={
@@ -117,9 +145,8 @@ function App() {
           <Route path="analytics" element={<Analytics />} />
         </Route>
       </Routes>
-
-      {/* ==================== Show Footer only for non-admin, non-auth routes ==================== */}
-      {!hideLayout && !isAdminRoute && <Footer />}
+ 
+      {showNavbarAndFooter && <Footer />}
     </>
   );
 }

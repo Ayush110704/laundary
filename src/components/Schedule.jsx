@@ -309,7 +309,6 @@ const isPastDate = currentDate < today;
           />
         </div>
 
-      
 
 <h3 className="font-semibold text-lg">
           {formattedDate}

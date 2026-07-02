@@ -172,7 +172,8 @@ const Services = () => {
               className=" text-4xl sm:text-5xl lg:text-6xl font-serif font-semibold text-white md:text-blue-950 leading-15">
               Expert Laundry <span className=" text-xl md:text-4xl text-[#f1f1fa]">&</span>
               <br />
-              
+               
+               
             </motion.h1>
             <motion.div
             initial={{ opacity: 0, scale: 1, y: 40 }}
