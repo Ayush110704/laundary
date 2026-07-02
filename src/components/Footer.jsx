@@ -406,7 +406,7 @@ function Footer() {
             <ul className="space-y-3 text-gray-300 text-sm">
               <Link to="/About">
               <motion.li
-                className="hover:text-blue-400 cursor-pointer"
+                className="hover:text-blue-400 cursor-pointer mb-4"
                 variants={slideInLeftVariants}
                 whileHover={{ x: 8 }}
                 transition={{ duration: 0.3 }}
