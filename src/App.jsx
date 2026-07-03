@@ -84,6 +84,7 @@ function App() {
         {/* Auth Routes - No Navbar/Footer */}
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} /> 
+        <Route path="/forgot-password" element={<ForgotPassword/>} />
         
 
         
