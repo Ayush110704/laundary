@@ -32,8 +32,7 @@ import AdminLogin from "./components/Admin/AdminLogin";
 
 
 
-// Import user components
-// import UserOrders from "./Pages/UserOrders";
+// Import user components 
 import UserTracking from "./components/OrderTracking"; 
 import TermsCondition from "./Pages/TermsCondition";
 import { useLayoutEffect } from "react";
@@ -51,7 +50,7 @@ function App() {
   // Only hide navbar/footer for login and signup pages
   const hideLayoutRoutes = ["/login", "/signup","/forgot-password","/admin-login","/admin-register"];
   
-  // ==================== Admin routes ====================
+  //  Admin routes 
   const adminRoutes = [
     "/admin-dashboard", 
     "/admin-dashboard/user-management", 
@@ -100,7 +99,7 @@ function App() {
         <Route path="/user-tracking" element={<OrderTracking />} />
         <Route path="/user-terms" element={<TermsCondition />} />
 
-        {/* ==================== ADMIN ROUTES WITH ADMINLAYOUT ==================== */}
+        {/*  ADMIN ROUTES WITH ADMINLAYOUT  */}
         <Route
           path="/admin-dashboard" 
           element={

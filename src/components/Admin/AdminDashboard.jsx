@@ -93,16 +93,7 @@ const AdminDashboard = () => {
       setLoginActivities(activities);
     }
   };
-
-  // Logout function
-  const handleLogout = () => {
-    // Add logout activity
-    addLoginActivity('Logged out from admin dashboard');
-    
-    localStorage.removeItem('adminSession');
-    navigate('/admin-login');
-  };
-
+ 
   // Real profit/loss data for weekly revenue
   const orderData = [
     { name: 'Mon', orders: 45, revenue: 12000, profit: 3600, loss: 0 },
