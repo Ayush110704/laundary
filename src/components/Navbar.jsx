@@ -250,7 +250,7 @@ const Navbar = () => {
             <div className="w-75  flex justify-around mb-5">
               <button
                 onClick={() => {
-                 navigate(userlogin ? "/user-dashboard" : "/Login")
+                 navigate(userlogin ? "/user-profile" : "/Login")
                   setMobileMenu(false);
                 }}
                 className="py-1 px-3 bg-blue-600 rounded-3xl text-white cursor-pointer hover:bg-blue-700"
