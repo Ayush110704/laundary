@@ -25,7 +25,7 @@ import BookingApplyForm from "./Pages/BookingApplyForm";
 import CheckOut from "./Pages/CheckOut";
 import Address from "./Pages/Address"; 
 import Pricing from "./Pages/Pricing";
-import MyOrders from "./Pages/MyOrders";
+import MyBookings from "./Pages/MyBookings";
 import UserLayout from "./Pages/UserLayout";
 
 
@@ -76,7 +76,7 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/services/:service" element={<ServicePage key={location.pathname} />} />
         <Route path="/pricing" element={<Pricing />} />
-        <Route path="/TermsCondition" element={<TermsConndition />} />
+        <Route path="/TermsCondition" element={<TermsCondition />} />
         <Route path="/FAQ" element={<FAQ />} />
         <Route path="/checkout" element={<CheckOut />} />  
         
@@ -84,17 +84,12 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} /> 
         
-        {/* Other Routes */}
-        <Route path="/subscription" element={<Subscription />} /> 
-        <Route path="/bookingapplyform" element={<BookingApplyForm/>} />
-        <Route path="/myorders" element={<MyOrders />} />
-        <Route path="/userlayout" element={<UserLayout />} />
 
         
-        {/* All these routes will show: Navbar + UserLayout (with sidebar) + Content + Footer */}
+        {/* User Routes */}
         <Route path="/user-profile" element={<UserProfile />} />
         <Route path="/user-address" element={<Address />} />
-        {/* <Route path="/user-orders" element={<UserOrders />} /> */}
+        <Route path="/user-orders" element={<MyBookings />} />
         <Route path="/user-subscription" element={<Subscription />} />
         <Route path="/user-tracking" element={<OrderTracking />} />
         <Route path="/user-terms" element={<TermsCondition />} />
