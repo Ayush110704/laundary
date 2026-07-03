@@ -133,36 +133,42 @@ export const allServices = [
     title: 'Laundry',
     description: 'Enjoy fresh, clean, folded laundry – more time for what matters most.',
     bgImage: laundryBg,
+    path: "/services/Laundry-service"
   },
   {
     id: 2,
     title: 'Dry Cleaning',
     description: 'Refresh your garments with our expert dry cleaning – book now!',
     bgImage: dryCleanBg,
+     path: "/services/DryClean-service"
   },
   {
     id: 3,
     title: 'Ironing',
     description: 'Get wrinkle-free perfection – expert ironing that keeps you looking sharp!',
     bgImage: ironingBg,
+   path: "/services/Ironing-service"
   },
   {
     id: 4,
-    title: 'Wash & Fold',
+    title: 'Curtain Cleaning',
     description: 'Convenient wash and fold service – save time and enjoy fresh clothes.',
     bgImage: laundryBg,
+    path: "/services/CurtainCleaning-service" 
   },
   {
     id: 5,
-    title: 'Steam Cleaning',
+    title: 'Shoe Cleaning',
     description: 'Gentle steam cleaning for delicate fabrics – safe and effective.',
     bgImage: dryCleanBg,
+    path:"/services/ShoeCleaning-service"
   },
   {
     id: 6,
-    title: 'Alterations',
+    title: 'Carpet Cleaning',
     description: 'Professional alterations and repairs – perfect fit guaranteed.',
     bgImage: ironingBg,
+    path: "/services/CarpetCleaning-service"
   }
 ];
 

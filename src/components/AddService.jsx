@@ -1,7 +1,56 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
+import { useState, useEffect } from "react";
 
- const AddService =({ isOpen, onClose })=> {
+const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
+
+  const initialForm = {
+    id: "",
+    category: "",
+    price: "",
+    duration: "",
+    status: "Active",
+    description: "",
+    image: null,
+  };
+
+  const [formData, setFormData] = useState(initialForm);
+
+  useEffect(() => {
+  if (serviceToEdit) {
+    setFormData({
+      id: serviceToEdit.id || "",
+      category: serviceToEdit.category || "",
+      price: serviceToEdit.price || "",
+      duration: serviceToEdit.duration || "",
+      status: serviceToEdit.status || "Active",
+      description: serviceToEdit.description || "",
+      image: serviceToEdit.image || null,
+    });
+  } else {
+    setFormData(initialForm);
+  }
+}, [serviceToEdit, isOpen]);
+
+  const handleSubmit = (e) => {
+  e.preventDefault();
+
+  if (serviceToEdit) {
+    onSave({
+      ...formData,
+      id: serviceToEdit.id,
+    });
+  } else {
+    onSave({
+      ...formData,
+      id: Date.now(),
+    });
+  }
+
+  onClose();
+};
+
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -23,7 +72,7 @@ import { X } from "lucide-react";
             {/* Header */}
             <div className="sticky top-0 bg-white z-10 flex items-center justify-between px-4 md:px-6 py-4 border-b">
               <h2 className="text-xl md:text-2xl font-bold text-blue-900">
-                Add New Service
+                 {serviceToEdit ? "Edit Service" : "Add New Service"}
               </h2>
 
               <button
@@ -35,17 +84,20 @@ import { X } from "lucide-react";
             </div>
 
             {/* Form */}
-            <form className="p-4 md:p-6 space-y-5">
+            <form className="p-4 md:p-6 space-y-5" onSubmit={handleSubmit}>
               {/* Service Name */}
               <div>
                 <label className="block mb-2 font-medium text-gray-700">
-                  Service Name
+                  Service Id
                 </label>
 
                 <input
                   type="text"
-                  placeholder="Enter service name"
-                  className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={formData.id}
+                  onChange={(e) =>
+                    setFormData({ ...formData, id: e.target.value })
+                  }
+                  className="w-full px-4 py-3 border rounded-xl"
                 />
               </div>
 
@@ -56,13 +108,21 @@ import { X } from "lucide-react";
                     Category
                   </label>
 
-                  <select className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>Wash & Fold</option>
-                    <option>Dry Cleaning</option>
-                    <option>Ironing</option>
-                    <option>Carpet Cleaning</option>
-                    <option>Curtain Cleaning</option>
-                    <option>Shoe Cleaning</option>
+                  <select 
+                  value={formData.category}
+  onChange={(e) =>
+    setFormData({
+      ...formData,
+      category: e.target.value,
+    })
+  }
+                  className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="Laundry">Laundry</option>
+                    <option value="Dry Cleaning">Dry Cleaning</option>
+                    <option value="Ironing">Ironing</option>
+                    <option value="Carpet Cleaning">Carpet Cleaning</option>
+                    <option value="Curtain Cleaning">Curtain Cleaning</option>
+                    <option value="Shoe Cleaning">Shoe Cleaning</option>
                   </select>
                 </div>
 
@@ -72,9 +132,12 @@ import { X } from "lucide-react";
                   </label>
 
                   <input
-                    type="number"
-                    placeholder="0.00"
-                    className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    type="text"
+                    value={formData.price}
+                    onChange={(e) =>
+                      setFormData({ ...formData, price: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border rounded-xl"
                   />
                 </div>
               </div>
@@ -88,8 +151,11 @@ import { X } from "lucide-react";
 
                   <input
                     type="text"
-                    placeholder="e.g. 24 Hours"
-                    className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={formData.duration}
+                    onChange={(e) =>
+                      setFormData({ ...formData, duration: e.target.value })
+                    }
+                    className="w-full px-4 py-3 border rounded-xl"
                   />
                 </div>
 
@@ -98,9 +164,17 @@ import { X } from "lucide-react";
                     Status
                   </label>
 
-                  <select className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>Active</option>
-                    <option>Inactive</option>
+                  <select 
+                   value={formData.status}
+  onChange={(e) =>
+    setFormData({
+      ...formData,
+      status: e.target.value,
+    })
+  }
+                  className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
                   </select>
                 </div>
               </div>
@@ -112,9 +186,12 @@ import { X } from "lucide-react";
                 </label>
 
                 <textarea
-                  rows="4"
-                  placeholder="Enter service description..."
-                  className="w-full px-4 py-3 border rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  type="text"
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  className="w-full px-4 py-3 border rounded-xl"
                 />
               </div>
 
@@ -142,9 +219,10 @@ import { X } from "lucide-react";
 
                 <button
                   type="submit"
+                  
                   className="w-full sm:w-auto px-6 py-3 bg-blue-900 text-white rounded-xl font-medium hover:bg-blue-800 transition"
                 >
-                  Save Service
+                  {serviceToEdit ? "Update Service" : "Save Service"}
                 </button>
               </div>
             </form>
