@@ -25,6 +25,11 @@ import BookingApplyForm from "./Pages/BookingApplyForm";
 import CheckOut from "./Pages/CheckOut";
 import Address from "./Pages/Address"; 
 import Pricing from "./Pages/Pricing";
+import MyOrders from "./Pages/MyOrders";
+import UserLayout from "./Pages/UserLayout";
+
+
+
 // Import user components
 // import UserOrders from "./Pages/UserOrders";
 import UserTracking from "./components/OrderTracking"; 
@@ -82,6 +87,8 @@ function App() {
         {/* Other Routes */}
         <Route path="/subscription" element={<Subscription />} /> 
         <Route path="/bookingapplyform" element={<BookingApplyForm/>} />
+        <Route path="/myorders" element={<MyOrders />} />
+        <Route path="/userlayout" element={<UserLayout />} />
 
         
         {/* All these routes will show: Navbar + UserLayout (with sidebar) + Content + Footer */}
