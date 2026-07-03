@@ -24,18 +24,16 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        // ==================== NEW: Get users from localStorage ====================
         const users = JSON.parse(localStorage.getItem("Users"));
         console.log(users)
         
-        // ==================== NEW: Find user by email and password ====================
         const user = users.find(
             (item) => item.Email === userdata.Email &&
                     item.Password === userdata.Password
         );
 
         if (user) {
-            // ==================== NEW: Store current user in localStorage ====================
+           
             localStorage.setItem("currentUser", JSON.stringify(user))
 
             await Swal.fire({
@@ -44,7 +42,6 @@ const Login = () => {
                 text: `Welcome ${user.FirstName}`,
             });
 
-            // ==================== NEW: Redirect to profile page ====================
             Navigate("/profile")
         } else {
             Swal.fire({
@@ -130,7 +127,7 @@ const Login = () => {
                                 Please enter your details to sign in.
                             </p>
                             
-                            {/* ==================== NEW: Added onSubmit handler ==================== */}
+                            
                             <form onSubmit={handleLogin}>
                                 {/* Email */}
                                 <div className="mt-6">
@@ -184,9 +181,9 @@ const Login = () => {
                                             Remember Me
                                         </span>
                                     </label>
-                                    <button className="font-semibold text-blue-600 text-sm" type="button">
+                                   <Link to="/forgot-password"> <button className="font-semibold text-blue-600 text-sm" type="button">
                                         Forgot Password?
-                                    </button>
+                                    </button></Link>
                                 </div>
 
                                 {/* Login Button */}

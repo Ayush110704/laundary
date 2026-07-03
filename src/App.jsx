@@ -35,6 +35,7 @@ import UserLayout from "./Pages/UserLayout";
 import UserTracking from "./components/OrderTracking"; 
 import TermsCondition from "./Pages/TermsCondition";
 import { useLayoutEffect } from "react";
+import ForgotPassword from './Pages/ForgotPassword';
 
 function App() {
   const location = useLocation();
@@ -46,7 +47,7 @@ function App() {
   }, [pathname]);
    
   // Only hide navbar/footer for login and signup pages
-  const hideLayoutRoutes = ["/login", "/signup"];
+  const hideLayoutRoutes = ["/login", "/signup","/forgot-password"];
   
   // ==================== Admin routes ====================
   const adminRoutes = [

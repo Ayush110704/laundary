@@ -156,8 +156,7 @@ const SignUp = () => {
           <form className="" onSubmit={handleSubmit}>
 
             <div className="grid sm:grid-cols-2 gap-5 mt-8 ">
-              {/* <form> */}
-              {/* <form onSubmit={handleSubmit}> */}
+            
               <div>
                 <label className="font-semibold text-blue-950 text-sm">
                   FIRST NAME
@@ -323,8 +322,6 @@ const SignUp = () => {
             > Sign Up</motion.button>
           </form>
 
-          {/* </form> */}
-          {/* Divider */}
 
           <div className="flex items-center gap-4 my-8">
             <div className="flex-1 border"></div>
@@ -339,8 +336,7 @@ const SignUp = () => {
         </motion.div>
       </motion.div>
 
-      {/* Bottom cards */}
-
+     
     
     </div>
   );
