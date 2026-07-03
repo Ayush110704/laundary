@@ -13,15 +13,12 @@ import {
   BarChart3,
   ChevronRight,
   Clock,
-  Plus,
-  LogOut
+  Plus
 } from 'lucide-react';
 
 const AdminDashboard = () => { 
   const navigate = useNavigate();
   const [adminName, setAdminName] = useState('Admin');
-  const [adminEmail, setAdminEmail] = useState('');
-  const [adminData, setAdminData] = useState(null);
   const [loginActivities, setLoginActivities] = useState([]);
 
   // Check if admin is logged in and get data from localStorage
@@ -34,8 +31,6 @@ const AdminDashboard = () => {
     }
 
     setAdminName(session.fullName || 'Admin');
-    setAdminEmail(session.email || '');
-    setAdminData(session);
 
     // Load login activities from localStorage
     loadLoginActivities(session);
@@ -93,7 +88,7 @@ const AdminDashboard = () => {
       setLoginActivities(activities);
     }
   };
- 
+
   // Real profit/loss data for weekly revenue
   const orderData = [
     { name: 'Mon', orders: 45, revenue: 12000, profit: 3600, loss: 0 },
@@ -220,36 +215,9 @@ const AdminDashboard = () => {
             <p className="text-blue-100 mt-1">
               Welcome back to your LaundryHub dashboard. Here's what's happening with your business today.
             </p>
-            <div className="flex items-center gap-4 mt-2 flex-wrap">
-              <p className="text-blue-200 text-sm">
-                {currentDate}
-              </p>
-              {adminEmail && (
-                <p className="text-blue-200 text-sm border-l border-blue-300 pl-3">
-                  {adminEmail}
-                </p>
-              )}
-              {adminData && (
-                <p className="text-blue-200 text-sm border-l border-blue-300 pl-3">
-                  Admin since: {new Date(adminData.registeredAt).toLocaleDateString()}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
-              <p className="text-sm font-medium">Last Login</p>
-              <p className="text-xs text-blue-100">
-                {adminData?.lastLogin ? new Date(adminData.lastLogin).toLocaleString() : 'Today at 9:30 AM'}
-              </p>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg px-4 py-2 transition-all duration-200 flex items-center gap-2"
-            >
-              <LogOut size={18} />
-              <span className="text-sm font-medium">Logout</span>
-            </button>
+            <p className="text-blue-200 text-sm mt-2">
+              {currentDate}
+            </p>
           </div>
         </div>
       </motion.div>
