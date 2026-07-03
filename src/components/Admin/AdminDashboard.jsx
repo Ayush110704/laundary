@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom'; // NEW: Import useNavigate hook
+import { useNavigate } from 'react-router-dom';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line
@@ -13,12 +13,95 @@ import {
   BarChart3,
   ChevronRight,
   Clock,
-  Plus
+  Plus,
+  LogOut
 } from 'lucide-react';
-
 
 const AdminDashboard = () => { 
   const navigate = useNavigate();
+  const [adminName, setAdminName] = useState('Admin');
+  const [adminEmail, setAdminEmail] = useState('');
+  const [adminData, setAdminData] = useState(null);
+  const [loginActivities, setLoginActivities] = useState([]);
+
+  // Check if admin is logged in and get data from localStorage
+  useEffect(() => {
+    const session = JSON.parse(localStorage.getItem('adminSession'));
+    
+    if (!session || !session.isLoggedIn) {
+      navigate('/admin-login');
+      return;
+    }
+
+    setAdminName(session.fullName || 'Admin');
+    setAdminEmail(session.email || '');
+    setAdminData(session);
+
+    // Load login activities from localStorage
+    loadLoginActivities(session);
+  }, [navigate]);
+
+  // Load login activities from localStorage
+  const loadLoginActivities = (session) => {
+    const storedActivities = JSON.parse(localStorage.getItem('adminLoginActivities') || '[]');
+    
+    // If no activities exist, create default one with current login
+    if (storedActivities.length === 0) {
+      const initials = session.fullName ? 
+        session.fullName.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2) : 
+        'AD';
+      
+      const defaultActivity = {
+        id: Date.now(),
+        initials: initials,
+        name: session.fullName || 'Admin',
+        action: 'Logged in to admin dashboard',
+        time: 'Just now',
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('adminLoginActivities', JSON.stringify([defaultActivity]));
+      setLoginActivities([defaultActivity]);
+    } else {
+      setLoginActivities(storedActivities);
+    }
+  };
+
+  // Add admin login activity
+  const addLoginActivity = (action) => {
+    const activities = JSON.parse(localStorage.getItem('adminLoginActivities') || '[]');
+    const session = JSON.parse(localStorage.getItem('adminSession'));
+    
+    if (session) {
+      const initials = session.fullName ? 
+        session.fullName.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2) : 
+        'AD';
+      
+      const newActivity = {
+        id: Date.now(),
+        initials: initials,
+        name: session.fullName || 'Admin',
+        action: action,
+        time: 'Just now',
+        timestamp: new Date().toISOString()
+      };
+      
+      activities.unshift(newActivity);
+      if (activities.length > 50) {
+        activities.pop();
+      }
+      localStorage.setItem('adminLoginActivities', JSON.stringify(activities));
+      setLoginActivities(activities);
+    }
+  };
+
+  // Logout function
+  const handleLogout = () => {
+    // Add logout activity
+    addLoginActivity('Logged out from admin dashboard');
+    
+    localStorage.removeItem('adminSession');
+    navigate('/admin-login');
+  };
 
   // Real profit/loss data for weekly revenue
   const orderData = [
@@ -59,15 +142,6 @@ const AdminDashboard = () => {
   const totalOrderRevenue = orderData.reduce((sum, day) => sum + day.revenue, 0);
   const totalOrderProfit = orderData.reduce((sum, day) => sum + day.profit, 0);
   const totalOrderLoss = orderData.reduce((sum, day) => sum + day.loss, 0);
-
-  // Recent Activity Data
-  const recentActivities = [
-    { id: 1, initials: 'PS', name: 'Priya Sharma', action: 'New inquiry from', time: '2 min ago' },
-    { id: 2, initials: 'AR', name: 'Admission', action: 'Application submitted', time: '15 min ago' },
-    { id: 3, initials: 'AD', name: 'Admin', action: 'Notice published: Exam Schedule', time: '1 hr ago' },
-    { id: 4, initials: 'SK', name: 'Staff', action: 'Calendar event added: PTM', time: '3 hrs ago' },
-    { id: 5, initials: 'RK', name: 'Admin', action: 'Announcement updated', time: 'Yesterday' },
-  ];
 
   // Quick Actions Data  
   const quickActions = [
@@ -115,6 +189,29 @@ const AdminDashboard = () => {
     return null;
   };
 
+  // Get initials from name
+  const getInitials = (name) => {
+    if (!name) return 'AD';
+    return name.split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2);
+  };
+
+  // Format time
+  const formatTime = (timestamp) => {
+    if (!timestamp) return 'Just now';
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} min ago`;
+    if (diffHours < 24) return `${diffHours} hr ago`;
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString();
+  };
+
   return (
     <>
       {/* Welcome Message */}
@@ -124,23 +221,44 @@ const AdminDashboard = () => {
         transition={{ duration: 0.6 }}
         className="mb-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg"
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h2 className="text-2xl font-bold">
-              👋 {greeting}, Admin!
+              {greeting}, {adminName}!
             </h2>
             <p className="text-blue-100 mt-1">
               Welcome back to your LaundryHub dashboard. Here's what's happening with your business today.
             </p>
-            <p className="text-blue-200 text-sm mt-2">
-              {currentDate}
-            </p>
+            <div className="flex items-center gap-4 mt-2 flex-wrap">
+              <p className="text-blue-200 text-sm">
+                {currentDate}
+              </p>
+              {adminEmail && (
+                <p className="text-blue-200 text-sm border-l border-blue-300 pl-3">
+                  {adminEmail}
+                </p>
+              )}
+              {adminData && (
+                <p className="text-blue-200 text-sm border-l border-blue-300 pl-3">
+                  Admin since: {new Date(adminData.registeredAt).toLocaleDateString()}
+                </p>
+              )}
+            </div>
           </div>
-          <div className="hidden md:block">
+          <div className="flex items-center gap-3">
             <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
               <p className="text-sm font-medium">Last Login</p>
-              <p className="text-xs text-blue-100">Today at 9:30 AM</p>
+              <p className="text-xs text-blue-100">
+                {adminData?.lastLogin ? new Date(adminData.lastLogin).toLocaleString() : 'Today at 9:30 AM'}
+              </p>
             </div>
+            <button
+              onClick={handleLogout}
+              className="bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-lg px-4 py-2 transition-all duration-200 flex items-center gap-2"
+            >
+              <LogOut size={18} />
+              <span className="text-sm font-medium">Logout</span>
+            </button>
           </div>
         </div>
       </motion.div>
@@ -154,47 +272,63 @@ const AdminDashboard = () => {
           className="lg:col-span-2"
         >
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Clock size={20} className="text-blue-600" />
-              <h3 className="text-lg font-semibold text-gray-800">Recent Activity</h3>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <Clock size={20} className="text-blue-600" />
+                <h3 className="text-lg font-semibold text-gray-800">Admin Login Activity</h3>
+              </div>
+              <span className="text-xs text-gray-400">
+                {loginActivities.length} activities
+              </span>
             </div>
 
-            <div className="space-y-4">
-              {recentActivities.map((activity, index) => (
-                <motion.div
-                  key={activity.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 + index * 0.05 }}
-                  className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
-                      {activity.initials}
+            <div className="space-y-4 max-h-80 overflow-y-auto">
+              {loginActivities.length > 0 ? (
+                loginActivities.map((activity, index) => (
+                  <motion.div
+                    key={activity.id || index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 + index * 0.05 }}
+                    className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
+                        {activity.initials || getInitials(activity.name)}
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-800">
+                          <span className="font-medium">{activity.name}</span>
+                          <span className="text-gray-500 ml-1">{activity.action}</span>
+                        </p>
+                        {activity.timestamp && (
+                          <p className="text-xs text-gray-400 mt-0.5">
+                            {new Date(activity.timestamp).toLocaleString()}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm text-gray-800">
-                        <span className="font-medium">{activity.name}</span>
-                        <span className="text-gray-500 ml-1">{activity.action}</span>
-                      </p>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-gray-400">
+                        {activity.time || formatTime(activity.timestamp)}
+                      </span>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-400">{activity.time}</span>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                ))
+              ) : (
+                <p className="text-gray-400 text-sm text-center py-4">No admin login activities yet</p>
+              )}
             </div>
           </div>
         </motion.div>
 
-        {/* Quick Actions  */}
+        {/* Quick Actions */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 h-full ">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 h-full">
             <div className="flex items-center gap-2 mb-4">
               <Plus size={20} className="text-blue-600" />
               <h3 className="text-lg font-semibold text-gray-800">Quick Actions</h3>
@@ -213,7 +347,7 @@ const AdminDashboard = () => {
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
                   }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => handleNavigation(action.path)}   navigation
+                  onClick={() => handleNavigation(action.path)}
                   className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-all duration-200 border border-transparent hover:border-gray-200 cursor-pointer"
                 >
                   <div className={`${action.color} p-2 rounded-lg text-white`}>
