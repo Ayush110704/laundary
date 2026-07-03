@@ -236,6 +236,7 @@ const ServiceManagement = () => {
   const [selectedService, setSelectedService] =useState(null);
   const [showDetail, setShowDetail] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [editingService, setEditingService] = useState(null);
 
   const itemsPerPage = 5;
 
@@ -343,11 +344,10 @@ const ServiceManagement = () => {
   };
 
 
-  const handleEdit = (id) => {
-
-    alert(`Edit Service ${id}`);
-
-  };
+const handleEdit = (service) => {
+  setEditingService(service);
+  setOpenModal(true);
+};
 
 
  // status
@@ -508,7 +508,11 @@ const ServiceManagement = () => {
           </div>
 
           <button 
-          onClick={() => setOpenModal(true)}
+          onClick={() => {
+            
+             setEditingService(null)
+    setOpenModal(true);
+  }}
           className="bg-blue-600 text-white px-5 py-3 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition">
 
             <Plus className="w-5 h-5" />
@@ -517,10 +521,15 @@ const ServiceManagement = () => {
 
           </button>
 
-           <AddService
-        isOpen={openModal}
-        onClose={() => setOpenModal(false)}
-      />
+          <AddService
+  isOpen={openModal}
+  onClose={() => {
+    setOpenModal(false);
+    setEditingService(null);
+  }}
+  serviceToEdit={editingService}
+  onSave={() => {}}
+/>
 
         </div>
 
@@ -574,64 +583,7 @@ const ServiceManagement = () => {
         </div>
 
 
-        {/* TOOLBAR */}
-        {/* 
-<div className="bg-white rounded-xl shadow-sm p-4 mb-6">
-
-<div className="flex flex-col md:flex-row gap-4">
-
-<div className="relative flex-1">
-
-<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-
-<input
-
-type="text"
-
-placeholder="Search services..."
-
-value={searchTerm}
-
-onChange={(e)=>setSearchTerm(e.target.value)}
-
-className="w-full pl-10 py-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
-
-/>
-
-</div>
-
-<select
-
-value={filterCategory}
-
-onChange={(e)=>setFilterCategory(e.target.value)}
-
-className="px-4 py-3 border rounded-lg outline-none"
-
->
-
-{categories.map((category)=>(
-
-<option
-
-key={category}
-
-value={category}
-
->
-
-{category}
-
-</option>
-
-))}
-
-</select>
-
-</div>
-
-</div> */}
-
+       
 
         {/* TABLE */}
 
@@ -671,13 +623,13 @@ value={category}
                 {paginatedServices.map((service) => (
 
                   <tr
-
+                
                     key={service.id}
-
-                    className="border-t hover:bg-blue-100 transition font-semibold text-gray-900 text-md"
+                   
+                    className="border-t hover:bg-blue-100 transition font-semibold text-gray-900 text-md cursor-arrow"
 
                   >
-
+                     
                     <td className="px-5 py-4 text-blue-600 ">
 
                       {service.id}
@@ -726,15 +678,20 @@ value={category}
 
                         <button
                           onClick={() => handleView(service)}
-                          className="p-2 rounded hover:bg-blue-100"
+                          className="p-2 rounded hover:bg-yellow-100" >
 
-                        >
+                       
                           <Eye className="w-4 h-4 text-blue-600" />
                         </button>
 
                         <button
-                          onClick={() => handleEdit(service.id)}
+                          onClick={() => handleEdit(service)} 
+                          
                           className="p-2 rounded hover:bg-yellow-100" >
+                            {/* <AddService
+        isOpen={openModal}
+        onClose={() => setOpenModal(false)}
+      /> */}
 
                        
                           <Edit className="w-4 h-4 text-yellow-600" />

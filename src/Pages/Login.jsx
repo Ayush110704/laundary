@@ -42,7 +42,7 @@ const Login = () => {
                 text: `Welcome ${user.FirstName}`,
             });
 
-            Navigate("/profile")
+            Navigate("/")
         } else {
             Swal.fire({
                 icon: "error",

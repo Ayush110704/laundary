@@ -1,6 +1,6 @@
 import React ,{useEffect,useState,useRef} from 'react'
 import { ServicesData } from '../Data/LaundaryData.js'
-import { useParams } from "react-router-dom"
+import { useParams , useNavigate } from "react-router-dom"
 import { motion } from 'framer-motion'
 import HeroCTA from './CTA.jsx'
 import { MoveRight, CheckCircle2, ArrowRight } from 'lucide-react'
@@ -81,7 +81,7 @@ const [emblaRef, emblaApi] = useEmblaCarousel({
     return () => clearInterval(interval);
   }, [emblaApi]);
 
-
+const navigate = useNavigate();
   return (
     <>
       <div>
@@ -142,6 +142,7 @@ const [emblaRef, emblaApi] = useEmblaCarousel({
                 </motion.p>
 
                 <motion.button
+                onClick={()=>navigate("/checkout")}
                   variants={{
                     hidden: { opacity: 0, y: 25 },
                     visible: { opacity: 1, y: 0, transition: { duration: 0.7 }, },

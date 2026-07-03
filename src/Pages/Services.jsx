@@ -15,7 +15,7 @@ import Iron from '../assets/Services/Iron.webp'
 import DryCleaning from '../assets/Services/DryCleaning.webp'
 import CarpetCleaning from '../assets/Services/CarpetCleaning.webp'
 import Curtain from '../assets/Services/Curtain.webp'
-import { Link } from "react-router-dom"
+import { Link , useNavigate} from "react-router-dom"
 import CTA from '../components/CTA.jsx'
 import Review from '../components/Review.jsx'
 import useEmblaCarousel from "embla-carousel-react";
@@ -23,6 +23,8 @@ import useEmblaCarousel from "embla-carousel-react";
 const Services = () => {
 
   const [hoveredId, setHoveredId] = useState(null);
+
+  const navigate = useNavigate();
 
   const price = [
     {
@@ -193,7 +195,7 @@ const Services = () => {
              initial={{ opacity: 0, y: 10, scale: 1, }}
               animate={{ opacity: 1, y: 0, scale: 1, }}
               transition={{ duration: 1, delay: 1 }}
-            
+            onClick={()=>navigate("/checkout")}
             className="group mt-8 md:mt-10 mb-5 py-3 md:py-5 px-6 md:px-8 rounded-xl bg-blue-900 text-white font-semibold text-base md:text-xl">
               <span className="flex items-center gap-2 transition-transform duration-300 group-hover:scale-105">
                 Book this Service

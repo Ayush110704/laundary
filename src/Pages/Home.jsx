@@ -11,7 +11,7 @@ import {
   buttonTexts,
   colors
 } from '../Data/LaundaryData';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate} from 'react-router-dom';
 
  
 const useInView = (threshold = 0.3) => {
@@ -315,6 +315,8 @@ const HomePage = () => {
     })
   };
 
+  const navigate = useNavigate();
+
   const underlineVariants = {
     hidden: { pathLength: 0, opacity: 0 },
     visible: {
@@ -407,7 +409,7 @@ const HomePage = () => {
               >
                 <span className="text-xs sm:text-sm md:text-base font-semibold text-blue-600 bg-white/50 px-3 py-1 rounded-full backdrop-blur-sm relative inline-block"> 
                   <motion.span
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/70 to-transparent"
+                    className="absolute inset-0 bg-linear-to-r from-transparent via-white/70 to-transparent"
                     animate={{
                       x: ["-100%", "200%"],
                     }}
@@ -480,8 +482,8 @@ const HomePage = () => {
                 transition={{ delay: 1, duration: 0.6 }}
                 className="mt-6 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start"
               >
-                <motion.a 
-                  href="#" 
+                <motion.button 
+                 onClick={()=>navigate("/checkout")}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="relative px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-md transition duration-200 text-center text-sm sm:text-base overflow-hidden group"
@@ -499,10 +501,10 @@ const HomePage = () => {
                     }}
                   />
                   <span className="relative z-10">{buttonTexts.primary}</span>
-                </motion.a>
+                </motion.button>
                 
-                <motion.a 
-                  href="#" 
+                <motion.button 
+                  onClick={()=>navigate("/pricing")} 
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="relative px-6 py-2.5 bg-white hover:bg-gray-50 text-gray-800 font-semibold rounded-full shadow-md transition duration-200 text-center text-sm sm:text-base border border-sky-200 overflow-hidden group"
@@ -520,7 +522,7 @@ const HomePage = () => {
                     }}
                   />
                   <span className="relative z-10">{buttonTexts.secondary}</span>
-                </motion.a>
+                </motion.button>
               </motion.div>
 
               {/* Features */}
@@ -587,6 +589,7 @@ const HomePage = () => {
             <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'} gap-6 overflow-hidden`}>
               {visibleServices.map((service, index) => (
                 <div
+                  // onClick={()=>navigate(service.path)}
                   key={`${activeIndex}-${index}`}
                   className="relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 group h-[420px]"
                   style={{

@@ -1,7 +1,10 @@
 import { ArrowRight, Phone, ShieldCheck,} from "lucide-react";
 import { motion } from "framer-motion";
+import {useNavigate} from 'react-router-dom'
 
 const CTA =( { type, headingtop, headingbottom,subHeading,})=> {
+const navigate = useNavigate();
+
   return (
     <section className="w-full flex justify-center py-16 p-5 md:p-0 mb-10">
 
@@ -74,11 +77,12 @@ const CTA =( { type, headingtop, headingbottom,subHeading,})=> {
             {/* Primary */}
 
             <motion.button
+            onClick={()=>navigate("/checkout")}
               whileHover={{y: -5, scale: 1.03, }} 
                 whileTap={{ scale: 0.97,}}
               className="group flex items-center gap-3 rounded-2xl bg-white  px-3 md:px-8  py-3 md:py-4 text-md md:text-lg font-semibold text-blue-900 shadow-xl"
             >
-              Book Free Pickup
+              Book  Pickup
 
               <motion.div
                 animate={{ x: [0, 4, 0],  }}
@@ -91,6 +95,8 @@ const CTA =( { type, headingtop, headingbottom,subHeading,})=> {
 
             {/* Secondary */}
             <motion.button
+            onClick={()=>navigate("/contact")}
+            
               whileHover={{  y: -5, scale: 1.03,}}
               whileTap={{ scale: 0.97, }}
               className="flex items-center gap-3 rounded-2xl border mt-4 md:mt-0 border-white/20 bg-white/10  px-9 md:px-8  py-3 md:py-4 mb-4 md:mb-0  text-md md:text-lg font-semibold text-white backdrop-blur-md"

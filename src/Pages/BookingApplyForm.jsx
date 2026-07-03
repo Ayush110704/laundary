@@ -7,10 +7,12 @@ import {
   Shirt,
   ClipboardList,
   CheckCircle2,
+  Trash2
 } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
+import { getCheckoutData, saveCheckoutData } from "../utils/checkoutStorage";
 
-const BookingApplyForm = () => {
+const BookingApplyForm = ({ checkoutData, setCheckoutData }) => {
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -28,14 +30,17 @@ const BookingApplyForm = () => {
 
   // Load user data from localStorage on component mount
   useEffect(() => {
-    const savedName = localStorage.getItem("fullName") || "";
-    const savedEmail = localStorage.getItem("email") || "";
-    
-    setFormData((prev) => ({
-      ...prev,
-      fullName: savedName,
-      email: savedEmail,
-    }));
+
+    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+
+    if (currentUser) {
+      setFormData((prev) => ({
+        ...prev,
+        fullName: `${currentUser.FirstName} ${currentUser.LastName}`,
+        email: currentUser.Email,
+        phone: currentUser.number,
+      }));
+    }
   }, []);
 
   const cardBase =
@@ -114,12 +119,13 @@ const BookingApplyForm = () => {
     console.log("Booking Submitted:", formData);
     setSubmitted(true);
 
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     // Resetting form fields but preserving pre-filled data from localStorage
     setFormData({
-      fullName: localStorage.getItem("fullName") || "",
-      phone: "",
+      fullName: currentUser ? `${currentUser.FirstName} ${currentUser.LastName}` : "",
+      phone: currentUser ? currentUser.number : "",
       altPhone: "",
-      email: localStorage.getItem("email") || "",
+      email: currentUser ? currentUser.Email : "",
       serviceType: "",
       clothType: "",
       quantity: "",
@@ -144,250 +150,330 @@ const BookingApplyForm = () => {
   const ErrorText = ({ message }) =>
     message ? <p className="mt-2 text-sm text-rose-500">{message}</p> : null;
 
+
+
+  const handleAddItem = (e) => {
+    e.preventDefault();
+    const checkoutData = getCheckoutData();
+
+    const newItems = {
+      serviceType: formData.serviceType,
+      clothType: formData.clothType,
+      quantity: Number(formData.quantity),
+      instructions: formData.instructions,
+
+    };
+
+     const updatedCheckoutData = {
+    ...checkoutData,
+    items: [...checkoutData.items, newItems],
+  };
+
+  setCheckoutData(updatedCheckoutData);
+  saveCheckoutData(updatedCheckoutData);
+
+  // setCheckoutItems(updatedCheckoutData.items);
+
+
+   
+
+    setCheckoutItems(checkoutData.items);
+    console.log(getCheckoutData());
+
+  }
+
+ const removeItems = (index) => {
+  const checkoutData = getCheckoutData();
+
+  const updatedItems = checkoutData.items.filter((_, i) => i !== index);
+
+  saveCheckoutData({
+    ...checkoutData,
+    items: updatedItems,
+  });
+
+  setCheckoutItems(updatedItems);
+};
+
+  const totalItems = checkoutData.items.reduce((total, item) => total + Number(item.quantity), 0);
+
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.12),transparent_22%),radial-gradient(circle_at_top_right,rgba(59,130,246,0.14),transparent_24%),linear-gradient(180deg,#f8fbff_0%,#eef5fb_100%)] px-3 pb-8 pt-20 text-slate-800 sm:px-5 sm:pt-24 lg:px-8 lg:pt-28">
-      <div className="mx-auto max-w-4xl">
-        <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
-          className={`${cardBase} overflow-hidden`}
-        >
-          {/* Header */}
-          <div className="relative overflow-hidden bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-600 px-4 py-6 text-white sm:px-6 sm:py-8 md:px-8">
-            <div className="absolute right-0 top-0 h-24 w-24 rounded-full bg-white/10 blur-2xl sm:h-32 sm:w-32" />
-            <div className="absolute bottom-0 left-6 h-16 w-16 rounded-full bg-white/10 blur-xl sm:left-10 sm:h-20 sm:w-20" />
 
-            <div className="relative z-10 flex flex-col items-center text-center">
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-[11px] font-semibold text-white/95 backdrop-blur sm:text-xs">
-                <ClipboardList size={14} />
-                Booking Apply Form
-              </div>
+    <div className="mx-auto w-full max-w-7xl">
+      <motion.div
+        initial={{ opacity: 0, y: 22 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+        className={`${cardBase} overflow-hidden`}
+      >
+        {/* Header */}
+        <div className="relative overflow-hidden bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-600 px-4 py-6 text-white sm:px-6 sm:py-8 md:px-8">
+          <div className="absolute right-0 top-0 h-24 w-24 rounded-full bg-white/10 blur-2xl sm:h-32 sm:w-32" />
+          <div className="absolute bottom-0 left-6 h-16 w-16 rounded-full bg-white/10 blur-xl sm:left-10 sm:h-20 sm:w-20" />
 
-              <h2 className="text-xl font-bold sm:text-2xl md:text-3xl">
-                Schedule Pickup Request
-              </h2>
-
-              <p className="mt-2 max-w-2xl px-1 text-sm leading-6 text-white/90 sm:text-base">
-                Fill your details below and submit your laundry booking request.
-              </p>
+          <div className="relative z-10 flex flex-col items-center text-center">
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-[11px] font-semibold text-white/95 backdrop-blur sm:text-xs">
+              <ClipboardList size={14} />
+              Booking Apply Form
             </div>
+
+            <h2 className="text-xl font-bold sm:text-2xl md:text-3xl">
+              Schedule Pickup Request
+            </h2>
+
+            <p className="mt-2 max-w-2xl px-1 text-sm leading-6 text-white/90 sm:text-base">
+              Fill your details below and submit your laundry booking request.
+            </p>
           </div>
+        </div>
 
-          <div className="p-4 sm:p-6 md:p-8">
-            <AnimatePresence>
-              {submitted && (
-                <motion.div
-                  initial={{ opacity: 0, y: -12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  className="mb-6 flex flex-col gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-700 sm:flex-row sm:items-start"
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100">
-                    <CheckCircle2 size={20} />
-                  </div>
-                  <div>
-                    <p className="font-bold">Booking submitted successfully!</p>
-                    <p className="text-sm text-emerald-600">
-                      Our team will review and confirm your pickup shortly.
-                    </p>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <form onSubmit={handleSubmit} className="space-y-8">
-              {/* Personal Details */}
-              <section>
-                <div className="mb-5 flex items-start gap-3 sm:items-center">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-lg">
-                    1
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900 sm:text-lg">
-                      Personal Details
-                    </h3>
-                    <p className="text-sm text-slate-500">
-                      Verify your profile and primary contact credentials
-                    </p>
-                  </div>
+        <div className="p-4 sm:p-6 md:p-8">
+          <AnimatePresence>
+            {submitted && (
+              <motion.div
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                className="mb-6 flex flex-col gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-700 sm:flex-row sm:items-start"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100">
+                  <CheckCircle2 size={20} />
                 </div>
-
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-                  <div>
-                    <FieldLabel icon={User} label="Full Name" required />
-                    <input
-                      type="text"
-                      name="fullName"
-                      value={formData.fullName}
-                      onChange={handleChange}
-                      placeholder={formData.fullName ? "" : "No name found in profile"}
-                      className={`${inputStyle} ${formData.fullName ? 'bg-slate-50/70 opacity-85 cursor-not-allowed' : ''}`}
-                      disabled={!!localStorage.getItem("fullName")}
-                    />
-                    <ErrorText message={errors.fullName} />
-                  </div>
-
-                  <div>
-                    <FieldLabel icon={Mail} label="Email Address" required />
-                    <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder={formData.email ? "" : "No email found in profile"}
-                      className={`${inputStyle} ${formData.email ? 'bg-slate-50/70 opacity-85 cursor-not-allowed' : ''}`}
-                      disabled={!!localStorage.getItem("email")}
-                    />
-                    <ErrorText message={errors.email} />
-                  </div>
-
-                  <div>
-                    <FieldLabel icon={Phone} label="Phone Number" required />
-                    <input
-                      type="tel"
-                      inputMode="numeric"
-                      maxLength={10}
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleChange}
-                      placeholder="Enter 10 digit phone number"
-                      className={inputStyle}
-                    />
-                    <ErrorText message={errors.phone} />
-                  </div>
-
-                  <div>
-                    <FieldLabel icon={Phone} label="Alternate Mobile Number" />
-                    <input
-                      type="tel"
-                      inputMode="numeric"
-                      maxLength={10}
-                      name="altPhone"
-                      value={formData.altPhone}
-                      onChange={handleChange}
-                      placeholder="Enter alternative mobile number"
-                      className={inputStyle}
-                    />
-                    <ErrorText message={errors.altPhone} />
-                  </div>
+                <div>
+                  <p className="font-bold">Booking submitted successfully!</p>
+                  <p className="text-sm text-emerald-600">
+                    Our team will review and confirm your pickup shortly.
+                  </p>
                 </div>
-              </section>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-              {/* Pickup Logistics */}
-              <section>
-                <div className="mb-5 flex items-start gap-3 sm:items-center">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-lg">
-                    2
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900 sm:text-lg">
-                      Pickup Window & Options
-                    </h3>
-                    <p className="text-sm text-slate-500">
-                      Configure service types along with standard dates and hours
-                    </p>
-                  </div>
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Personal Details */}
+            <section>
+              <div className="mb-5 flex items-start gap-3 sm:items-center">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-lg">
+                  1
                 </div>
-
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-                  <div>
-                    <FieldLabel icon={Shirt} label="Service Type" required />
-                    <select
-                      name="serviceType"
-                      value={formData.serviceType}
-                      onChange={handleChange}
-                      className={inputStyle}
-                    >
-                      <option value="">Select service</option>
-                      <option value="Wash & Fold">Wash & Fold</option>
-                      <option value="Dry Cleaning">Dry Cleaning</option>
-                      <option value="Premium Laundry">Premium Laundry</option>
-                      <option value="Ironing">Ironing</option>
-                    </select>
-                    <ErrorText message={errors.serviceType} />
-                  </div>
-
-                  <div>
-                    <FieldLabel icon={ClipboardList} label="Clothes Type" required />
-                    <input
-                      type="text"
-                      name="clothType"
-                      value={formData.clothType}
-                      onChange={handleChange}
-                      placeholder="e.g. Shirts, Jeans, Bedsheets"
-                      className={inputStyle}
-                    />
-                    <ErrorText message={errors.clothType} />
-                  </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900 sm:text-lg">
+                    Personal Details
+                  </h3>
+                  <p className="text-sm text-slate-500">
+                    Verify your profile and primary contact credentials
+                  </p>
                 </div>
-              </section>
-
-              {/* Order Details & Cloth Type */}
-              <section>
-                <div className="mb-5 flex items-start gap-3 sm:items-center">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-lg">
-                    3
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900 sm:text-lg">
-                      Order Breakdown
-                    </h3>
-                    <p className="text-sm text-slate-500">
-                      Enter the quantity and any special handling notes for your order
-                    </p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-                  <div className="md:col-span-2">
-                    <FieldLabel icon={ClipboardList} label="Clothes Quantity" required />
-                    <input
-                      type="number"
-                      name="quantity"
-                      min="1"
-                      value={formData.quantity}
-                      onChange={handleChange}
-                      placeholder="e.g. 12"
-                      className={inputStyle}
-                    />
-                    <ErrorText message={errors.quantity} />
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <FieldLabel icon={ClipboardList} label="Special Instructions" />
-                    <textarea
-                      name="instructions"
-                      rows={4}
-                      value={formData.instructions}
-                      onChange={handleChange}
-                      placeholder="Any special notes for washing, pickup, stain care, delicate fabric handling..."
-                      className={inputStyle}
-                    />
-                  </div>
-                </div>
-              </section>
-
-              {/* Submit */}
-              <div className="pt-2">
-                <motion.button
-                  whileTap={{ scale: 0.985 }}
-                  whileHover={{ y: -2 }}
-                  type="submit"
-                  className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-600 px-6 py-3.5 text-sm font-bold text-white shadow-[0_16px_40px_rgba(14,165,233,0.30)] transition sm:rounded-2xl sm:py-4 sm:text-base"
-                >
-                  <span className="absolute inset-0 bg-white/10 opacity-0 transition group-hover:opacity-100" />
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    <CheckCircle2 size={18} />
-                    Next
-                  </span>
-                </motion.button>
               </div>
-            </form>
-          </div>
-        </motion.div>
-      </div>
+
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
+                <div>
+                  <FieldLabel icon={User} label="Full Name" required />
+                  <input
+                    type="text"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    placeholder={formData.fullName ? "" : "No name found in profile"}
+                    className={`${inputStyle} ${formData.fullName ? 'bg-slate-50/70 opacity-85 cursor-not-allowed' : ''}`}
+                    disabled={!!formData.fullName}
+                  />
+                  <ErrorText message={errors.fullName} />
+                </div>
+
+                <div>
+                  <FieldLabel icon={Mail} label="Email Address" required />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder={formData.email ? "" : "No email found in profile"}
+                    className={`${inputStyle} ${formData.email ? 'bg-slate-50/70 opacity-85 cursor-not-allowed' : ''}`}
+                    disabled={!!formData.email}
+                  />
+                  <ErrorText message={errors.email} />
+                </div>
+
+                <div>
+                  <FieldLabel icon={Phone} label="Phone Number" required />
+                  <input
+                    type="tel"
+                    inputMode="numeric"
+                    maxLength={10}
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="Enter 10 digit phone number"
+                    className={inputStyle}
+                  />
+                  <ErrorText message={errors.phone} />
+                </div>
+
+                <div>
+                  <FieldLabel icon={Phone} label="Alternate Mobile Number" />
+                  <input
+                    type="tel"
+                    inputMode="numeric"
+                    maxLength={10}
+                    name="altPhone"
+                    value={formData.altPhone}
+                    onChange={handleChange}
+                    placeholder="Enter alternative mobile number"
+                    className={inputStyle}
+                  />
+                  <ErrorText message={errors.altPhone} />
+                </div>
+              </div>
+            </section>
+
+            {/*  Select Service  */}
+            <section>
+              <div className="mb-5 flex items-start gap-3 sm:items-center">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-lg">
+                  2
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900 sm:text-lg">
+                    Select Service & Options
+                  </h3>
+                  <p className="text-sm text-slate-500">
+                    Configure service types along with standard dates and hours
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-4 md:gap-6 ">
+                <div className="">
+                  <FieldLabel icon={Shirt} label="Service Type" required />
+                  <select
+                    name="serviceType"
+                    value={formData.serviceType}
+                    onChange={handleChange}
+                    className={inputStyle}
+
+
+                  >
+                   <option value="all">All</option>
+                    <option value="Laundry">Laundry</option>
+                    <option value="Dry Cleaning">Dry Cleaning</option>
+                    <option value="Shoe Cleaning">Shoe Cleaning</option>
+                    <option value="Ironing">Ironing</option>
+                    <option value="Curtain Cleaning">Curtain Cleaning</option>
+                    <option value="Carpet Cleaning">Carpet Cleaning</option>
+                  </select>
+                  <ErrorText message={errors.serviceType} />
+                </div>
+
+                <div className="">
+                  <FieldLabel icon={ClipboardList} label="Clothes Type" required />
+                  <input
+                    type="text"
+                    name="clothType"
+                    value={formData.clothType}
+                    onChange={handleChange}
+                    placeholder="e.g. Shirts, Jeans, Bedsheets"
+                    className={inputStyle}
+                  />
+                  <ErrorText message={errors.clothType} />
+                </div>
+
+                <div>
+<FieldLabel icon={ClipboardList} label="Clothes Quantity" required />
+                  <input
+                    type="number"
+                    name="quantity"
+                    value={formData.quantity}
+                    onChange={handleChange}
+                    placeholder="e.g. 5"
+                    className={inputStyle}
+                  />
+                  <ErrorText message={errors.quantity} />
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleAddItem}
+                  className="  h-10 mt-12 ml-5 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-600 text-white text-lg font-bold rounded-2xl  ">Add</button>
+
+              </div>
+
+              {checkoutData.items.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                    Added Items
+                  </h3>
+                  <ul className="space-y-3">
+                    {checkoutData.items.map((item, index) => (
+                      <li key={index} className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm">
+                        <span>
+                          {item.quantity} × {item.clothType} ({item.serviceType})
+                        </span>
+                        {item.instructions && (
+                          <span className="text-xs text-slate-500">
+                            Instructions: {item.instructions}
+                          </span>
+                        )}
+                        <button  
+                        type="button"
+                        onClick={() => removeItems(index)}
+                        className="text-red-500 hover:scale-110"><Trash2 size={16} /></button>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                </div>
+
+                
+              )}
+
+
+
+              <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 mt-5">
+                
+ <div className="md:col-span-2">
+                  <FieldLabel icon={ClipboardList} label="Clothes Quantity" required />
+                  <div className="mt-4 rounded-xl bg-blue-50 p-4">
+                    <p className="text-lg font-semibold text-blue-900">
+                      Total Quantity: {totalItems} Items
+                    </p>
+                  </div>
+                </div>
+
+                <div className="md:col-span-2">
+                  <FieldLabel icon={ClipboardList} label="Special Instructions" />
+                  <textarea
+                    name="instructions"
+                    rows={4}
+                    value={formData.instructions}
+                    onChange={handleChange}
+                    placeholder="Any special notes for washing, pickup, stain care, delicate fabric handling..."
+                    className={inputStyle}
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Submit */}
+            <div className="pt-2">
+              <motion.button
+                whileTap={{ scale: 0.985 }}
+                whileHover={{ y: -2 }}
+                type="submit"
+                className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-600 px-6 py-3.5 text-sm font-bold text-white shadow-[0_16px_40px_rgba(14,165,233,0.30)] transition sm:rounded-2xl sm:py-4 sm:text-base"
+              >
+                <span className="absolute inset-0 bg-white/10 opacity-0 transition group-hover:opacity-100" />
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  <CheckCircle2 size={18} />
+                  Next
+                </span>
+              </motion.button>
+            </div>
+          </form>
+        </div>
+      </motion.div>
     </div>
+
   );
 };
 
