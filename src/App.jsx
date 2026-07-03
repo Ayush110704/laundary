@@ -49,7 +49,7 @@ function App() {
   }, [pathname]);
    
   // Only hide navbar/footer for login and signup pages
-  const hideLayoutRoutes = ["/login", "/signup","/forgot-password","/admin-register","/admin-login"];
+  const hideLayoutRoutes = ["/login", "/signup","/forgot-password","/admin-login","/admin-register"];
   
   // ==================== Admin routes ====================
   const adminRoutes = [
@@ -86,6 +86,7 @@ function App() {
         {/* Auth Routes - No Navbar/Footer */}
         <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<SignUp/>} />  
+        <Route path="/forgot-password" element={<ForgotPassword/>} />
         <Route path="/admin-register" element={<AdminRegister/>} />
         <Route path="/admin-login" element={<AdminLogin/>} />
         
