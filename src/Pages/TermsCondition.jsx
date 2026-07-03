@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import {
   FaShieldAlt,
   FaChevronDown,
@@ -13,9 +14,9 @@ import {
   FiDollarSign,
   FiShield,
 } from "react-icons/fi";
-import UserLayout from './UserLayout'; // ADD THIS IMPORT
 
-function TermsCondition() {
+const TermsCondition = () => {
+
   const [open, setOpen] = useState(1);
 
   const terms = [
@@ -57,134 +58,195 @@ function TermsCondition() {
   ];
 
   return (
-    <UserLayout> {/* WRAPPED WITH UserLayout */}
-      <div className="w-full">
-        <div className="min-h-screen bg-gradient-to-br from-[#f8fbff] via-[#eef4ff] to-[#dbeafe] py-16 px-4 relative overflow-hidden">
 
-          {/* Background Blur Effects */}
-          <div className="absolute top-0 left-0 w-72 h-72 bg-blue-300/20 rounded-full blur-3xl"></div>
+    <div className="min-h-screen bg-gradient-to-br from-[#f8fbff] via-[#eef4ff] to-[#dbeafe] relative overflow-hidden py-10 md:py-16">
 
-          <div className="absolute bottom-0 right-0 w-80 h-80 bg-cyan-300/20 rounded-full blur-3xl"></div>
+      {/* Blur */}
 
-          <div className="max-w-5xl mx-auto relative z-10">
+      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-300/20 rounded-full blur-3xl"></div>
 
-            {/* Header */}
-            <div className="text-center">
+      <div className="absolute bottom-0 right-0 w-80 h-80 bg-cyan-300/20 rounded-full blur-3xl"></div>
 
-              <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-blue-100 text-[#0f3d7a] text-xs font-bold tracking-widest mt-6">
-                <FaShieldAlt />
-                LEGAL INFORMATION
-              </div>
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-              <h1 className="mt-6 text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-[#0f3d7a] via-[#2563eb] to-[#38bdf8] bg-clip-text text-transparent">
-                Terms & Conditions
-              </h1>
+        {/* ================= HEADER ================= */}
 
-              <p className="mt-4 text-gray-500 text-lg">
-                Last Updated: October 24, 2024
-              </p>
+        <div className="text-center">
+
+          <div className="inline-flex items-center gap-2 px-4 md:px-5 py-2 rounded-full bg-blue-100 text-[#0f3d7a] text-[11px] md:text-xs font-bold tracking-widest mt-10">
+
+            <FaShieldAlt />
+
+            LEGAL INFORMATION
+
+          </div>
+
+          <h1 className="mt-6 text-3xl sm:text-4xl md:text-6xl font-extrabold leading-tight bg-gradient-to-r from-[#0f3d7a] via-[#2563eb] to-[#38bdf8] bg-clip-text text-transparent">
+
+            Terms & Conditions
+
+          </h1>
+
+          <p className="mt-4 text-gray-500 text-sm md:text-lg">
+
+            Last Updated: October 24, 2024
+
+          </p>
+
+        </div>
+
+        {/* ================= ACCORDION START ================= */}
+
+        <div className="mt-10 md:mt-14 space-y-4">
+          {terms.map((item) => (
+
+  <div
+    key={item.id}
+    className="group bg-white/90 backdrop-blur-md border border-blue-100 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden"
+  >
+
+    <button
+      onClick={() =>
+        setOpen(open === item.id ? null : item.id)
+      }
+      className="w-full flex justify-between items-start md:items-center gap-4 px-4 md:px-6 py-5"
+    >
+
+      {/* Left */}
+
+      <div className="flex items-start gap-4 text-left">
+
+        <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-blue-50 flex items-center justify-center text-[#0f3d7a] text-lg shrink-0">
+
+          {item.icon}
+
+        </div>
+
+        <div>
+
+          <h3 className="text-base md:text-lg font-semibold text-[#0f3d7a]">
+
+            {item.title}
+
+          </h3>
+
+        </div>
+
+      </div>
+
+      {/* Arrow */}
+
+      <FaChevronDown
+        className={`text-[#0f3d7a] transition-transform duration-300 mt-1 md:mt-0
+
+        ${
+          open === item.id
+            ? "rotate-180"
+            : ""
+        }
+
+        `}
+      />
+
+    </button>
+
+    {/* Content */}
+
+    <div
+      className={`transition-all duration-500 overflow-hidden
+
+      ${
+        open === item.id
+
+        ? "max-h-96 opacity-100"
+
+        : "max-h-0 opacity-0"
+
+      }
+
+      `}
+    >
+
+      <div className="px-4 md:px-6 pb-6 text-sm md:text-base text-gray-600 leading-7 md:leading-8">
+
+        {item.content}
+
+      </div>
+
+    </div>
+
+  </div>
+
+))}
+        </div>
+
+        {/* ================= ACKNOWLEDGEMENT ================= */}
+
+        <div className="mt-12 md:mt-16">
+
+          <div className="bg-white/90 backdrop-blur-md border border-blue-100 rounded-3xl shadow-xl p-6 md:p-10 text-center">
+
+            {/* Icon */}
+
+            <div className="w-20 h-20 md:w-24 md:h-24 mx-auto rounded-full bg-gradient-to-r from-blue-100 to-cyan-100 flex items-center justify-center shadow-lg">
+
+              <FaShieldAlt className="text-4xl md:text-5xl text-[#0f3d7a]" />
 
             </div>
 
-            {/* Terms Cards */}
-            <div className="mt-14 space-y-5">
+            {/* Heading */}
 
-              {terms.map((item) => (
-                <div
-                  key={item.id}
-                  className="group bg-white/90 backdrop-blur-md border border-blue-100 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden"
-                >
+            <h2 className="mt-6 text-2xl md:text-4xl font-bold text-[#0f3d7a]">
 
-                  <button
-                    onClick={() =>
-                      setOpen(open === item.id ? null : item.id)
-                    }
-                    className="w-full flex justify-between items-center px-6 py-5"
-                  >
+              Acknowledgment
 
-                    <div className="flex items-center gap-4">
+            </h2>
 
-                      <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center text-[#0f3d7a] text-lg group-hover:bg-blue-100 transition-all duration-300">
-                        {item.icon}
-                      </div>
+            {/* Paragraph */}
 
-                      <span className="font-semibold text-[#0f3d7a] text-lg">
-                        {item.title}
-                      </span>
+            <p className="mt-5 text-sm md:text-base text-gray-600 leading-7 md:leading-8 max-w-3xl mx-auto">
 
-                    </div>
+              By clicking the button below, you confirm that you have
+              read, understood and agreed to the Athenura Terms &
+              Conditions and Privacy Policy.
 
-                    <FaChevronDown
-                      className={`text-[#0f3d7a] transition-transform duration-300 ${
-                        open === item.id ? "rotate-180" : ""
-                      }`}
-                    />
+            </p>
 
-                  </button>
+            {/* Buttons */}
 
-                  <div
-                    className={`overflow-hidden transition-all duration-500 ${
-                      open === item.id
-                        ? "max-h-96 opacity-100"
-                        : "max-h-0 opacity-0"
-                    }`}
-                  >
+            <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
 
-                    <div className="px-6 pb-6 text-gray-600 leading-8">
-                      {item.content}
-                    </div>
+              <button
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#0f3d7a] via-[#2563eb] to-[#38bdf8] text-white font-semibold hover:scale-105 transition duration-300"
+              >
 
-                  </div>
+                <FaCheckCircle />
 
-                </div>
-              ))}
+                Accept Terms
 
-            </div>
+              </button>
 
-            {/* Acknowledgment Card */}
-            <div className="mt-16 bg-white/90 backdrop-blur-md border border-blue-100 rounded-3xl p-8 md:p-12 shadow-lg text-center hover:shadow-2xl transition-all duration-500">
+              <button
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-blue-200 bg-white text-[#0f3d7a] font-semibold hover:bg-blue-50 hover:border-blue-500 transition duration-300"
+              >
 
-              <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-r from-blue-100 to-cyan-100 flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-500">
+                <FaFileDownload />
 
-                <FaShieldAlt className="text-5xl text-[#0f3d7a]" />
+                Download PDF
 
-              </div>
-
-              <h2 className="mt-6 text-3xl md:text-4xl font-bold text-[#0f3d7a]">
-                Acknowledgment
-              </h2>
-
-              <p className="mt-4 text-gray-600 max-w-2xl mx-auto leading-8">
-                By clicking the button below, you confirm that you have
-                read, understood and agreed to the Athenura Terms of
-                Service and Privacy Policy.
-              </p>
-
-              <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
-
-                <button className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-[#0f3d7a] via-[#2563eb] to-[#38bdf8] text-white font-semibold hover:scale-105 hover:shadow-2xl transition-all duration-500">
-
-                  <FaCheckCircle />
-                  Accept Terms
-
-                </button>
-
-                <button className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl border border-blue-200 bg-white font-semibold hover:bg-blue-50 hover:border-blue-500 hover:scale-105 transition-all duration-500">
-
-                  <FaFileDownload />
-                  Download PDF
-
-                </button>
-
-              </div>
+              </button>
 
             </div>
 
           </div>
+
         </div>
+
       </div>
-    </UserLayout>
+
+    </div>
+
   );
-}
+};
 
 export default TermsCondition;
