@@ -55,7 +55,7 @@ const UserLayout = ({ children }) => {
       name: "Profile",
       description: "Account identity and security keys",
       icon: <FaUser />,
-      path: "/user-profile",
+      path: "/",
     },
     {
       id: "orders",
