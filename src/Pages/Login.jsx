@@ -24,46 +24,30 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        try {
-            const response = await fetch("http://localhost:5000/api/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    email: userdata.Email,
-                    password: userdata.Password
-                })
-            });
-            const data = await response.json();
+        const users = JSON.parse(localStorage.getItem("Users"));
+        console.log(users)
+        
+        const user = users.find(
+            (item) => item.Email === userdata.Email &&
+                    item.Password === userdata.Password
+        );
 
-            if (!response.ok || !data.success) {
-                throw new Error(data.message || "Invalid credentials");
-            }
-
-            // Store token
-            localStorage.setItem("token", data.token);
-
-            // Construct compatibility user object for local storage
-            const nameParts = (data.user.name || "").split(" ");
-            const compatUser = {
-                FirstName: nameParts[0] || "",
-                LastName: nameParts.slice(1).join(" ") || "",
-                Email: data.user.email,
-                Password: userdata.Password
-            };
-            localStorage.setItem("currentUser", JSON.stringify(compatUser));
+        if (user) {
+           
+            localStorage.setItem("currentUser", JSON.stringify(user))
 
             await Swal.fire({
                 icon: "success",
                 title: "Login Successful",
-                text: `Welcome ${compatUser.FirstName}`,
+                text: `Welcome ${user.FirstName}`,
             });
 
-            Navigate("/");
-        } catch (error) {
+            Navigate("/")
+        } else {
             Swal.fire({
                 icon: "error",
                 title: "Login Failed",
-                text: error.message || "Invalid email or password",
+                text: "Invalid email or password",
             });
         }
     }

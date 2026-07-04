@@ -1,11 +1,11 @@
-import User from '../models/User.js'; // Added .js
+ import User from '../models/User.js'; // Added .js
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 // REGISTER USER
 export const registerUser = async (req, res) => {
     try {
-        const { name, email, password, phone, address } = req.body;
+        const { name, email, password, phone } = req.body;
 
         let user = await User.findOne({ email });
         if (user) {
@@ -19,8 +19,7 @@ export const registerUser = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            phone,
-            address: address || ''
+            phone
         });
 
         await user.save();
@@ -50,9 +49,6 @@ export const loginUser = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
-
-        user.lastLogin = new Date();
-        await user.save();
 
         const token = jwt.sign(
             { id: user._id, role: user.role },
