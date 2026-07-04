@@ -59,7 +59,7 @@ const TermsCondition = () => {
   ];
 
   return (
-    <UserLayout> {/* WRAPPED WITH UserLayout */}
+    <UserLayout>  
       <div className="w-full">
         <div className="min-h-screen bg-gradient-to-br from-[#f8fbff] via-[#eef4ff] to-[#dbeafe] relative overflow-hidden py-10 md:py-16">
 
