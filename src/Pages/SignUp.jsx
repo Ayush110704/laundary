@@ -24,51 +24,63 @@ const SignUp = () => {
 
 
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(text);
 
-    const existingData = JSON.parse(localStorage.getItem("Users")) || [];
-    
+    const payload = {
+      name: `${text.FirstName} ${text.LastName}`.trim(),
+      email: text.Email,
+      password: text.Password,
+      phone: text.number,
+      address: text.Address
+    };
 
-    const userExists = existingData.find(
-    (user) => user.Email === text.Email
-  );
+    try {
+      const response = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json();
 
-  if (userExists) {
-    Swal.fire({
-      icon: "error",
-      title: "User already exists",
-      text: "Please use another email",
-    });
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Registration failed");
+      }
 
-    return;
-  }
+      // Sync to local storage for backward compatibility with other frontend components
+      const existingData = JSON.parse(localStorage.getItem("Users")) || [];
+      const userExists = existingData.find(user => user.Email === text.Email);
+      if (!userExists) {
+        existingData.push(text);
+        localStorage.setItem("Users", JSON.stringify(existingData));
+      }
 
-  existingData.push(text);
+      await Swal.fire({
+        title: "Signup Successful!",
+        text: "Please login to continue",
+        icon: "success",
+        confirmButtonColor: "#10b981",
+      });
 
+      setText({
+        FirstName: "",
+        LastName: "",
+        Email: "",
+        Password: "",
+        Address: "",
+        number: ""
+      });
 
-    setText
-    ({
-      FirstName: "",
-      LastName: "",
-      Email: "",
-      Password: "",
-      Address: "",
-      number: ""
-    })
-
-    localStorage.setItem("Users", JSON.stringify(existingData));
-
-    await Swal.fire({
-      title: "Signup Successful!",
-      text: "Please login to continue",
-      icon: "success",
-      confirmButtonColor: "#10b981",
-    });
-
-    navigate("/login");
-  }
+      navigate("/login");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Signup Failed",
+        text: error.message || "Server error during registration"
+      });
+    }
+  };
 
 
 
