@@ -55,7 +55,7 @@ const UserLayout = ({ children }) => {
       name: "Profile",
       description: "Account identity and security keys",
       icon: <FaUser />,
-      path: "/",
+      path: "/user-profile",
     },
     {
       id: "orders",
@@ -100,7 +100,7 @@ const UserLayout = ({ children }) => {
       id: "orders",
       name: "Bookings",
       icon: <FaBoxOpen />,
-      path: "/",
+      path: "/user-orders",
     },
     {
       id: "address",
@@ -112,7 +112,7 @@ const UserLayout = ({ children }) => {
       id: "home",
       name: "Home",
       icon: <FaHome />,
-      path: "/user-profile",
+      path: "/",
       isHome: true,
     },
     {

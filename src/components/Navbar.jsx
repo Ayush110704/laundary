@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown, ChevronUp, User, LogOut } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate ,useLocation} from "react-router-dom";
 import logo from "../assets/Athenura.png";
 
 const Navbar = () => {
@@ -14,6 +14,17 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
+const location = useLocation();
+
+const hideHamburgerRoutes = [
+  "/user-profile",
+  "/user-orders",
+  "/user-address",
+  "/user-subscription",
+  
+];
+
+const hideHamburger = hideHamburgerRoutes.includes(location.pathname);
 
   useEffect(() => {
 
@@ -174,12 +185,14 @@ const Navbar = () => {
 
 
         {/* Mobile Icon */}
+        {!hideHamburger && (
         <div
           className="md:hidden cursor-pointer"
           onClick={() => setMobileMenu(!mobileMenu)}
         >
           {mobileMenu ? <X /> : <Menu />}
         </div>
+        )}
       </motion.nav>
 
       {/* Mobile Menu */}
