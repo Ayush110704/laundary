@@ -11,8 +11,9 @@ import {
 } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { getCheckoutData, saveCheckoutData } from "../utils/checkoutStorage";
+import Swal from 'sweetalert2'
 
-const BookingApplyForm = ({ checkoutData, setCheckoutData }) => {
+const BookingApplyForm = ({ checkoutData, setCheckoutData, setCurrentStep, }) => {
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -72,19 +73,7 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData }) => {
       newErrors.email = "Enter valid email address";
     }
 
-    if (!formData.serviceType) {
-      newErrors.serviceType = "Select service type";
-    }
-
-    if (!formData.clothType.trim()) {
-      newErrors.clothType = "Clothes type is required";
-    }
-
-    if (!formData.quantity.toString().trim()) {
-      newErrors.quantity = "Enter clothes quantity";
-    } else if (Number(formData.quantity) <= 0) {
-      newErrors.quantity = "Quantity must be greater than 0";
-    }
+  
 
     return newErrors;
   };
@@ -107,18 +96,47 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData }) => {
     if (submitted) setSubmitted(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const validationErrors = validate();
+
+    if ((checkoutData.items || []).length === 0) {
+    validationErrors.items = "Please add at least one item.";
+  }
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
-    console.log("Booking Submitted:", formData);
+const updatedCheckoutData = {
+    ...checkoutData,
+    altPhone: formData.altPhone,
+    instructions: formData.instructions,
+  };
+
+  setCheckoutData(updatedCheckoutData);
+  saveCheckoutData(updatedCheckoutData);
+
+
+    console.log("Booking Submitted:", updatedCheckoutData);
     setSubmitted(true);
 
+const swalResult = await Swal.fire({
+  icon: "success",
+  title: "Items Added !",
+  text: "Your Items has been added successfully.",
+  confirmButtonText: "OK",
+  confirmButtonColor: "#06b6d4",
+});
+
+if (swalResult.isConfirmed) {
+  setCurrentStep(2);
+}
+
+  
+
+  
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
     // Resetting form fields but preserving pre-filled data from localStorage
     setFormData({
@@ -153,8 +171,32 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData }) => {
 
 
   const handleAddItem = (e) => {
+
+    const newErrors = {};
+
+  if (!formData.serviceType) {
+    newErrors.serviceType = "Select service type";
+  }
+
+  if (!formData.clothType.trim()) {
+    newErrors.clothType = "Clothes type is required";
+  }
+
+  if (!formData.quantity.toString().trim()) {
+    newErrors.quantity = "Enter clothes quantity";
+  } else if (Number(formData.quantity) <= 0) {
+    newErrors.quantity = "Quantity must be greater than 0";
+  }
+
+  if (Object.keys(newErrors).length > 0) {
+    setErrors((prev) => ({
+      ...prev,
+      ...newErrors,
+    }));
+    return;
+  }
     e.preventDefault();
-    const checkoutData = getCheckoutData();
+    // const checkoutData = getCheckoutData();
 
     const newItems = {
       serviceType: formData.serviceType,
@@ -166,20 +208,23 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData }) => {
 
      const updatedCheckoutData = {
     ...checkoutData,
-    items: [...checkoutData.items, newItems],
+    items: [...(checkoutData.items || []), newItems],
   };
 
   setCheckoutData(updatedCheckoutData);
   saveCheckoutData(updatedCheckoutData);
 
   // setCheckoutItems(updatedCheckoutData.items);
-
-
-   
-
-    setCheckoutItems(checkoutData.items);
+    // setCheckoutItems(updatedCheckoutData.items);
     console.log(getCheckoutData());
 
+ setFormData((prev) => ({
+  ...prev,
+  serviceType: "",
+  clothType: "",
+  quantity: "",
+  instructions: "",
+}));
   }
 
  const removeItems = (index) => {
@@ -195,7 +240,7 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData }) => {
   setCheckoutItems(updatedItems);
 };
 
-  const totalItems = checkoutData.items.reduce((total, item) => total + Number(item.quantity), 0);
+  const totalItems = (checkoutData.items || []).reduce((total, item) => total + Number(item.quantity), 0);
 
   return (
 
@@ -354,7 +399,7 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData }) => {
 
 
                   >
-                   <option value="all">All</option>
+                   <option value="">Select Service</option>
                     <option value="Laundry">Laundry</option>
                     <option value="Dry Cleaning">Dry Cleaning</option>
                     <option value="Shoe Cleaning">Shoe Cleaning</option>
@@ -366,7 +411,7 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData }) => {
                 </div>
 
                 <div className="">
-                  <FieldLabel icon={ClipboardList} label="Clothes Type" required />
+                  <FieldLabel icon={ClipboardList} label="Item Type" required />
                   <input
                     type="text"
                     name="clothType"
@@ -379,7 +424,7 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData }) => {
                 </div>
 
                 <div>
-<FieldLabel icon={ClipboardList} label="Clothes Quantity" required />
+<FieldLabel icon={ClipboardList} label="Item Quantity" required />
                   <input
                     type="number"
                     name="quantity"
@@ -403,9 +448,9 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData }) => {
                   <h3 className="text-lg font-semibold text-slate-900 mb-3">
                     Added Items
                   </h3>
-                  <ul className="space-y-3">
+                  <ul className=" flex gap-2 items-center">
                     {checkoutData.items.map((item, index) => (
-                      <li key={index} className="flex items-center justify-between rounded-xl border border-slate-200/80 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm">
+                      <li key={index} className="flex gap-3 items-center justify-between rounded-xl border border-slate-200/80 bg-blue-50 px-4 py-3 text-sm text-slate-700 shadow-sm">
                         <span>
                           {item.quantity} × {item.clothType} ({item.serviceType})
                         </span>
