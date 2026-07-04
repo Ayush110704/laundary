@@ -4,11 +4,17 @@ import { ShoppingBag, ArrowRight } from 'lucide-react';
 import validateCheckout from '../utils/validatesCheckout';
 import saveOrder from '../utils/saveOrder';
 import { getCheckoutData } from "../utils/checkoutStorage";
+import Swal from 'sweetalert2'
+import {useNavigate} from "react-router-dom"
 
 
 const OrderSummary = ({ Step, checkoutData }) => {
 
-    const handleConfirm = () => {
+    const data = getCheckoutData();
+
+    const navigate = useNavigate()
+
+    const handleConfirm = async() => {
 
         const result = validateCheckout();
 
@@ -18,10 +24,20 @@ const OrderSummary = ({ Step, checkoutData }) => {
         }
 
         saveOrder();
-        alert("🎉 Order Confirmed");
+      
+       const swalResult = await Swal.fire({
+           icon: "success",
+           title: "Booking Successful!",
+           text: "Your booking has been submitted successfully.",
+           confirmButtonText: "Continue",
+           confirmButtonColor: "#06b6d4",
+         });
+         
+         if (swalResult.isConfirmed) {
+                navigate("/user-orders"); 
+              }
 
-    }
-
+            }
     return (
         <>
             {/* Order Summary */}
@@ -38,7 +54,7 @@ const OrderSummary = ({ Step, checkoutData }) => {
                     transition={{ duration: 0.3 }}
                     className="w-full rounded-2xl bg-white border border-gray-200 shadow-xl overflow-hidden"
                 >
-                    {/* Header */}
+                   
                     <div className="flex items-center gap-3 border-b px-5 py-4 bg-blue-50">
                         <ShoppingBag className="h-5 w-5 text-blue-700" />
                         <h2 className="text-lg font-semibold text-gray-900">
@@ -46,7 +62,7 @@ const OrderSummary = ({ Step, checkoutData }) => {
                         </h2>
                     </div>
 
-                    {/* Body */}
+                    
                     <div className="space-y-3 p-5">
 
                         <motion.div

@@ -352,42 +352,83 @@ const Profile = () => {
             />
           </div>
 
-          {/* Quick Stats */}
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3"
-          >
-            <div className="bg-white rounded-xl p-3 border border-gray-200 text-center">
-              <p className="text-xs text-gray-500">Member Since</p>
-              <p className="text-sm font-semibold text-gray-800 mt-1">
-                {userData.joiningDate || 'N/A'}
-              </p>
-            </div>
-            <div className="bg-white rounded-xl p-3 border border-gray-200 text-center">
-              <p className="text-xs text-gray-500">Profile Status</p>
-              <p className="text-sm font-semibold text-green-600 mt-1">
-                <i className="fas fa-check-circle mr-1"></i> Active
-              </p>
-            </div>
-            <div className="bg-white rounded-xl p-4 border border-gray-200">
-              <div className="flex justify-between items-center mb-1">
-                <p className="text-xs text-gray-500">Profile Complete</p>
-                <span className={`text-sm font-bold ${profileCompletion === 100 ? 'text-green-600' : 'text-blue-600'}`}>
-                  {profileCompletion}%
-                </span>
-              </div>
-              <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${profileCompletion}%` }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                  className={`h-full ${getCompletionColor(profileCompletion)} rounded-full transition-all`}
-                />
-              </div>
-            </div>
-          </motion.div>
+      {/* Quick Stats  */}
+<motion.div 
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 0.3 }}
+  className="mt-6 grid grid-cols-3 gap-2 md:gap-4"
+>
+  {/* Member Since */}
+  <div className="bg-white rounded-xl p-2 md:p-4 border border-gray-200 text-center flex flex-col justify-center">
+    <p className="text-[10px] md:text-xs text-gray-500">Member Since</p>
+    <p className="text-[11px] md:text-sm font-semibold text-gray-800 mt-0.5 md:mt-1 truncate">
+      {userData.joiningDate || 'N/A'}
+    </p>
+  </div>
+
+  {/* Profile Status */}
+  <div className="bg-white rounded-xl p-2 md:p-4 border border-gray-200 text-center flex flex-col justify-center">
+    <p className="text-[10px] md:text-xs text-gray-500">Profile Status</p>
+    <p className="text-[11px] md:text-sm font-semibold text-green-600 mt-0.5 md:mt-1">
+      <i className="fas fa-check-circle mr-0.5 md:mr-1 text-[10px] md:text-sm"></i> 
+      <span className="text-[11px] md:text-sm">Active</span>
+    </p>
+  </div>
+
+  {/* Profile Complete */}
+  <div className="bg-white rounded-xl p-2 md:p-4 border border-gray-200 flex flex-col items-center justify-center"> 
+    <div className="relative inline-flex items-center justify-center md:hidden">
+      <svg className="w-14 h-14 transform -rotate-90">
+        {/* Background circle */}
+        <circle
+          className="text-gray-200"
+          strokeWidth="5"
+          stroke="currentColor"
+          fill="transparent"
+          r="24"
+          cx="28"
+          cy="28"
+        /> 
+        <circle
+          className="text-green-500 transition-all duration-1000 ease-out"
+          strokeWidth="5"
+          strokeDasharray={2 * Math.PI * 24}
+          strokeDashoffset={2 * Math.PI * 24 * (1 - profileCompletion / 100)}
+          strokeLinecap="round"
+          stroke="currentColor"
+          fill="transparent"
+          r="24"
+          cx="28"
+          cy="28"
+        />
+      </svg>
+      <span className="absolute text-[11px] font-bold text-gray-800">
+        {profileCompletion}%
+      </span>
+    </div>
+
+    {/* Desktop: Horizontal Progress Bar */}
+    <div className="hidden md:block w-full">
+      <div className="flex justify-between items-center mb-1">
+        <p className="text-xs text-gray-500">Profile Complete</p>
+        <span className="text-sm font-bold text-green-600">
+          {profileCompletion}%
+        </span>
+      </div>
+      <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden">
+        <motion.div 
+          initial={{ width: 0 }}
+          animate={{ width: `${profileCompletion}%` }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="h-full bg-green-500 rounded-full transition-all"
+        />
+      </div>
+    </div>
+ 
+    <p className="text-[10px] md:hidden text-gray-500 mt-1">Complete</p>
+  </div>
+</motion.div>
         </div>
 
         {/* Footer */}

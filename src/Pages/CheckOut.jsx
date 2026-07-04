@@ -9,6 +9,8 @@ import OrderSummary from '../components/OrderSummary';
 import Schedule from '../components/Schedule';
 import Payment from '../components/Payment';
 import { getCheckoutData } from '../utils/checkoutStorage';
+import validateStep from '../utils/validateStep';
+import Swal from "sweetalert2";
 
 
 const CheckOut = () => {
@@ -24,6 +26,22 @@ const CheckOut = () => {
     { id: 4, title: "Payment" },
   ];
 
+  const handleNext = async () => {
+  const result = validateStep(currentStep);
+
+  if (!result.success) {
+    await Swal.fire({
+      icon: "warning",
+      title: "Incomplete Details",
+      text: result.message,
+      confirmButtonColor: "#2563eb",
+    });
+
+    return;
+  }
+
+  setCurrentStep((prev) => prev + 1);
+};
 
   return (
     <>
@@ -86,6 +104,7 @@ const CheckOut = () => {
               <BookingApplyForm 
                checkoutData={checkoutData}
   setCheckoutData={setCheckoutData}
+  setCurrentStep={setCurrentStep}
               />
             )}
 
@@ -140,23 +159,25 @@ const CheckOut = () => {
             )}
 
             {/* Buttons */}
-            <div className="flex justify-between mt-8">
-              <button
-                disabled={currentStep === 1}
-                onClick={() => setCurrentStep((prev) => prev - 1)}
-                className="px-6 py-2 rounded-lg bg-gray-200 disabled:opacity-50"
-              >
-                Previous
-              </button>
+           {currentStep !== 1 && (
+  <div className="flex justify-between mt-8">
+    <button
+      disabled={currentStep === 1}
+      onClick={() => setCurrentStep((prev) => prev - 1)}
+      className="px-6 py-2 rounded-lg bg-gray-200 disabled:opacity-50"
+    >
+      Previous
+    </button>
 
-              <button
-                disabled={currentStep === 4}
-                onClick={() => setCurrentStep((prev) => prev + 1)}
-                className="px-6 py-2 rounded-lg bg-blue-700 text-white disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
+    <button
+      disabled={currentStep === 4}
+      onClick={handleNext}
+      className="px-6 py-2 rounded-lg bg-blue-700 text-white disabled:opacity-50"
+    >
+      Next
+    </button>
+  </div>
+)}
           </div>
         </section>
 

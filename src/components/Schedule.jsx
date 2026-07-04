@@ -6,8 +6,8 @@ import {getCheckoutData,saveCheckoutData,} from "../utils/checkoutStorage";
 const Schedule = ({ checkoutData, setCheckoutData }) => {
 
 
-const [selectedPickupSlot, setSelectedPickupSlot] = useState( checkoutData.schedule?.time || "");
-const [selectedDeliverySlot, setSelectedDeliverySlot] = useState(checkoutData.schedule?.deliverySlot || null);
+const [selectedPickupSlot, setSelectedPickupSlot] = useState( checkoutData.schedule?.slot || "");
+const [selectedDeliverySlot, setSelectedDeliverySlot] = useState(checkoutData.schedule?.deliverySlot || "");
  const [startDate, setStartDate] = useState(() => {
     const today = new Date();
     const start = new Date(today);

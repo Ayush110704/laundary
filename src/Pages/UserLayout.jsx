@@ -14,7 +14,7 @@ import {
   FaChevronRight,
   FaPhone,
   FaEnvelope,
-  FaUserCircle,
+  FaHome,
 } from "react-icons/fa";
 
 const UserLayout = ({ children }) => {
@@ -48,7 +48,7 @@ const UserLayout = ({ children }) => {
   const userPhone = currentUser?.Phone || currentUser?.phone || currentUser?.contact || '+1 (555) 000-0000';
   const userEmail = currentUser?.Email || currentUser?.email || 'user@example.com';
 
-  // --- NAVIGATION CONFIGURATION ---
+ 
   const NAVIGATION_ITEMS = [
     {
       id: "profile",
@@ -94,6 +94,42 @@ const UserLayout = ({ children }) => {
     },
   ];
 
+  // Bottom navigation 
+  const BOTTOM_NAV_ITEMS = [
+    {
+      id: "orders",
+      name: "Bookings",
+      icon: <FaBoxOpen />,
+      path: "/user-orders",
+    },
+    {
+      id: "address",
+      name: "Address",
+      icon: <FaMapMarkerAlt />,
+      path: "/user-address",
+    },
+    {
+      id: "home",
+      name: "Home",
+      icon: <FaHome />,
+      path: "/",
+      isHome: true,
+    },
+    {
+      id: "subscription",
+      name: "Subscription",
+      icon: <FaCrown />,
+      path: "/user-subscription",
+    },
+    {
+      id: "more",
+      name: "More",
+      icon: <FaBars />,
+      path: "#",
+      action: () => setMobileMenuOpen(true),
+    },
+  ];
+
   const activeItem = NAVIGATION_ITEMS.find((item) => item.path === location.pathname) || NAVIGATION_ITEMS[0];
 
   const handleNavigation = (path, id) => {
@@ -113,9 +149,8 @@ const UserLayout = ({ children }) => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex flex-col">
-      {/* MAIN CONTENT AREA WITH SIDEBAR */}
-      <div className="flex flex-1 pt-20 font-sans antialiased text-slate-900 select-none">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 flex flex-col"> 
+      <div className="flex flex-1 pt-20 pb-20 lg:pb-0 font-sans antialiased text-slate-900 select-none">
         {/* MOBILE DRAWER */}
         <AnimatePresence>
           {mobileMenuOpen && (
@@ -211,8 +246,7 @@ const UserLayout = ({ children }) => {
 
         {/* DESKTOP SIDEBAR */}
         <aside className="hidden lg:flex flex-col justify-between w-[290px] bg-white/80 backdrop-blur-xl border-r border-slate-200/60 h-[calc(100vh-80px)] sticky top-20 shrink-0 z-30">
-          <div className="p-6">
-            {/* Desktop User Profile Header - Enhanced */}
+          <div className="p-6"> 
             <div className="mb-6 p-4 bg-gradient-to-br from-indigo-50/80 via-violet-50/80 to-purple-50/80 rounded-2xl border border-indigo-100/50 shadow-sm hover:shadow-md transition-shadow duration-300">
               <div className="flex items-start gap-3.5">
                 <div className="relative">
@@ -298,7 +332,7 @@ const UserLayout = ({ children }) => {
           </div>
 
           {/* Content Canvas */}
-          <div className="flex-1 min-h-[520px] lg:min-h-[calc(100vh-210px)] bg-white/70 backdrop-blur-sm border border-slate-200/70 rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 p-6 sm:p-10 flex flex-col relative overflow-hidden group/canvas">
+          <div className="flex-1 min-h-[400px] lg:min-h-[calc(100vh-210px)] bg-white/70 backdrop-blur-sm border border-slate-200/70 rounded-3xl shadow-sm hover:shadow-md transition-shadow duration-300 p-6 sm:p-10 flex flex-col relative overflow-hidden group/canvas">
             <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30 pointer-events-none" />
             
             {/* Decorative gradient orbs */}
@@ -319,6 +353,78 @@ const UserLayout = ({ children }) => {
             </AnimatePresence>
           </div>
         </main>
+      </div>
+
+      {/* MOBILE BOTTOM NAVIGATION BAR */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200/80 shadow-lg z-40 safe-bottom">
+        <div className="flex items-center justify-around px-2 py-1.5 max-w-md mx-auto">
+          {BOTTOM_NAV_ITEMS.map((item) => {
+            const isSelected = item.path !== "#" && isActive(item.path);
+            
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  if (item.action) {
+                    item.action();
+                  } else if (item.path) {
+                    handleNavigation(item.path, item.id);
+                  }
+                }}
+                className={`flex flex-col items-center justify-center py-1 px-2 rounded-2xl transition-all duration-200 relative ${
+                  item.isHome 
+                    ? "min-w-[60px] mt-[-16px]" 
+                    : "min-w-[56px]"
+                } ${
+                  isSelected 
+                    ? "text-indigo-600" 
+                    : "text-slate-500 hover:text-indigo-500"
+                }`}
+              >
+                {/* Active indicator for non-home items */}
+                {isSelected && !item.isHome && (
+                  <motion.div
+                    layoutId="bottomNavActive"
+                    className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                  />
+                )}
+                
+                {/* Icon with badge */}
+                <div className="relative">
+                  {/* Home button */}
+                  {item.isHome ? (
+                    <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white text-2xl shadow-lg shadow-indigo-500/30 ring-4 ring-white transition-all duration-200 ${
+                      isSelected ? "scale-110 shadow-indigo-500/40" : ""
+                    }`}>
+                      {item.icon}
+                    </div>
+                  ) : (
+                    <span className={`text-xl transition-all duration-200 ${
+                      isSelected ? "scale-110" : "scale-100"
+                    }`}>
+                      {item.icon}
+                    </span>
+                  )}
+                  
+                  {/* Badge for orders */}
+                  {item.id === "orders" && newOrdersCount > 0 && (
+                    <span className="absolute -top-1 -right-2 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm animate-pulse">
+                      {newOrdersCount}
+                    </span>
+                  )}
+                </div>
+                
+                {/* Label */}
+                <span className={`text-[10px] font-bold mt-0.5 transition-all duration-200 ${
+                  isSelected ? "text-indigo-600" : "text-slate-500"
+                } ${item.isHome ? "mt-0" : ""}`}>
+                  {item.name}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* LOGOUT MODAL - Enhanced */}
