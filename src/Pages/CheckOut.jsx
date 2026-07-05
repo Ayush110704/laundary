@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import "react-calendar/dist/Calendar.css";
 import Calendar from "react-calendar";
 import BookingApplyForm from '../Pages/BookingApplyForm';
-import Address from '../components/Address';
+import CheckoutAddress from '../components/CheckoutAddress';
 import OrderSummary from '../components/OrderSummary';
 import Schedule from '../components/Schedule';
 import Payment from '../components/Payment';
@@ -112,7 +112,7 @@ const CheckOut = () => {
               <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                 {/* Left Section */}
-                <Address
+                <CheckoutAddress
                   checkoutData={checkoutData}
                   setCheckoutData={setCheckoutData}
                 />

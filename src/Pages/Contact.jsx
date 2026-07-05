@@ -1,7 +1,7 @@
 import React from "react";
 import laundryContact from "../assets/laundryContact.png";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
-import hero from "../assets/hero.webp";
+// import hero from "../assets/hero.webp";
 import { motion } from "framer-motion";
 
 function Contact() {

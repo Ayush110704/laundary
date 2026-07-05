@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import UserLayout from './UserLayout'; // ADD THIS IMPORT
+import UserLayout from '../User/UserLayout'; 
 
 import {
   FaShieldAlt,

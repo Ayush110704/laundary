@@ -414,6 +414,16 @@ function Footer() {
                 About Us
               </motion.li>
               </Link>
+              <Link to="/Services">
+                <motion.li
+                  className="hover:text-blue-400 cursor-pointer mb-4"
+                  variants={slideInLeftVariants}
+                  whileHover={{ x: 8 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  Services
+                </motion.li>
+              </Link>
               <Link to="/TermsCondition">
                 <motion.li
                   className="hover:text-blue-400 cursor-pointer mb-4"
@@ -432,6 +442,16 @@ function Footer() {
                   transition={{ duration: 0.3 }}
                 >
                   FAQs
+                </motion.li>
+              </Link>
+              <Link to="/Contact">
+                <motion.li
+                  className="hover:text-blue-400 cursor-pointer mb-4"
+                  variants={slideInLeftVariants}
+                  whileHover={{ x: 8 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  Contact Us
                 </motion.li>
               </Link>
             </ul>

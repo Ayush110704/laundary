@@ -7,8 +7,8 @@ import Warehouse from '../assets/Services/Warehouse.png'
 import { motion } from 'framer-motion'
 import { CircleCheck, Star, Minus, MoveRight, Clock3, Leaf, Truck, ShieldCheck, Play, Ampersand } from 'lucide-react';
 import { useState , useRef, useEffect} from 'react';
-import FloatingCard from '../components/FloatingCard.jsx';
-import Stat from '../components/Stat.jsx';
+import FloatingCard from '../Ui/FloatingCard.jsx';
+import Stat from '../Ui/Stat.jsx';
 import WashingMachine from '../assets/Services/WashingMachine.webp'
 import ShoeCleaning from '../assets/Services/ShoeCleaning.webp'
 import Iron from '../assets/Services/Iron.webp'
