@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown, ChevronUp, User, LogOut } from "lucide-react";
-import { Link, useNavigate ,useLocation} from "react-router-dom";
+import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/Athenura.png";
 
 const Navbar = () => {
@@ -14,17 +14,17 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-const location = useLocation();
+  const location = useLocation();
 
-const hideHamburgerRoutes = [
-  "/user-profile",
-  "/user-orders",
-  "/user-address",
-  "/user-subscription",
-  
-];
+  const hideHamburgerRoutes = [
+    "/user-profile",
+    "/user-orders",
+    "/user-address",
+    "/user-subscription",
 
-const hideHamburger = hideHamburgerRoutes.includes(location.pathname);
+  ];
+
+  const hideHamburger = hideHamburgerRoutes.includes(location.pathname);
 
   useEffect(() => {
 
@@ -92,32 +92,84 @@ const hideHamburger = hideHamburgerRoutes.includes(location.pathname);
         <div className="hidden md:flex font-semibold text-lg gap-10 items-center">
           <ul className="flex gap-6">
             {menu.map((item) => (
-              <li key={item.id} className=" group">
+              <li key={item.id} className=" group relative">
                 {item.dropdown ? (
                   <>
-                    <Link to={item.path} className="flex items-center  gap-1 hover:text-blue-600"
+                    <NavLink to={item.path}
+                      className={({ isActive }) =>
+                        `flex items-center gap-1 transition-colors duration-300 ${isActive || location.pathname.startsWith("/services")
+                          ? "text-blue-600"
+                          : "text-gray-950 hover:text-blue-600"
+                        }`
+                      }
 
                     >
                       {item.label}
-                      <span className="text-xs flex items-center"> <ChevronDown size={20} className="mt-1 transition-transform duration-600 group-hover:rotate-180" /></span>
-                    </Link>
+                      <ChevronDown
+                        size={20}
+                        className="mt-1 transition-transform duration-300 group-hover:rotate-180"
+                      />
+                      {location.pathname.startsWith("/services") && (
+                        <motion.div
+                          layoutId="active-navbar"
+                          className="absolute left-1/3 -translate-x-1/6  -bottom-1 h-[2px] w-[30px] rounded-full bg-blue-600"
+                          transition={{
+                            type: "spring",
+                            stiffness: 450,
+                            damping: 30,
+                          }}
+                        />
+                      )}
+                    </NavLink>
 
-                    <div className="absolute top-12 left-170 mt-3 w-48 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden">
+                    <div className="absolute top-8  mt-3 w-48 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden">
                       {item.dropdown.map((service) => (
-                        <Link
+                        <NavLink
                           key={service.path}
                           to={service.path}
-                          className="block px-5 py-2 text-[15px] hover:bg-blue-50 hover:text-blue-600"
+
+
+                          className={({ isActive }) =>
+                            `block px-5 py-2 text-[15px] ${isActive
+                              ? "bg-blue-100 text-blue-900 font-semibold"
+                              : "hover:bg-blue-50 hover:text-blue-600"
+                            }`
+                          }
                         >
                           {service.label}
-                        </Link>
+
+                        </NavLink>
                       ))}
                     </div>
                   </>
                 ) : (
-                  <Link to={item.path} className="hover:text-blue-600">
-                    {item.label}
-                  </Link>
+                  <NavLink
+                    to={item.path}
+                    end={item.path === "/"} // Important for Home
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-blue-700"
+                        : "text-gray-900 hover:text-blue-600"
+                    }
+                  >
+                    {({ isActive }) => (
+                      <>
+                        {item.label}
+
+                        {isActive && (
+                          <motion.div
+                            layoutId="active-navbar"
+                            className="absolute left-1/2 -translate-x-1/2  -bottom-1 h-[2px] w-[30px] rounded-full bg-blue-600"
+                            transition={{
+                              type: "spring",
+                              stiffness: 450,
+                              damping: 30,
+                            }}
+                          />
+                        )}
+                      </>
+                    )}
+                  </NavLink>
                 )}
               </li>
             ))}
@@ -186,12 +238,12 @@ const hideHamburger = hideHamburgerRoutes.includes(location.pathname);
 
         {/* Mobile Icon */}
         {!hideHamburger && (
-        <div
-          className="md:hidden cursor-pointer"
-          onClick={() => setMobileMenu(!mobileMenu)}
-        >
-          {mobileMenu ? <X /> : <Menu />}
-        </div>
+          <div
+            className="md:hidden cursor-pointer"
+            onClick={() => setMobileMenu(!mobileMenu)}
+          >
+            {mobileMenu ? <X /> : <Menu />}
+          </div>
         )}
       </motion.nav>
 
@@ -263,7 +315,7 @@ const hideHamburger = hideHamburgerRoutes.includes(location.pathname);
             <div className="w-75  flex justify-around mb-5">
               <button
                 onClick={() => {
-                 navigate(userlogin ? "/user-profile" : "/Login")
+                  navigate(userlogin ? "/user-profile" : "/Login")
                   setMobileMenu(false);
                 }}
                 className="py-1 px-3 bg-blue-600 rounded-3xl text-white cursor-pointer hover:bg-blue-700"
@@ -271,11 +323,11 @@ const hideHamburger = hideHamburgerRoutes.includes(location.pathname);
                 {userlogin ? userData.FirstName : "Login"}
               </button>
 
-               <button
+              <button
                 onClick={handleLogout}
                 className=" text-red-700 cursor-pointer hover:bg-blue-700"
               >
-             Logout
+                Logout
               </button>
             </div>
           </motion.div>

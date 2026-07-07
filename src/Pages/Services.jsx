@@ -6,7 +6,7 @@ import Ironing from '../assets/ironing.webp'
 import Warehouse from '../assets/Services/Warehouse.png'
 import { motion } from 'framer-motion'
 import { CircleCheck, Star, Minus, MoveRight, Clock3, Leaf, Truck, ShieldCheck, Play, Ampersand } from 'lucide-react';
-import { useState , useRef, useEffect} from 'react';
+import { useState, useRef, useEffect } from 'react';
 import FloatingCard from '../Ui/FloatingCard.jsx';
 import Stat from '../Ui/Stat.jsx';
 import WashingMachine from '../assets/Services/WashingMachine.webp'
@@ -15,7 +15,7 @@ import Iron from '../assets/Services/Iron.webp'
 import DryCleaning from '../assets/Services/DryCleaning.webp'
 import CarpetCleaning from '../assets/Services/CarpetCleaning.webp'
 import Curtain from '../assets/Services/Curtain.webp'
-import { Link , useNavigate} from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import CTA from '../components/CTA.jsx'
 import Review from '../components/Review.jsx'
 import useEmblaCarousel from "embla-carousel-react";
@@ -109,24 +109,24 @@ const Services = () => {
     },
   };
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+  const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "center",
     loop: true,
     skipSnaps: false,
   });
-  
+
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     if (!emblaApi) return;
-    
+
     const onSelect = () => {
       setSelectedIndex(emblaApi.selectedScrollSnap());
     };
-    
+
     emblaApi.on("select", onSelect);
     onSelect();
-    
+
     return () => {
       emblaApi.off("select", onSelect);
     };
@@ -135,7 +135,7 @@ const Services = () => {
   // ADDED: Auto-scroll effect for mobile carousel
   useEffect(() => {
     if (!emblaApi) return;
-    
+
     const interval = setInterval(() => {
       if (!emblaApi.canScrollNext()) {
         emblaApi.scrollTo(0);
@@ -143,7 +143,7 @@ const Services = () => {
         emblaApi.scrollNext();
       }
     }, 3000);
-    
+
     return () => clearInterval(interval);
   }, [emblaApi]);
 
@@ -160,52 +160,74 @@ const Services = () => {
         }}
       >
         <div className="flex md:hidden absolute inset-0 md:mt-12 bg-black/20 z-10 min-h-screen"></div>
-        <div className="md:flex hidden absolute inset-0 md:mt-12 bg-black/10 z-10 min-h-screen"></div>
+        <div className="md:flex hidden absolute inset-0 md:mt-12 bg-white/10 z-10 min-h-screen"></div>
 
         <div className="relative z-20 min-h-screen flex items-center  text-center md:text-left">
           <div className="w-full max-w-3xl px-6 sm:px-10 lg:px-20 md:mt-0">
-           
+
+
 
             <motion.h1
               initial={{ opacity: 0, scale: 1, y: 40 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.5 }}
+              transition={{ duration: 1, delay: 0.2 }}
 
-              className=" text-4xl sm:text-5xl lg:text-6xl font-serif font-semibold text-white md:text-blue-950 leading-15">
-              Expert Laundry <span className=" text-xl md:text-4xl text-[#f1f1fa]">&</span>
+              className="mt-6 text-5xl md:text-7xl font-bold leading-tight">
+              <span className="text-white md:text-blue-950">
+                Laundry
+              </span>
+
               <br />
-               
+
+              <span className="bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent">
+                Made Effortless
+              </span>
             </motion.h1>
-            <motion.div
-            initial={{ opacity: 0, scale: 1, y: 40 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.5 }}
-            className=' text-2xl md:text-5xl leading-tight font-semibold font-serif mt-3 text-blue-700'> Dry Cleaning Services</motion.div>
+
+
 
             <motion.p
               initial={{ opacity: 0, scale: 1, }}
               animate={{ opacity: 1, scale: 1, }}
               transition={{ duration: 1, delay: 0.7 }}
-              className="mt-6 text-sm sm:text-base md:text-lg text-gray-400 font-semibold  md:text-blue-950 leading-5 max-w-xl">
-              Preserving the integrity of your most delicate fabrics
-              with eco-friendly solvents and expert craftsmanship.
+              className="mt-6 text-sm sm:text-base md:text-lg text-gray-400 font-semibold  md:text-blue-950 leading-8 max-w-xl">
+
+              Professional laundry and dry cleaning with
+              30-minute pickup, eco-friendly cleaning,
+              and doorstep delivery.
             </motion.p>
 
             <motion.button
-             initial={{ opacity: 0, y: 10, scale: 1, }}
-              animate={{ opacity: 1, y: 0, scale: 1, }}
-              transition={{ duration: 1, delay: 1 }}
-            onClick={()=>navigate("/checkout")}
-            className="group mt-8 md:mt-10 mb-5 py-3 md:py-5 px-6 md:px-8 rounded-xl bg-blue-900 text-white font-semibold text-base md:text-xl">
-              <span className="flex items-center gap-2 transition-transform duration-300 group-hover:scale-105">
-                Book this Service
-                <MoveRight className="h-5 w-5 mt-1 transition-transform duration-300 group-hover:translate-x-1" />
+              initial={{ opacity: 0, }}
+              animate={{ opacity: 1, }}
+              transition={{ duration: 1.2, delay: 0.9 }}
+              whileHover={{ scale: 1.04, y: -3 }}
+              whileTap={{ scale: 0.96 }}
+              onClick={() => navigate("/checkout")}
+              className="group relative mt-8 mb-4 overflow-hidden rounded-2xl bg-linear-to-r from-blue-700 via-blue-600 to-cyan-500 px-8 py-4 md:px-10 md:py-5 text-white shadow-lg shadow-blue-600/30 transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-400/20"
+            >
+              {/* Shine Effect */}
+              <span className="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/30 to-transparent transition-transform duration-1000 group-hover:translate-x-full" />
+
+              {/* Content */}
+              <span className="relative z-10 flex items-center gap-3 text-base md:text-lg font-semibold">
+                Book Pickup
+
+                <motion.div
+                  animate={{ x: [0, 6, 0] }}
+                  transition={{
+                    duration: 1.4,
+                    repeat: Infinity,
+                  }}
+                >
+                  <MoveRight className="h-5 w-5" />
+                </motion.div>
               </span>
             </motion.button>
 
             {/* STATS */}
 
-            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4  mt-8 md:mt-5 ">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-4  mt-8 md:mt-5  ">
 
               <Stat
                 value="5000+"
@@ -265,7 +287,7 @@ const Services = () => {
       <div className="bg-linear-to-b from-blue-50 via-blue-100 to-blue-50  w-full">
         <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16 pt-16 ">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* LEFT SECTION */}
+            {/* Left section */}
             <div>
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
@@ -353,8 +375,8 @@ const Services = () => {
               </motion.div>
             </div>
 
-            {/* CENTER SECTION */}
-            
+            {/* center section */}
+
 
             <div className="space-y-6">
               {/* Ironing Image */}
@@ -362,8 +384,8 @@ const Services = () => {
                 initial={{ opacity: 0, x: -60 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.8, ease: "easeOut",}} 
-                  whileHover={{ y: -5 }}
+                transition={{ duration: 0.8, ease: "easeOut", }}
+                whileHover={{ y: -5 }}
                 className="bg-gray-100 rounded-xl"
               >
                 <img
@@ -378,8 +400,8 @@ const Services = () => {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut",  }}
-                whileHover={{  y: -6,scale: 1.02,}}
+                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut", }}
+                whileHover={{ y: -6, scale: 1.02, }}
                 className="border border-gray-300 rounded-2xl p-6 md:p-8 bg-gray-100 shadow-lg"
               >
                 <Clock3
@@ -402,7 +424,7 @@ const Services = () => {
             </div>
 
 
-            {/* RIGHT SECTION */}
+            {/* right section */}
             <div className="space-y-6">
 
               {/* Eco-Wash Card */}
@@ -410,8 +432,8 @@ const Services = () => {
                 initial={{ opacity: 0, x: -40 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.8 }}
-                transition={{ duration: 0.8,   delay: 0.4, ease: "easeOut",  }}
-                whileHover={{  y: -6,   scale: 1.02, }}
+                transition={{ duration: 0.8, delay: 0.4, ease: "easeOut", }}
+                whileHover={{ y: -6, scale: 1.02, }}
                 className="bg-teal-800 text-white p-6 md:p-8 rounded-2xl shadow-xl"
               >
 
@@ -433,8 +455,8 @@ const Services = () => {
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.8 }}
-                transition={{ duration: 0.8,  delay: 0.6, ease: "easeOut",}}
-                whileHover={{ y: -5, scale: 1.02,}}
+                transition={{ duration: 0.8, delay: 0.6, ease: "easeOut", }}
+                whileHover={{ y: -5, scale: 1.02, }}
                 className="h-72 md:h-80 w-full rounded-2xl object-cover shadow-xl"
               />
             </div>
@@ -474,141 +496,140 @@ const Services = () => {
         </div>
 
         {/* dekstop  Grid layout*/}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true ,  amount: 0.9 }}
-            
-            className="hidden md:grid max-w-7xl mx-auto px-5 mt-14 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-5"
-          >
-            {services.map((service) => (
-              <motion.div
-                key={service.id}
-                variants={cardVariants}
-                whileHover={{ y: -12, scale: 1.03, }}
-                transition={{ duration: 0.25, }}
-                className="group flex flex-col border border-blue-900 rounded-2xl bg-white shadow-md overflow-hidden"
-              >
-
-                {/* Image */}
-                <div className="p-5 flex justify-center">
-                  <motion.img
-                    src={service.image}
-                    alt={service.title}
-                    whileHover={{ y: -6, rotate: 3, }}
-                    transition={{ duration: 0.2 }}
-                    className="w-20 h-20 object-contain"
-                  />
-
-                </div>
-
-                {/* Title */}
-                <h2 className="font-bold text-blue-950 text-xl px-2">
-                  {service.title}
-                </h2>
-
-                {/* Description */}
-                <p className="p-4 text-gray-700 text-sm leading-6">
-                  {service.desc}
-                </p>
-
-                {/* Footer */}
-                <footer className="mt-auto mb-5 flex justify-center">
-                  <Link
-                    to={service.path}
-                    className="flex items-center gap-1 font-semibold text-blue-600 transition-all duration-300 group-hover:text-blue-950"
-                  >
-                    Explore
-
-                    <motion.div
-                      animate={{ x: [0, 4, 0], }}
-                      transition={{ duration: 1.5, repeat: Infinity, }}
-                    >
-                      <MoveRight className="w-4 h-4" />
-                    </motion.div>
-                  </Link>
-                </footer>
-              </motion.div>
-            ))}
-          </motion.div>
-
-           {/* mobile view layout */}
-
-          <div className="md:hidden relative overflow-hidden mt-10" ref={emblaRef}>
-  <div className="flex  ">
-    {services.map((service) => (
-      <div
-        key={service.id}
-        className="basis-[80%] shrink-0 px-2"
-      >
         <motion.div
-          variants={cardVariants}
-          whileHover={{ y: -12, scale: 1.03 }}
-          transition={{ duration: 0.25 }}
-          className="group flex flex-col h-full border border-blue-900 rounded-2xl bg-white shadow-md overflow-hidden"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.9 }}
+
+          className="hidden md:grid max-w-7xl mx-auto px-5 mt-14 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-5"
         >
-          {/* Image */}
-          <div className="p-5 flex justify-center">
-            <motion.img
-              src={service.image}
-              alt={service.title}
-              whileHover={{ y: -6, rotate: 3 }}
-              transition={{ duration: 0.2 }}
-              className="w-20 h-20 object-contain"
-            />
+          {services.map((service) => (
+            <motion.div
+              key={service.id}
+              variants={cardVariants}
+              whileHover={{ y: -12, scale: 1.03, }}
+              transition={{ duration: 0.25, }}
+              className="group flex flex-col border border-blue-900 rounded-2xl bg-white shadow-md overflow-hidden"
+            >
+
+              {/* Image */}
+              <div className="p-5 flex justify-center">
+                <motion.img
+                  src={service.image}
+                  alt={service.title}
+                  whileHover={{ y: -6, rotate: 3, }}
+                  transition={{ duration: 0.2 }}
+                  className="w-20 h-20 object-contain"
+                />
+
+              </div>
+
+              
+              <h2 className="font-bold text-blue-950 text-xl px-2">
+                {service.title}
+              </h2>
+
+             
+              <p className="p-4 text-gray-700 text-sm leading-6">
+                {service.desc}
+              </p>
+
+              {/* Footer */}
+              <footer className="mt-auto mb-5 flex justify-center">
+                <Link
+                  to={service.path}
+                  className="flex items-center gap-1 font-semibold text-blue-600 transition-all duration-300 group-hover:text-blue-950"
+                >
+                  Explore
+
+                  <motion.div
+                    animate={{ x: [0, 4, 0], }}
+                    transition={{ duration: 1.5, repeat: Infinity, }}
+                  >
+                    <MoveRight className="w-4 h-4" />
+                  </motion.div>
+                </Link>
+              </footer>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* mobile view layout */}
+
+        <div className="md:hidden relative overflow-hidden mt-10" ref={emblaRef}>
+          <div className="flex  ">
+            {services.map((service) => (
+              <div
+                key={service.id}
+                className="basis-[80%] shrink-0 px-2"
+              >
+                <motion.div
+                  variants={cardVariants}
+                  whileHover={{ y: -12, scale: 1.03 }}
+                  transition={{ duration: 0.25 }}
+                  className="group flex flex-col h-full border border-blue-900 rounded-2xl bg-white shadow-md overflow-hidden"
+                >
+                  {/* Image */}
+                  <div className="p-5 flex justify-center">
+                    <motion.img
+                      src={service.image}
+                      alt={service.title}
+                      whileHover={{ y: -6, rotate: 3 }}
+                      transition={{ duration: 0.2 }}
+                      className="w-20 h-20 object-contain"
+                    />
+                  </div>
+
+                
+                  <h2 className="font-bold text-blue-950 text-2xl px-2">
+                    {service.title}
+                  </h2>
+
+                 
+                  <p className="p-4 text-gray-700 text-sm leading-6">
+                    {service.desc}
+                  </p>
+
+                  {/* Footer */}
+                  <footer className="mt-auto mb-5 flex justify-center">
+                    <Link
+                      to={service.path}
+                      className="flex items-center gap-1 font-bold text-blue-900 group-hover:text-blue-950"
+                    >
+                      Explore
+
+                      <motion.div
+                        animate={{ x: [0, 4, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      >
+                        <MoveRight className="w-4 h-4" />
+                      </motion.div>
+                    </Link>
+                  </footer>
+                </motion.div>
+              </div>
+            ))}
           </div>
 
-          {/* Title */}
-          <h2 className="font-bold text-blue-950 text-2xl px-2">
-            {service.title}
-          </h2>
+          {/* Dots */}
+          <div className="flex justify-center gap-2 mt-10">
+            {services.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => emblaApi?.scrollTo(idx)}
+                className={`h-2 rounded-full transition-all duration-300 ${selectedIndex === idx
+                  ? "w-6 bg-blue-900"
+                  : "w-2 bg-blue-300"
+                  }`}
+              />
+            ))}
+          </div>
+        </div>
+      </motion.div>
 
-          {/* Description */}
-          <p className="p-4 text-gray-700 text-sm leading-6">
-            {service.desc}
-          </p>
 
-          {/* Footer */}
-          <footer className="mt-auto mb-5 flex justify-center">
-            <Link
-              to={service.path}
-              className="flex items-center gap-1 font-bold text-blue-900 group-hover:text-blue-950"
-            >
-              Explore
 
-              <motion.div
-                animate={{ x: [0, 4, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
-                <MoveRight className="w-4 h-4" />
-              </motion.div>
-            </Link>
-          </footer>
-        </motion.div>
-      </div>
-    ))}
-  </div>
-
-  {/* Dots */}
-  <div className="flex justify-center gap-2 mt-10">
-    {services.map((_, idx) => (
-      <button
-        key={idx}
-        onClick={() => emblaApi?.scrollTo(idx)}
-        className={`h-2 rounded-full transition-all duration-300 ${
-          selectedIndex === idx
-            ? "w-6 bg-blue-900"
-            : "w-2 bg-blue-300"
-        }`}
-      />
-    ))}
-  </div>
-</div>
-        </motion.div>
-
-       
-        
 
 
 
@@ -665,17 +686,17 @@ const Services = () => {
           </div>
         </div>
       </div>
-     
-     {/* CTA Section */}
-      < CTA 
-      type=" Laundry"
-      headingtop="Ready For Fresh, Clean Clothes"
-      headingbottom="Every Day?"
-      subHeading="Schedule a pickup in seconds. We wash, dry clean, iron and deliver right to your doorstep"
+
+      {/* CTA Section */}
+      < CTA
+        type=" Laundry"
+        headingtop="Ready For Fresh, Clean Clothes"
+        headingbottom="Every Day?"
+        subHeading="Schedule a pickup in seconds. We wash, dry clean, iron and deliver right to your doorstep"
       />
 
       {/* Customers Review Section */}
-           <Review/>
+      <Review />
     </div>
 
   )

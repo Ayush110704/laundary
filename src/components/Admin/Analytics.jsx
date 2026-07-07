@@ -37,9 +37,9 @@ import {
   Layers
 } from 'lucide-react';
 
-// ============================================================
+
 // STAT CARD COMPONENT
-// ============================================================
+
 function StatCard({ title, value, icon: Icon, color, trend, trendValue, subtitle }) {
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-all duration-300">
@@ -70,9 +70,9 @@ function StatCard({ title, value, icon: Icon, color, trend, trendValue, subtitle
   );
 }
 
-// ============================================================
+
 // CHART COMPONENTS
-// ============================================================
+
 function RevenueChart({ data }) {
   // Calculate max value, default to 1 if all values are 0
   const maxValue = Math.max(...data.map(d => d.value), 1);
@@ -289,18 +289,18 @@ function StatusChart({ data }) {
   );
 }
 
-// ============================================================
+
 // MAIN ANALYTICS COMPONENT
-// ============================================================
+
 function Analytics() {
   // Use real data from context
   const { bookings } = useOrders();
   const [selectedMetric, setSelectedMetric] = useState('revenue');
   const [loading, setLoading] = useState(false);
 
-  // ============================================================
+  
   // COMPUTED STATISTICS
-  // ============================================================
+ 
   const totalOrders = bookings.length;
   const totalRevenue = bookings.reduce((sum, b) => sum + b.totalAmount, 0);
   const completedOrders = bookings.filter(b => b.status === 'Completed').length;
@@ -403,9 +403,9 @@ function Analytics() {
     .sort(([, a], [, b]) => b - a)
     .map(([name, count]) => ({ name, count }));
 
-  // ============================================================
+  
   // HANDLERS
-  // ============================================================
+ 
   const handleRefresh = () => {
     setLoading(true);
     setTimeout(() => {
@@ -413,9 +413,9 @@ function Analytics() {
     }, 1000);
   };
 
-  // ============================================================
+
   // RENDER
-  // ============================================================
+ 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-7xl mx-auto">

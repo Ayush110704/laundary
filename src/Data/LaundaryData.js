@@ -872,7 +872,7 @@ ServiceOffered: [
     ExpertTitle: "OUR EXPERT CARPET CLEANING SERVICE ",
 
     ExpertService: [
-      { id: 1, image: steamCarpet, title: " Deep Steam Carpet Cleaning", desc: "High-pressure hot water extraction removes deep-seated dust, stains, and bacteria from carpet fibers. Perfect for homes and offices that need hygienic, allergen-free cleaning." },
+      { id: 1, image: steamCarpet, title: " Deep Steam Carpet Cleaning", desc: "High-pressure hot water extraction removes deep-seated dust, stains, and bacteria from carpet fibers. Perfect for homes and offices that need  allergen-free cleaning." },
       { id: 2, image: dry, title: "Dry Carpet Cleaning ", desc: "A low-moisture cleaning method that uses specialized compounds to lift dirt. Quick drying time and extremely safe for delicate fabrics like silk and Persian rugs. " },
       { id: 3, image: dry, title: " Carpet Stain & Odor Removal", desc: "Targeted treatment for stubborn stains (coffee, wine, pet stains) and specialized deodorizers to eliminate trapped odors, bringing your carpet back to life." },
     ],

@@ -26,9 +26,9 @@ import {
   Star
 } from 'lucide-react';
 
-// ============================================================
+
 // MOCK DATA - Customer Data
-// ============================================================
+
 const MOCK_USERS = [
   { 
     id: '1', 
@@ -232,9 +232,9 @@ const MOCK_USERS = [
   },
 ];
 
-// ============================================================
+
 // USER DETAIL VIEW COMPONENT
-// ============================================================
+
 function UserDetailView({ user, onBack, onEdit }) {
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -393,9 +393,9 @@ function UserDetailView({ user, onBack, onEdit }) {
   );
 }
 
-// ============================================================
+
 // EDIT MODAL COMPONENT
-// ============================================================
+
 function EditUserModal({ user, onClose, onSave }) {
   const [formData, setFormData] = useState(user);
   const [loading, setLoading] = useState(false);
@@ -542,9 +542,9 @@ function EditUserModal({ user, onClose, onSave }) {
   );
 }
 
-// ============================================================
+
 // MAIN COMPONENT
-// ============================================================
+
 function UserManagement() {
   // State
   const [users, setUsers] = useState(MOCK_USERS);
@@ -559,9 +559,9 @@ function UserManagement() {
   const [showDetailView, setShowDetailView] = useState(false);
   const itemsPerPage = 5;
 
-  // ============================================================
+  
   // COMPUTED VALUES
-  // ============================================================
+  
   const stats = {
     total: users.length,
     active: users.filter(u => u.status === 'Active').length,
@@ -591,9 +591,9 @@ function UserManagement() {
     setCurrentPage(1);
   }, [searchTerm, filterStatus]);
 
-  // ============================================================
+  
   // HANDLERS
-  // ============================================================
+
   const handleSelectAll = (checked) => {
     if (checked) {
       setSelectedUsers(paginatedUsers.map(u => u.id));
@@ -693,9 +693,9 @@ function UserManagement() {
     );
   };
 
-  // ============================================================
+ 
   // RENDER
-  // ============================================================
+  
   
   // If detail view is active, show the user detail
   if (showDetailView && selectedUser) {
@@ -740,13 +740,7 @@ function UserManagement() {
             <p className="text-gray-600 mt-1">Click on any customer to view detailed information</p>
           </div>
           
-          <button 
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 whitespace-nowrap shadow-sm transition"
-            type="button"
-          >
-            <Plus className="w-4 h-4" />
-            Add Customer
-          </button>
+         
         </div>
 
         {/* STATS CARDS */}

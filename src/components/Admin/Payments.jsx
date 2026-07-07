@@ -40,9 +40,9 @@ import {
 } from 'lucide-react';
 import { useOrders } from './OrderManagement';
 
-// ============================================================
+
 // PAYMENT DETAIL VIEW COMPONENT
-// ============================================================
+
 function PaymentDetailView({ payment, onBack }) {
   const paymentStatusConfig = {
     'Completed': { color: 'bg-green-100 text-green-800', icon: CheckCircle },
@@ -222,9 +222,8 @@ function PaymentDetailView({ payment, onBack }) {
   );
 }
 
-// ============================================================
+
 // MAIN COMPONENT
-// ============================================================
 function Payments() {
   const { bookings } = useOrders();
   
@@ -327,9 +326,9 @@ function Payments() {
     setCurrentPage(1);
   }, [searchTerm, filterStatus, filterMethod]);
 
-  // ============================================================
+
   // HANDLERS
-  // ============================================================
+ 
   const handlePaymentClick = (payment) => {
     setSelectedPayment(payment);
     setShowDetailView(true);
@@ -371,9 +370,9 @@ function Payments() {
     }
   };
 
-  // ============================================================
+ 
   // RENDER
-  // ============================================================
+  
   
   // If detail view is active, show the payment detail
   if (showDetailView && selectedPayment) {
@@ -407,13 +406,7 @@ function Payments() {
             <p className="text-gray-600 mt-1">Manage all payments and transactions</p>
           </div>
           
-          <button 
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 whitespace-nowrap shadow-sm transition"
-            type="button"
-          >
-            <Plus className="w-4 h-4" />
-            New Payment
-          </button>
+      
         </div>
 
         {/* STATS CARDS */}

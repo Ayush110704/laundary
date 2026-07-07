@@ -1,7 +1,7 @@
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import "./App.css"; 
 import Contact from "./Pages/Contact";
-import Subscription from "./User/Subscription";
+
 import Footer from "./components/Footer";
 import HomePage from "./Pages/Home";
 import Navbar from "./components/Navbar";
@@ -94,7 +94,7 @@ function App() {
         <Route path="/user-profile" element={<UserProfile />} />
         <Route path="/user-address" element={<Address />} />
         <Route path="/user-orders" element={<MyBookings />} />
-        <Route path="/user-subscription" element={<Subscription />} />
+        
         <Route path="/user-tracking" element={<OrderTracking />} />
         <Route path="/user-terms" element={<TermsCondition />} />
 

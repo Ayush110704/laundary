@@ -71,13 +71,7 @@ const UserLayout = ({ children }) => {
       icon: <FaMapMarkerAlt />,
       path: "/user-address",
     },
-    {
-      id: "subscription",
-      name: "Subscription",
-      description: "Tier variables and access caps",
-      icon: <FaCrown />,
-      path: "/user-subscription",
-    },
+   
     {
       id: "tracking",
       name: "Progress Tracking",
@@ -115,11 +109,12 @@ const UserLayout = ({ children }) => {
       path: "/",
       isHome: true,
     },
-    {
-      id: "subscription",
-      name: "Subscription",
-      icon: <FaCrown />,
-      path: "/user-subscription",
+  {
+      id: "tracking",
+      name: "Progress Tracking",
+      description: "Real-time pipeline telemetry",
+      icon: <FaRoute />,
+      path: "/user-tracking",
     },
     {
       id: "more",

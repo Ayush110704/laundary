@@ -48,9 +48,9 @@ import {
   CalendarDays
 } from 'lucide-react';
 
-// ============================================================
+
 // ORDER CONTEXT - For sharing data with Analytics and Payments
-// ============================================================
+
 const OrderContext = createContext();
 
 const useOrders = () => {
@@ -96,9 +96,8 @@ const OrderProvider = ({ children, initialData }) => {
   );
 };
 
-// ============================================================
 // HELPER FUNCTIONS FOR DYNAMIC DATES
-// ============================================================
+
 const getDate = (daysAgo) => {
   const date = new Date();
   date.setDate(date.getDate() - daysAgo);
@@ -111,9 +110,9 @@ const getFutureDate = (daysFromNow) => {
   return date.toISOString();
 };
 
-// ============================================================
+
 // MOCK DATA - Bookings with Items (Dynamic Dates)
-// ============================================================
+
 const MOCK_BOOKINGS = [
   {
     id: 'BK001',
@@ -372,9 +371,9 @@ const MOCK_BOOKINGS = [
   }
 ];
 
-// ============================================================
+
 // REFUND MODAL COMPONENT
-// ============================================================
+
 function RefundModal({ booking, onClose, onConfirm }) {
   const [refundAmount, setRefundAmount] = useState(booking.totalAmount);
   const [refundReason, setRefundReason] = useState('');
@@ -496,9 +495,9 @@ function RefundModal({ booking, onClose, onConfirm }) {
   );
 }
 
-// ============================================================
+
 // STATUS NOTE MODAL COMPONENT WITH TIME PICKER
-// ============================================================
+
 function StatusNoteModal({ status, onClose, onConfirm, booking }) {
   const [note, setNote] = useState('');
   const [pickupDate, setPickupDate] = useState('');
@@ -635,37 +634,7 @@ function StatusNoteModal({ status, onClose, onConfirm, booking }) {
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {status === 'pickup' && (
             <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Pickup Date <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <CalendarDays className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <input
-                    type="date"
-                    value={pickupDate}
-                    onChange={(e) => setPickupDate(e.target.value)}
-                    min={new Date().toISOString().split('T')[0]}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                    required
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Pickup Time <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <input
-                    type="time"
-                    value={pickupTime}
-                    onChange={(e) => setPickupTime(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                    required
-                  />
-                </div>
-              </div>
+            
             </div>
           )}
 
@@ -717,9 +686,9 @@ function StatusNoteModal({ status, onClose, onConfirm, booking }) {
   );
 }
 
-// ============================================================
+
 // BOOKING DETAIL VIEW COMPONENT
-// ============================================================
+
 function BookingDetailView({ booking, onBack, onRefund, onStatusUpdate }) {
   const [selectedStatus, setSelectedStatus] = useState(booking.status);
   const [showStatusNote, setShowStatusNote] = useState(false);
@@ -1305,9 +1274,9 @@ function BookingDetailView({ booking, onBack, onRefund, onStatusUpdate }) {
   );
 }
 
-// ============================================================
+
 // MAIN COMPONENT
-// ============================================================
+
 function OrderManagement() {
   const { bookings, updateBooking } = useOrders();
   
@@ -1518,13 +1487,7 @@ function OrderManagement() {
             <p className="text-gray-600 mt-1">Manage all bookings and orders</p>
           </div>
           
-          <button 
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 whitespace-nowrap shadow-sm transition"
-            type="button"
-          >
-            <Plus className="w-4 h-4" />
-            New Booking
-          </button>
+        
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 mb-6">
@@ -1729,8 +1692,8 @@ function OrderManagement() {
   );
 }
 
-// ============================================================
+
 // EXPORTS - Only export once at the bottom
-// ============================================================
+
 export default OrderManagement;
 export { MOCK_BOOKINGS, useOrders, OrderProvider };
