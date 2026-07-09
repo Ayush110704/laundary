@@ -11,7 +11,7 @@ import {
   ArrowLeft,
   LogOut,
   Menu,
-  X
+  X,MessageSquare 
 } from 'lucide-react'; 
 import logo from "../../assets/Athenura.png";
 
@@ -36,6 +36,11 @@ const AdminLayout = () => {
       name: 'Service Management', 
       icon: Wrench, 
       path: '/admin-dashboard/services'
+    },
+        { 
+      name: 'Inquiries',  
+      icon: MessageSquare,
+      path: '/admin-dashboard/inquiries'
     },
     { 
       name: 'Payments', 

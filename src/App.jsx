@@ -36,6 +36,7 @@ import AdminLogin from "./Auth/AdminLogin";
 import TermsCondition from "./Pages/TermsCondition";
 import { useLayoutEffect } from "react";
 import ForgotPassword from './Auth/ForgotPassword';
+import InquiryManagement from "./components/Admin/InquiryManagement";
 
 function App() {
   const location = useLocation();
@@ -113,6 +114,7 @@ function App() {
           <Route path="services" element={<ServiceManagement />} />
           <Route path="payments" element={<Payments />} /> 
           <Route path="analytics" element={<Analytics />} />
+          <Route path="inquiries" element={<InquiryManagement/>} />
         </Route>
       </Routes>
  
