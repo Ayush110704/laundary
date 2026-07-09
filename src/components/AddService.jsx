@@ -6,7 +6,8 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
 
   const initialForm = {
     id: "",
-    category: "",
+    name: "",
+    category: "Laundry",
     price: "",
     duration: "",
     status: "Active",
@@ -20,6 +21,7 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
   if (serviceToEdit) {
     setFormData({
       id: serviceToEdit.id || "",
+      name: serviceToEdit.name || "",
       category: serviceToEdit.category || "",
       price: serviceToEdit.price || "",
       duration: serviceToEdit.duration || "",
@@ -43,7 +45,7 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
   } else {
     onSave({
       ...formData,
-      id: Date.now(),
+      id: formData.id,
     });
   }
 
@@ -85,7 +87,7 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
 
             {/* Form */}
             <form className="p-4 md:p-6 space-y-5" onSubmit={handleSubmit}>
-              {/* Service Name */}
+              {/* Service ID */}
               <div>
                 <label className="block mb-2 font-medium text-gray-700">
                   Service Id
@@ -98,6 +100,25 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
                     setFormData({ ...formData, id: e.target.value })
                   }
                   className="w-full px-4 py-3 border rounded-xl"
+                  placeholder="e.g. SRV007"
+                />
+              </div>
+
+              {/* Service Name */}
+              <div>
+                <label className="block mb-2 font-medium text-gray-700">
+                  Service Name
+                </label>
+
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  className="w-full px-4 py-3 border rounded-xl"
+                  placeholder="e.g. Laundry"
+                  required
                 />
               </div>
 

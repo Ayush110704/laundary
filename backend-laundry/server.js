@@ -4,6 +4,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import addressRoutes from './routes/addressRoutes.js';
+import planRoutes from './routes/planRoutes.js';
+import termRoutes from './routes/termRoutes.js';
+import serviceRoutes from './routes/serviceRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
 
 dotenv.config();
 
@@ -22,6 +27,11 @@ mongoose.connect(MONGO_URI)
 // ROUTES: Directs traffic to your route files
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/addresses', addressRoutes);
+app.use('/api/plans', planRoutes);
+app.use('/api/terms', termRoutes);
+app.use('/api/services', serviceRoutes);
+app.use('/api/contacts', contactRoutes);
 
 // START SERVER
 const PORT = process.env.PORT || 5000;

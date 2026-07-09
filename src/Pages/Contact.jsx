@@ -1,10 +1,69 @@
-import React from "react";
+import React, { useState } from "react";
 import laundryContact from "../assets/laundryContact.png";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 // import hero from "../assets/hero.webp";
 import { motion } from "framer-motion";
+import Swal from "sweetalert2";
 
 function Contact() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    inquiryType: "Order Support",
+    message: ""
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.firstName.trim() || !formData.lastName.trim() || !formData.email.trim() || !formData.message.trim()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Validation Error',
+        text: 'All fields are required. Please fill them out.'
+      });
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/api/contacts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+      const result = await res.json();
+      if (result.success) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Your message has been sent successfully.'
+        });
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          inquiryType: "Order Support",
+          message: ""
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: result.message || 'Something went wrong.'
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting contact form:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Connection Error',
+        text: 'Could not submit form. Please check if the server is running.'
+      });
+    }
+  };
+
   return (
     <div className="pt-16 md:pt-15">
       {/* Banner - Desktop */}
@@ -117,7 +176,7 @@ function Contact() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-[2fr_1fr] gap-6">
             {/* Left Form */}
-            <div className="bg-white border border-blue-100 rounded-2xl p-8 shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+            <form onSubmit={handleSubmit} className="bg-white border border-blue-100 rounded-2xl p-8 shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
               <h2 className="text-3xl font-bold text-[#0f3d7a]">
                 Send a Message
               </h2>
@@ -136,7 +195,10 @@ function Contact() {
                   <input
                     type="text"
                     placeholder="Jane"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                     className="w-full h-12 px-4 border border-slate-200 rounded-xl outline-none transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                    required
                   />
                 </div>
 
@@ -148,7 +210,10 @@ function Contact() {
                   <input
                     type="text"
                     placeholder="Doe"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                     className="w-full h-12 px-4 border border-slate-200 rounded-xl outline-none transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                    required
                   />
                 </div>
               </div>
@@ -161,7 +226,10 @@ function Contact() {
                 <input
                   type="email"
                   placeholder="jane@example.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full h-12 px-4 border border-slate-200 rounded-xl outline-none transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                  required
                 />
               </div>
 
@@ -170,11 +238,15 @@ function Contact() {
                   INQUIRY TYPE
                 </label>
 
-                <select className="w-full h-12 px-4 border border-slate-200 rounded-xl outline-none transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100">
-                  <option>Order Support</option>
-                  <option>Pickup Request</option>
-                  <option>Dry Cleaning</option>
-                  <option>General Query</option>
+                <select 
+                  value={formData.inquiryType}
+                  onChange={(e) => setFormData({ ...formData, inquiryType: e.target.value })}
+                  className="w-full h-12 px-4 border border-slate-200 rounded-xl outline-none transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                >
+                  <option value="Order Support">Order Support</option>
+                  <option value="Pickup Request">Pickup Request</option>
+                  <option value="Dry Cleaning">Dry Cleaning</option>
+                  <option value="General Query">General Query</option>
                 </select>
               </div>
 
@@ -186,14 +258,17 @@ function Contact() {
                 <textarea
                   rows="6"
                   placeholder="How can we help you today?"
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full p-4 border border-slate-200 rounded-xl outline-none resize-none transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                  required
                 ></textarea>
               </div>
 
-              <button className="w-full h-12 mt-6 rounded-xl text-white font-semibold bg-gradient-to-r from-[#0f3d7a] to-[#2563eb] hover:from-[#2563eb] hover:to-[#0f3d7a] transition-all duration-500 hover:-translate-y-1 hover:shadow-xl">
+              <button type="submit" className="w-full h-12 mt-6 rounded-xl text-white font-semibold bg-gradient-to-r from-[#0f3d7a] to-[#2563eb] hover:from-[#2563eb] hover:to-[#0f3d7a] transition-all duration-500 hover:-translate-y-1 hover:shadow-xl cursor-pointer">
                 Send Message →
               </button>
-            </div>
+            </form>
 
             {/* Right Side */}
             <div className="space-y-5">

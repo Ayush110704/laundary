@@ -229,7 +229,47 @@ function ServiceDetail({ service, onBack }) {
 
 const ServiceManagement = () => {
 
-  const [services, setServices] =useState(MOCK_SERVICES);
+  const [services, setServices] = useState([]);
+
+  const fetchServices = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/services");
+      const result = await res.json();
+      if (result.success) {
+        setServices(result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const handleSave = async (formData) => {
+    try {
+      const method = editingService ? 'PUT' : 'POST';
+      const targetId = editingService ? (editingService._id || editingService.id) : '';
+      const url = editingService 
+        ? `http://localhost:5000/api/services/${targetId}`
+        : 'http://localhost:5000/api/services';
+      
+      const res = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      });
+      const result = await res.json();
+      if (result.success) {
+        fetchServices();
+      }
+    } catch (error) {
+      console.error("Error saving service:", error);
+    }
+  };
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState("All");
   const [currentPage, setCurrentPage] =useState(1);
@@ -328,19 +368,24 @@ const ServiceManagement = () => {
   };
 
 
-  const handleDelete = (id) => {
-
+  const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
       "Delete this service?"
     );
 
     if (!confirmDelete) return;
 
-    setServices(
-      services.filter(
-        (service) => service.id !== id
-      )
-    );
+    try {
+      const res = await fetch(`http://localhost:5000/api/services/${id}`, {
+        method: "DELETE"
+      });
+      const result = await res.json();
+      if (result.success) {
+        fetchServices();
+      }
+    } catch (error) {
+      console.error("Error deleting service:", error);
+    }
   };
 
 
@@ -507,19 +552,7 @@ const handleEdit = (service) => {
 
           </div>
 
-          <button 
-          onClick={() => {
-            
-             setEditingService(null)
-    setOpenModal(true);
-  }}
-          className="bg-blue-600 text-white px-5 py-3 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition">
-
-            <Plus className="w-5 h-5" />
-
-            Add Service
-
-          </button>
+          {/* Add Service button removed */}
 
           <AddService
   isOpen={openModal}
@@ -528,7 +561,7 @@ const handleEdit = (service) => {
     setEditingService(null);
   }}
   serviceToEdit={editingService}
-  onSave={() => {}}
+  onSave={handleSave}
 />
 
         </div>
@@ -697,11 +730,7 @@ const handleEdit = (service) => {
                           <Edit className="w-4 h-4 text-yellow-600" />
                         </button>
 
-                        <button
-                          onClick={() => handleDelete(service.id)}
-                          className="p-2 rounded hover:bg-red-100" >
-                          <Trash2 className="w-4 h-4 text-red-600" />
-                        </button>
+                        {/* Delete action removed */}
                     </div>
                     </td>
                   </tr>

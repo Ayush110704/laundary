@@ -11,6 +11,7 @@ const Navbar = () => {
   const [showServices, setShowServices] = useState(false);
   const [profile, setProfile] = useState(false);
   const [userData, setUserData] = useState();
+  const [servicesList, setServicesList] = useState([]);
 
   const navigate = useNavigate();
 
@@ -39,36 +40,62 @@ const Navbar = () => {
 
   }, [])
 
-  const handleLogout = () => {
-    localStorage.removeItem("currentUser");
-    navigate("/login")
-    setUserLogin(false)
-  }
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/services");
+        const result = await res.json();
+        if (result.success) {
+          setServicesList(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching navbar services:", error);
+      }
+    };
+    fetchServices();
+  }, []);
+
+  const getServicePath = (name) => {
+    const nameLower = name.toLowerCase();
+    if (nameLower.includes("dry")) return "/services/DryClean-service";
+    if (nameLower.includes("laundry")) return "/services/Laundry-service";
+    if (nameLower.includes("shoe")) return "/services/ShoeCleaning-service";
+    if (nameLower.includes("curtain")) return "/services/CurtainCleaning-service";
+    if (nameLower.includes("carpet")) return "/services/CarpetCleaning-service";
+    if (nameLower.includes("iron")) return "/services/Ironing-service";
+    return `/services/${name.replace(/\s+/g, '')}-service`;
+  };
+
+  const dynamicDropdown = servicesList.length > 0
+    ? servicesList.map(s => ({
+      label: s.name,
+      path: getServicePath(s.name),
+      isInactive: s.status === "Inactive"
+    }))
+    : [
+      { label: "Laundry Service", path: "/services/Laundry-service", isInactive: false },
+      { label: "Dry Cleaning", path: "/services/DryClean-service", isInactive: false },
+      { label: "Ironing", path: "/services/Ironing-service", isInactive: false },
+      { label: "Carpet Cleaning", path: "/services/CarpetCleaning-service", isInactive: false },
+      { label: "Shoe Cleaning", path: "/services/ShoeCleaning-service", isInactive: false },
+      { label: "Curtain Cleaning", path: "/services/CurtainCleaning-service", isInactive: false },
+    ];
 
   const menu = [
     { id: "Home", label: "Home", path: "/" },
     { id: "About", label: "About", path: "/about" },
     {
       id: "Services", label: "Services", path: "/services",
-
-      dropdown: [
-        { label: "Laundry Service", path: "/services/Laundry-service" },
-
-        { label: "Dry Cleaning", path: "/services/DryClean-service" },
-
-        { label: "Ironing", path: "/services/Ironing-service" },
-
-        { label: "Carpet Cleaning", path: "/services/CarpetCleaning-service" },
-
-        { label: "Shoe Cleaning", path: "/services/ShoeCleaning-service" },
-
-        { label: "Curtain Cleaning", path: "/services/CurtainCleaning-service" },
-
-      ],
-
+      dropdown: dynamicDropdown,
     },
     { id: "Contact", label: "Contact", path: "/contact" },
   ];
+
+  const handleLogout = () => {
+    localStorage.removeItem("currentUser");
+    navigate("/login")
+    setUserLogin(false)
+  }
 
   return (
     <div className="fixed top-0 left-0 w-full z-50">
@@ -122,23 +149,36 @@ const Navbar = () => {
                       )}
                     </NavLink>
 
-                    <div className="absolute top-8  mt-3 w-48 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden">
-                      {item.dropdown.map((service) => (
-                        <NavLink
-                          key={service.path}
-                          to={service.path}
-
-
-                          className={({ isActive }) =>
-                            `block px-5 py-2 text-[15px] ${isActive
-                              ? "bg-blue-100 text-blue-900 font-semibold"
-                              : "hover:bg-blue-50 hover:text-blue-600"
-                            }`
-                          }
-                        >
-                          {service.label}
-
-                        </NavLink>
+                    <div className="absolute top-8  mt-3 w-56 bg-white rounded-xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 overflow-hidden">
+                      {item.dropdown.map((service, idx) => (
+                        service.isInactive ? (
+                          <div
+                            key={`${service.path}-${idx}`}
+                            className="block px-5 py-2 text-[15px] bg-gray-100 text-gray-400 cursor-not-allowed font-medium"
+                          >
+                            <div className="flex items-center justify-between w-full">
+                              <span>{service.label}</span>
+                              <span className="text-red-500 text-[12px] font-medium shrink-0">
+                                [Inactive]
+                              </span>
+                            </div>
+                          </div>
+                        ) : (
+                          <NavLink
+                            key={`${service.path}-${idx}`}
+                            to={service.path}
+                            className={({ isActive }) =>
+                              `block px-5 py-2 text-[15px] ${isActive
+                                ? "bg-blue-100 text-blue-900 font-semibold"
+                                : "hover:bg-blue-50 hover:text-blue-600"
+                              }`
+                            }
+                          >
+                            <div className="flex items-center justify-between w-full">
+                              <span>{service.label}</span>
+                            </div>
+                          </NavLink>
+                        )
                       ))}
                     </div>
                   </>
@@ -284,18 +324,30 @@ const Navbar = () => {
                       </div>
                       {showServices && (
                         <div className="mt-3 flex flex-col rounded-2xl ">
-                          {item.dropdown.map((service) => (
-                            <Link
-                              key={service.path}
-                              to={service.path}
-                              onClick={() => {
-                                setMobileMenu(false);
-                                setShowServices(false);
-                              }}
-                              className="py-2 text-sm hover:bg-blue-50 hover:text-blue-600"
-                            >
-                              {service.label}
-                            </Link>
+                          {item.dropdown.map((service, idx) => (
+                            service.isInactive ? (
+                              <div
+                                key={`${service.path}-${idx}`}
+                                className="py-2 px-4 text-sm bg-gray-100 text-gray-400 cursor-not-allowed font-medium flex items-center justify-between pr-8"
+                              >
+                                <span>{service.label}</span>
+                                <span className="text-red-500 text-[12px] font-medium shrink-0">
+                                  [Inactive]
+                                </span>
+                              </div>
+                            ) : (
+                              <Link
+                                key={`${service.path}-${idx}`}
+                                to={service.path}
+                                onClick={() => {
+                                  setMobileMenu(false);
+                                  setShowServices(false);
+                                }}
+                                className="py-2 px-4 text-sm hover:bg-blue-50 hover:text-blue-600 flex items-center justify-between pr-8"
+                              >
+                                <span>{service.label}</span>
+                              </Link>
+                            )
                           ))}
                         </div>
                       )}

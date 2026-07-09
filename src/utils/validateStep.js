@@ -15,7 +15,7 @@ const validateStep = (step) => {
       return { success: true };
 
     case 2:
-      if (!data.address?.name) {
+      if (!data.address?.name && !data.address?.fullName) {
         return {
           success: false,
           message: "Please add your address.",
