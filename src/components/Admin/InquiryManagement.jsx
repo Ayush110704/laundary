@@ -28,83 +28,35 @@ const InquiryManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Sample inquiry data 
-  useEffect(() => {
-
-    setTimeout(() => {
-      const sampleInquiries = [
-        {
-          id: 1,
-          customerId: 'CUST-001',
-          firstName: 'Jane',
-          lastName: 'Doe',
-          email: 'jane.doe@example.com',
-          inquiryType: 'Order Support',
-          message: 'I need help with my recent order. The delivery was delayed and I need to reschedule.',
-          status: 'new',
-          createdAt: '2026-07-09T10:30:00Z',
-          phone: '+91 98765 43210',
-          customerSince: '2025-03-15'
-        },
-        {
-          id: 2,
-          customerId: 'CUST-002',
-          firstName: 'John',
-          lastName: 'Smith',
-          email: 'john.smith@example.com',
-          inquiryType: 'Pickup Request',
-          message: 'I would like to schedule a pickup for tomorrow between 2-4 PM. Please confirm availability.',
-          status: 'in-progress',
-          createdAt: '2026-07-08T15:20:00Z',
-          phone: '+91 87654 32109',
-          pickupAddress: '123 Main Street, Mumbai',
-          customerSince: '2025-06-20'
-        },
-        {
-          id: 3,
-          customerId: 'CUST-003',
-          firstName: 'Sarah',
-          lastName: 'Johnson',
-          email: 'sarah.j@example.com',
-          inquiryType: 'Dry Cleaning',
-          message: 'Do you offer dry cleaning for silk sarees? I have a few traditional garments that need special care.',
-          status: 'resolved',
-          createdAt: '2026-07-07T09:15:00Z',
-          phone: '+91 76543 21098',
-          customerSince: '2025-01-10'
-        },
-        {
-          id: 4,
-          customerId: 'CUST-004',
-          firstName: 'Michael',
-          lastName: 'Brown',
-          email: 'michael.brown@example.com',
-          inquiryType: 'General Query',
-          message: 'What are your service areas? I live in Andheri East and want to know if you deliver here.',
-          status: 'new',
-          createdAt: '2026-07-09T08:45:00Z',
-          phone: '+91 65432 10987',
-          customerSince: '2025-05-05'
-        },
-        {
-          id: 5,
-          customerId: 'CUST-005',
-          firstName: 'Priya',
-          lastName: 'Patel',
-          email: 'priya.patel@example.com',
-          inquiryType: 'Order Support',
-          message: 'I received my order but some items were missing. Please assist with this issue.',
-          status: 'in-progress',
-          createdAt: '2026-07-08T11:00:00Z',
-          phone: '+91 54321 09876',
-          customerSince: '2024-11-20'
-        }
-      ];
-      
-      setInquiries(sampleInquiries);
-      setFilteredInquiries(sampleInquiries);
+  // Fetch dynamic inquiries from backend
+  const fetchInquiries = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:5000/api/contacts");
+      const result = await res.json();
+      console.log("Fetched inquiries from backend:", result);
+      if (result.success) {
+        const formatted = result.data.map(inquiry => ({
+          ...inquiry,
+          id: inquiry._id,
+          status: inquiry.status || "new",
+          customerId: `INQ-${inquiry._id.slice(-6).toUpperCase()}`,
+        }));
+        console.log("Formatted inquiries for frontend:", formatted);
+        setInquiries(formatted);
+        setFilteredInquiries(formatted);
+      } else {
+        console.error("Error fetching inquiries:", result.message);
+      }
+    } catch (error) {
+      console.error("Error fetching inquiries:", error);
+    } finally {
       setLoading(false);
-    }, 500);
+    }
+  };
+
+  useEffect(() => {
+    fetchInquiries();
   }, []);
 
   // Filter inquiries
@@ -202,19 +154,47 @@ const InquiryManagement = () => {
     setSelectedInquiry(null);
   };
 
-  const handleStatusChange = (inquiryId, newStatus) => {
-    setInquiries(prev => 
-      prev.map(inquiry => 
-        inquiry.id === inquiryId 
-          ? { ...inquiry, status: newStatus }
-          : inquiry
-      )
-    );
+  const handleStatusChange = async (inquiryId, newStatus) => {
+    console.log("handleStatusChange called for ID:", inquiryId, "with Status:", newStatus);
+    try {
+      const res = await fetch(`http://localhost:5000/api/contacts/${inquiryId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      const result = await res.json();
+      console.log("Backend status update response:", result);
+      if (result.success) {
+        // Refetch from database to keep frontend and backend in perfect sync
+        await fetchInquiries();
+      } else {
+        alert("Failed to update status: " + (result.message || "Unknown error"));
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      alert("Error connecting to server to update status.");
+    }
   };
 
-  const handleDeleteInquiry = (inquiryId) => {
+  const handleDeleteInquiry = async (inquiryId) => {
     if (window.confirm('Are you sure you want to delete this inquiry?')) {
-      setInquiries(prev => prev.filter(inquiry => inquiry.id !== inquiryId));
+      try {
+        const res = await fetch(`http://localhost:5000/api/contacts/${inquiryId}`, {
+          method: "DELETE",
+        });
+        const result = await res.json();
+        if (result.success) {
+          // Refetch from database to keep frontend and backend in perfect sync
+          await fetchInquiries();
+        } else {
+          alert("Failed to delete inquiry: " + (result.message || "Unknown error"));
+        }
+      } catch (error) {
+        console.error("Error deleting inquiry:", error);
+        alert("Error connecting to server to delete inquiry.");
+      }
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import UserLayout from '../User/UserLayout'; 
 
 import {
@@ -16,47 +16,40 @@ import {
   FiShield,
 } from "react-icons/fi";
 
+const iconMap = {
+  FiEdit3: <FiEdit3 />,
+  FiFileText: <FiFileText />,
+  FiDollarSign: <FiDollarSign />,
+  FiShield: <FiShield />,
+  FaLeaf: <FaLeaf />
+};
+
 const TermsCondition = () => {
 
   const [open, setOpen] = useState(1);
+  const [terms, setTerms] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const terms = [
-    {
-      id: 1,
-      icon: <FiEdit3 />,
-      title: "Agreement to Terms",
-      content:
-        "By accessing or using Athenura professional cleaning services, you agree to be bound by these Terms and Conditions. These terms constitute a legally binding agreement between you and Athenura regarding your use of our platform and services.",
-    },
-    {
-      id: 2,
-      icon: <FiFileText />,
-      title: "Service Provision",
-      content:
-        "We provide laundry, dry cleaning, ironing, pickup and delivery services. Service availability may vary depending on location and operational requirements.",
-    },
-    {
-      id: 3,
-      icon: <FiDollarSign />,
-      title: "Pricing & Payments",
-      content:
-        "All prices are displayed before order confirmation. Payments must be completed before order processing. Additional charges may apply for special garment handling.",
-    },
-    {
-      id: 4,
-      icon: <FiShield />,
-      title: "Liability & Insurance",
-      content:
-        "We take reasonable care of all garments. However, Athenura shall not be liable for damage caused by pre-existing garment defects or inaccurate care instructions.",
-    },
-    {
-      id: 5,
-      icon: <FaLeaf />,
-      title: "Eco-Wash Commitment",
-      content:
-        "We use eco-friendly detergents and sustainable cleaning methods whenever possible.",
-    },
-  ];
+  useEffect(() => {
+    const fetchTerms = async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch('http://localhost:5000/api/terms');
+        const json = await res.json();
+        if (json.success && json.data) {
+          setTerms(json.data);
+          if (json.data.length > 0) {
+            setOpen(json.data[0].keyId || json.data[0]._id || 1);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch terms:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchTerms();
+  }, []);
 
   return (
     <UserLayout>  
@@ -84,49 +77,57 @@ const TermsCondition = () => {
             </div>
 
             {/* ================= ACCORDION START ================= */}
-            <div className="mt-10 md:mt-14 space-y-4">
-              {terms.map((item) => (
-                <div
-                  key={item.id}
-                  className="group bg-white/90 backdrop-blur-md border border-blue-100 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden"
-                >
-                  <button
-                    onClick={() =>
-                      setOpen(open === item.id ? null : item.id)
-                    }
-                    className="w-full flex justify-between items-start md:items-center gap-4 px-4 md:px-6 py-5"
-                  >
-                    {/* Left */}
-                    <div className="flex items-start gap-4 text-left">
-                      <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-blue-50 flex items-center justify-center text-[#0f3d7a] text-lg shrink-0">
-                        {item.icon}
-                      </div>
-                      <div>
-                        <h3 className="text-base md:text-lg font-semibold text-[#0f3d7a]">
-                          {item.title}
-                        </h3>
+            {isLoading ? (
+              <div className="flex justify-center items-center py-20">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0f3d7a]"></div>
+              </div>
+            ) : (
+              <div className="mt-10 md:mt-14 space-y-4">
+                {terms.map((item) => {
+                  const itemId = item.keyId || item._id;
+                  const isOpen = open === itemId;
+                  return (
+                    <div
+                      key={item._id || item.keyId}
+                      className="group bg-white/90 backdrop-blur-md border border-blue-100 rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden"
+                    >
+                      <button
+                        onClick={() => setOpen(isOpen ? null : itemId)}
+                        className="w-full flex justify-between items-start md:items-center gap-4 px-4 md:px-6 py-5"
+                      >
+                        {/* Left */}
+                        <div className="flex items-start gap-4 text-left">
+                          <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-blue-50 flex items-center justify-center text-[#0f3d7a] text-lg shrink-0">
+                            {iconMap[item.iconName] || <FiFileText />}
+                          </div>
+                          <div>
+                            <h3 className="text-base md:text-lg font-semibold text-[#0f3d7a]">
+                              {item.title}
+                            </h3>
+                          </div>
+                        </div>
+
+                        {/* Arrow */}
+                        <FaChevronDown
+                          className={`text-[#0f3d7a] transition-transform duration-300 mt-1 md:mt-0
+                          ${isOpen ? "rotate-180" : ""}`}
+                        />
+                      </button>
+
+                      {/* Content */}
+                      <div
+                        className={`transition-all duration-500 overflow-hidden
+                        ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
+                      >
+                        <div className="px-4 md:px-6 pb-6 text-sm md:text-base text-gray-600 leading-7 md:leading-8">
+                          {item.content}
+                        </div>
                       </div>
                     </div>
-
-                    {/* Arrow */}
-                    <FaChevronDown
-                      className={`text-[#0f3d7a] transition-transform duration-300 mt-1 md:mt-0
-                      ${open === item.id ? "rotate-180" : ""}`}
-                    />
-                  </button>
-
-                  {/* Content */}
-                  <div
-                    className={`transition-all duration-500 overflow-hidden
-                    ${open === item.id ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
-                  >
-                    <div className="px-4 md:px-6 pb-6 text-sm md:text-base text-gray-600 leading-7 md:leading-8">
-                      {item.content}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+                  );
+                })}
+              </div>
+            )}
 
             {/* ================= ACKNOWLEDGEMENT ================= */}
             <div className="mt-12 md:mt-16">

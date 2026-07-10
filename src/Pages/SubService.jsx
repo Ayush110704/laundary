@@ -14,6 +14,26 @@ const SubService = () => {
 
   const { service } = useParams();
   const data = ServicesData[service];
+  const navigate = useNavigate();
+
+  if (!data) {
+    return (
+      <div className="min-h-screen bg-linear-to-b from-blue-50 to-white flex flex-col items-center justify-center p-6 text-center pt-24">
+        <div className="max-w-md bg-white rounded-3xl p-8 shadow-2xl border border-blue-50">
+          <h1 className="text-3xl font-bold text-blue-950 mb-4">Service Inactive</h1>
+          <p className="text-gray-600 mb-8 leading-relaxed">
+            This professional cleaning service is currently inactive or unavailable. Please browse our other active services.
+          </p>
+          <button
+            onClick={() => navigate("/")}
+            className="w-full py-3.5 rounded-2xl bg-blue-900 text-white font-semibold hover:bg-blue-800 transition shadow-lg shadow-blue-950/20 cursor-pointer"
+          >
+            Go Back Home
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const { Hero, WhyUs, ServiceOffered, CTA, Servicetitle, ExpertService, ExpertTitle } = data;
 
@@ -81,7 +101,9 @@ const SubService = () => {
     return () => clearInterval(interval);
   }, [emblaApi]);
 
+
   const navigate = useNavigate();
+
   return (
     <>
       <div>

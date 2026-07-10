@@ -15,107 +15,118 @@ const Address = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
 
   useEffect(() => {
-    loadAddresses();
     loadUserData();
+    loadAddresses();
   }, []);
 
   const loadUserData = () => {
-    const user = JSON.parse(localStorage.getItem('freshUser')) || {};
+    const user = JSON.parse(localStorage.getItem('currentUser')) || JSON.parse(localStorage.getItem('freshUser')) || {};
     setUserData(user);
   };
 
-  const loadAddresses = () => {
-    const savedAddresses = JSON.parse(localStorage.getItem('userAddresses')) || [];
-    setAddresses(savedAddresses);
-  };
-
-  const saveAddresses = (addressList) => {
-    localStorage.setItem('userAddresses', JSON.stringify(addressList));
-    setAddresses(addressList);
-  };
-
-  const handleAddAddress = (formData) => {
+  const loadAddresses = async () => {
+    const user = JSON.parse(localStorage.getItem('currentUser')) || JSON.parse(localStorage.getItem('freshUser')) || {};
+    const email = user.Email || user.email;
+    if (!email) return;
+    
     setIsLoading(true);
-    setTimeout(() => {
-      const newAddress = {
-        id: Date.now(),
-        ...formData,
-        createdAt: new Date().toISOString()
-      };
-
-      let updatedAddresses = [...addresses];
-      if (formData.isDefault) {
-        updatedAddresses = updatedAddresses.map(addr => ({
-          ...addr,
-          isDefault: false
-        }));
+    try {
+      const res = await fetch(`http://localhost:5000/api/addresses?email=${encodeURIComponent(email)}`);
+      const json = await res.json();
+      if (json.success && json.data) {
+        setAddresses(json.data);
       }
-
-      updatedAddresses.push(newAddress);
-      saveAddresses(updatedAddresses);
-
-      setShowAddModal(false);
+    } catch (err) {
+      console.error('Failed to load addresses:', err);
+    } finally {
       setIsLoading(false);
-
-      Swal.fire({
-        title: 'Address Added! 🎉',
-        text: 'Your address has been added successfully!',
-        icon: 'success',
-        confirmButtonColor: '#2563eb',
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-        background: '#ffffff',
-        customClass: {
-          popup: 'rounded-2xl'
-        }
-      });
-    }, 800);
+    }
   };
 
-  const handleEditAddress = (formData) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      let updatedAddresses = addresses.map(addr => {
-        if (addr.id === selectedAddress.id) {
-          return {
-            ...addr,
-            ...formData
-          };
-        }
-        return addr;
-      });
-
-      if (formData.isDefault) {
-        updatedAddresses = updatedAddresses.map(addr => ({
-          ...addr,
-          isDefault: addr.id === selectedAddress.id
-        }));
-      }
-
-      saveAddresses(updatedAddresses);
-
-      setShowEditModal(false);
-      setSelectedAddress(null);
-      setIsLoading(false);
-
+  const handleAddAddress = async (formData) => {
+    const user = JSON.parse(localStorage.getItem('currentUser')) || JSON.parse(localStorage.getItem('freshUser')) || {};
+    const email = user.Email || user.email;
+    if (!email) {
       Swal.fire({
-        title: 'Address Updated! ✅',
-        text: 'Your address has been updated successfully!',
-        icon: 'success',
-        confirmButtonColor: '#2563eb',
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-        background: '#ffffff',
-        customClass: {
-          popup: 'rounded-2xl'
-        }
+        icon: 'error',
+        title: 'Authentication Required',
+        text: 'Please log in to add an address.',
+        confirmButtonColor: '#2563eb'
       });
-    }, 800);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await fetch('http://localhost:5000/api/addresses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, email })
+      });
+      const json = await res.json();
+      if (json.success) {
+        setShowAddModal(false);
+        await loadAddresses();
+        Swal.fire({
+          title: 'Address Added! 🎉',
+          text: 'Your address has been added successfully!',
+          icon: 'success',
+          confirmButtonColor: '#2563eb',
+          timer: 2000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+          background: '#ffffff',
+          customClass: {
+            popup: 'rounded-2xl'
+          }
+        });
+      }
+    } catch (err) {
+      console.error('Error adding address:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleEditAddress = async (formData) => {
+    if (!selectedAddress) return;
+    const addressId = selectedAddress._id || selectedAddress.id;
+
+    setIsLoading(true);
+    try {
+      const res = await fetch(`http://localhost:5000/api/addresses/${addressId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const json = await res.json();
+      if (json.success) {
+        setShowEditModal(false);
+        setSelectedAddress(null);
+        await loadAddresses();
+        Swal.fire({
+          title: 'Address Updated! ✅',
+          text: 'Your address has been updated successfully!',
+          icon: 'success',
+          confirmButtonColor: '#2563eb',
+          timer: 2000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+          background: '#ffffff',
+          customClass: {
+            popup: 'rounded-2xl'
+          }
+        });
+      }
+    } catch (err) {
+      console.error('Error editing address:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleDeleteAddress = (address) => {
+    const addressId = address._id || address.id;
     Swal.fire({
       title: 'Delete Address?',
       html: `Are you sure you want to delete <strong>${address.fullName}</strong>?<br>This action cannot be undone.`,
@@ -129,28 +140,40 @@ const Address = () => {
       customClass: {
         popup: 'rounded-2xl'
       }
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        const updatedAddresses = addresses.filter(addr => addr.id !== address.id);
-        saveAddresses(updatedAddresses);
-        
-        Swal.fire({
-          title: 'Deleted!',
-          text: 'Address has been deleted.',
-          icon: 'success',
-          confirmButtonColor: '#2563eb',
-          timer: 1500,
-          showConfirmButton: false,
-          background: '#ffffff',
-          customClass: {
-            popup: 'rounded-2xl'
+        setIsLoading(true);
+        try {
+          const res = await fetch(`http://localhost:5000/api/addresses/${addressId}`, {
+            method: 'DELETE'
+          });
+          const json = await res.json();
+          if (json.success) {
+            await loadAddresses();
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Address has been deleted.',
+              icon: 'success',
+              confirmButtonColor: '#2563eb',
+              timer: 1500,
+              showConfirmButton: false,
+              background: '#ffffff',
+              customClass: {
+                popup: 'rounded-2xl'
+              }
+            });
           }
-        });
+        } catch (err) {
+          console.error('Error deleting address:', err);
+        } finally {
+          setIsLoading(false);
+        }
       }
     });
   };
 
   const handleToggleDefault = (address) => {
+    const addressId = address._id || address.id;
     Swal.fire({
       title: 'Set as Default?',
       text: `Make ${address.fullName} your default delivery address?`,
@@ -164,13 +187,24 @@ const Address = () => {
       customClass: {
         popup: 'rounded-2xl'
       }
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        const updatedAddresses = addresses.map(addr => ({
-          ...addr,
-          isDefault: addr.id === address.id
-        }));
-        saveAddresses(updatedAddresses);
+        setIsLoading(true);
+        try {
+          const res = await fetch(`http://localhost:5000/api/addresses/${addressId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ isDefault: true })
+          });
+          const json = await res.json();
+          if (json.success) {
+            await loadAddresses();
+          }
+        } catch (err) {
+          console.error('Error setting default address:', err);
+        } finally {
+          setIsLoading(false);
+        }
       }
     });
   };
@@ -322,7 +356,7 @@ const Address = () => {
           ) : (
             <div className="grid grid-cols-1 gap-4">
               {addresses.map((address) => (
-                <AddressCard key={address.id} address={address} />
+                <AddressCard key={address._id || address.id} address={address} />
               ))}
             </div>
           )}
