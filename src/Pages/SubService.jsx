@@ -102,7 +102,7 @@ const SubService = () => {
   }, [emblaApi]);
 
 
-  const navigate = useNavigate();
+ 
 
   return (
     <>

@@ -1,10 +1,10 @@
 
 // Import service background images
-import laundryBg from '../assets/Laundry.jpg';
-import dryCleanBg from '../assets/dryclean.webp';
-import ironingBg from '../assets/Iron.jpg';
-import HomeCurtain from '../assets/Curtain.jpg'
-import HomeShoe from "../assets/Shoe.jpg"
+import Laundry from '../assets/Laundry.jpg';
+import dryclean from '../assets/dryclean.webp';
+import Iron from '../assets/Iron.jpg';
+import HomeCurtain from '../assets/HomeCurtain.jpg'
+import HomeShoe from "../assets/HomeShoe.jpg"
 import HomeCarpet  from '../assets/HomeCarpet.jpg'
 // Import feature icons
 import supportIcon from '../assets/customersupport.webp';
@@ -52,7 +52,7 @@ import Weeding from '../assets/DryClean/Weeding.jpeg'
 // Iron Service page Images
 
 import IronHeroBackground from '../assets/Iron-Service/IronHeroBackground1.png'
-import IronHeroVector from '../assets/Iron-Service/IronHeroVector1.png'
+import IronHeroVector1 from '../assets/Iron-Service/IronHeroVector1.png'
 import pant from '../assets/Iron-Service/pant.webp'
 import saree from '../assets/Iron-Service/saree.jpeg'
 import Steps from '../assets/Iron-Service/Steps.webp'
@@ -136,21 +136,21 @@ export const allServices = [
     id: 1,
     title: 'Laundry',
     description: 'Enjoy fresh, clean, folded laundry – more time for what matters most.',
-    bgImage: laundryBg,
+    bgImage: Laundry,
     path: "/services/Laundry-service"
   },
   {
     id: 2,
     title: 'Dry Cleaning',
     description: 'Refresh your garments with our expert dry cleaning – book now!',
-    bgImage: dryCleanBg,
+    bgImage: dryclean,
      path: "/services/DryClean-service"
   },
   {
     id: 3,
     title: 'Ironing',
     description: 'Get wrinkle-free perfection – expert ironing that keeps you looking sharp!',
-    bgImage: ironingBg,
+    bgImage: Iron,
    path: "/services/Ironing-service"
   },
   {
@@ -893,7 +893,7 @@ ServiceOffered: [
   "Ironing-service": {
     Hero: {
       HeroBackground: IronHeroBackground,
-      HeroVector: IronHeroVector,
+      HeroVector: IronHeroVector1,
       HeroBadge: " ✦ EXPERT CARE",
       HeroTitle: "Perfectly Pressed.",
       HeroSub: "Professionally Finished.",
