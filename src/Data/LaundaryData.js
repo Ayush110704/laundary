@@ -1,8 +1,11 @@
 
 // Import service background images
-import laundryBg from '../assets/laundry.webp';
+import laundryBg from '../assets/Laundry.jpg';
 import dryCleanBg from '../assets/dryclean.webp';
-import ironingBg from '../assets/ironing.webp';
+import ironingBg from '../assets/Iron.jpg';
+import HomeCurtain from '../assets/Curtain.jpg'
+import HomeShoe from "../assets/Shoe.jpg"
+import HomeCarpet  from '../assets/HomeCarpet.jpg'
 // Import feature icons
 import supportIcon from '../assets/customersupport.webp';
 import deliveryIcon from '../assets/fastdelivery.webp';
@@ -43,7 +46,7 @@ import WomenWear from '../assets/DryClean/WomenWear.jpeg'
 
 
 import shoe from '../assets/DryClean/shoe.webp'
-import Weeding from '../assets/DryClean/Weeding.webp'
+import Weeding from '../assets/DryClean/Weeding.jpeg'
 
 
 // Iron Service page Images
@@ -51,9 +54,9 @@ import Weeding from '../assets/DryClean/Weeding.webp'
 import IronHeroBackground from '../assets/Iron-Service/IronHeroBackground1.png'
 import IronHeroVector from '../assets/Iron-Service/IronHeroVector1.png'
 import pant from '../assets/Iron-Service/pant.webp'
-import saree from '../assets/Iron-Service/saree.webp'
+import saree from '../assets/Iron-Service/saree.jpeg'
 import Steps from '../assets/Iron-Service/Steps.webp'
-import suit from '../assets/Iron-Service/suit.webp'
+import suit from '../assets/Iron-Service/suit.jpeg'
 
 //Curatin service page Images
 
@@ -72,11 +75,11 @@ import velvet from '../assets/CurtainClean/velvet.webp'
 // Shoe service page Images
 import ShoeHeroBackground from '../assets/ShoeClean/ShoeHeroBackground1.png'
 import ShoeHeroVector from '../assets/ShoeClean/ShoeHeroVector.png'
-import heels from '../assets/ShoeClean/heels.webp'
+import heels from '../assets/ShoeClean/heels.jpeg'
 import jordan from '../assets/ShoeClean/jordan.webp'
-import leatherShoe from '../assets/ShoeClean/leather.webp'
+import leatherShoe from '../assets/ShoeClean/leather.jpeg'
 import repair from '../assets/ShoeClean/repair.webp'
-import sport from '../assets/ShoeClean/sport.webp'
+import sport from '../assets/ShoeClean/sport.jpeg'
 import steps from '../assets/ShoeClean/steps.webp'
 import white from '../assets/ShoeClean/white.webp'
 
@@ -92,6 +95,7 @@ import silkCarpet from '../assets/CarpetClean/silk.webp'
 import steamCarpet from '../assets/CarpetClean/steam.webp'
 import turkish from '../assets/CarpetClean/turkish.webp'
 import wool from '../assets/CarpetClean/wool.webp'
+import Odour from '../assets/CarpetClean/Odour.png'
 
 import { Shirt, Sparkles, Baby,  WashingMachine,
  Footprints,
@@ -153,21 +157,21 @@ export const allServices = [
     id: 4,
     title: 'Curtain Cleaning',
     description: 'Convenient wash and fold service – save time and enjoy fresh clothes.',
-    bgImage: laundryBg,
+    bgImage: HomeCurtain,
     path: "/services/CurtainCleaning-service" 
   },
   {
     id: 5,
     title: 'Shoe Cleaning',
     description: 'Gentle steam cleaning for delicate fabrics – safe and effective.',
-    bgImage: dryCleanBg,
+    bgImage: HomeShoe,
     path:"/services/ShoeCleaning-service"
   },
   {
     id: 6,
     title: 'Carpet Cleaning',
     description: 'Professional alterations and repairs – perfect fit guaranteed.',
-    bgImage: ironingBg,
+    bgImage: HomeCarpet,
     path: "/services/CarpetCleaning-service"
   }
 ];
@@ -569,8 +573,8 @@ export const ServicesData = {
     ExpertTitle: "OUR EXPERT DRY CLEANING SERVICES",
 
     ExpertService: [
-      { id: 1, image: Weeding, title: "Premium Garment Dry Cleaning", desc: "Hohenstein-certified process to restore the shine and beauty of your fabrics. Perfect dry cleaning for silk sarees and designer outfits. " },
-      { id: 2, image: repair, title: "SHOES, BAG CLEANING AND REPAIR ", desc: "Professional cleaning, laundry, and repair services for your shoes and bags. Customized care for every material, ensuring a flawless finish that restores their brand-new appearance." },
+      { id: 1, image: Weeding, title: "PREMIUM GARMENT DRY CLEANING", desc: "Hohenstein-certified process to restore the shine and beauty of your fabrics. Perfect dry cleaning for silk sarees and designer outfits. " },
+      { id: 2, image: repair, title: "SHOES, BAG CLEANING AND REPAIR ", desc: "Professional cleaning,and repair services for your shoes and bags. Customized care for every material, ensuring a flawless finish that restores their brand-new appearance." },
       { id: 3, image: woolen, title: " WOOLENS DRY CLEANING", desc: "At Laundrywala, we use advanced Woolmark-approved Lagoon dry cleaning technology to care for your woolen clothes. This ensures they retain their original shape, size, and softness after every clean." }
     ],
 
@@ -759,7 +763,7 @@ export const ServicesData = {
 
     ExpertService: [
       { id: 1, image: steam, title: "Deep Steam Curtain Cleaning", desc: "Removes dust, allergens, and bacteria from curtains while restoring freshness and softness." },
-      { id: 2, image: dry, title: "Dry Foam Curtain Cleaning", desc: "Low-moisture cleaning that safely removes dirt without damaging delicate fabrics." },
+      { id: 2, image: foam, title: "Dry Foam Curtain Cleaning", desc: "Low-moisture cleaning that safely removes dirt without damaging delicate fabrics." },
       { id: 3, image: antibacteria, title: "Antibacterial  Treatment", desc: "Eliminates germs and odors, leaving curtains clean, fresh, and hygienic." },
     ],
 
@@ -874,7 +878,7 @@ ServiceOffered: [
     ExpertService: [
       { id: 1, image: steamCarpet, title: " Deep Steam Carpet Cleaning", desc: "High-pressure hot water extraction removes deep-seated dust, stains, and bacteria from carpet fibers. Perfect for homes and offices that need  allergen-free cleaning." },
       { id: 2, image: dry, title: "Dry Carpet Cleaning ", desc: "A low-moisture cleaning method that uses specialized compounds to lift dirt. Quick drying time and extremely safe for delicate fabrics like silk and Persian rugs. " },
-      { id: 3, image: dry, title: " Carpet Stain & Odor Removal", desc: "Targeted treatment for stubborn stains (coffee, wine, pet stains) and specialized deodorizers to eliminate trapped odors, bringing your carpet back to life." },
+      { id: 3, image: Odour, title: " Carpet Stain & Odor Removal", desc: "Targeted treatment for stubborn stains (coffee, wine, pet stains) and specialized deodorizers to eliminate trapped odors, bringing your carpet back to life." },
     ],
 
     CTA: {
@@ -911,9 +915,9 @@ ServiceOffered: [
     ExpertTitle: "OUR EXPERT IRONING SERVICE ",
 
     ExpertService: [
-      { id: 1, image: washfold, title: " IRON SILK SAREE", desc: "Every woman cherishes at least one silk saree, a timeless piece passed down from her mother or a beloved figure she holds dear." },
-      { id: 2, image: washiron, title: "Suit Ironing ", desc: "Suits are crafted from fabrics designed to withstand ironing, making the process hassle-free. Proper ironing ensures your suit looks sharp, polished, and perfectly tailored—just the way it's meant to! " },
-      { id: 3, image: woolen, title: " Heat Setting Fabric Paint", desc: "Permanent fabric paint needs to be heat set to ensure it stays intact. Once heat set, you can use the fabric without worrying about the paint peeling or fading." },
+      { id: 1, image: saree, title: "Silk Saree", desc: "Every woman cherishes at least one silk saree, a timeless piece passed down from her mother or a beloved figure she holds dear." },
+      { id: 2, image: suit, title: "Suit Ironing ", desc: "Suits are crafted from fabrics designed to withstand ironing, making the process hassle-free. Proper ironing ensures your suit looks sharp and perfectly tailored. " },
+      { id: 3, image: woolen, title: " Heat Setting Fabric", desc: "Permanent fabric paint needs to be heat set to ensure it stays intact. Once heat set, you can use the fabric without worrying about the paint peeling or fading." },
     ],
 
     CTA: {
