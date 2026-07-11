@@ -2,7 +2,7 @@ import React from 'react'
 import heroVideo from '../assets/ServiceVideo.mp4'
 import ServiceImageDesktop from '../assets/Services/ServiceImage.png'
 import ServiceImageMobile from '../assets/Services/ServiceImageMobile.png'
-import Ironing from '../assets/ironing.webp'
+import Ironing from '../assets/Services/Ironing.jpg'
 import Warehouse from '../assets/Services/Warehouse.png'
 import { motion } from 'framer-motion'
 import { CircleCheck, Star, Minus, MoveRight, Clock3, Leaf, Truck, ShieldCheck, Play, Ampersand } from 'lucide-react';
@@ -391,7 +391,7 @@ const Services = () => {
                 <img
                   src={Ironing}
                   alt="Ironing"
-                  className="h-60 md:h-72 w-full rounded-xl object-contain shadow-2xl"
+                  className="h-60 md:h-72 w-full rounded-xl object-cover shadow-2xl"
                 />
               </motion.div>
 
