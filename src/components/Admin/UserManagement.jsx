@@ -547,8 +547,9 @@ function EditUserModal({ user, onClose, onSave }) {
 
 function UserManagement() {
   // State
-  const [users, setUsers] = useState(MOCK_USERS);
-  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -559,7 +560,52 @@ function UserManagement() {
   const [showDetailView, setShowDetailView] = useState(false);
   const itemsPerPage = 5;
 
-  
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const res = await fetch('http://localhost:5000/api/admin/users');
+      const data = await res.json();
+      if (data.success) {
+        const mappedUsers = data.users.map(u => ({
+          id: u._id,
+          name: u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'Unknown User',
+          firstName: u.firstName || '',
+          lastName: u.lastName || '',
+          email: u.email,
+          phone: u.phone,
+          address: u.address || '',
+          status: u.status || 'Active',
+          joined: u.createdAt || new Date().toISOString(),
+          closedDate: u.closedDate || null,
+          avatar: (u.firstName || u.name || 'U').charAt(0).toUpperCase(),
+          // Mock data integrations for detail view fields not yet in db schema
+          bookings: 0,
+          totalSpent: '₹0',
+          totalBookings: 0,
+          completedBookings: 0,
+          cancelledBookings: 0,
+          preferredService: 'N/A',
+          rating: 0,
+          feedback: 'No feedback yet',
+          lastLogin: null
+        }));
+        setUsers(mappedUsers);
+      } else {
+        setError(data.message || 'Failed to retrieve user accounts.');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Could not connect to the backend server.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   // COMPUTED VALUES
   
   const stats = {
@@ -571,8 +617,8 @@ function UserManagement() {
 
   // Filter users
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = (user.name && user.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                          (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
                           (user.phone && user.phone.includes(searchTerm)) ||
                           (user.address && user.address.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesStatus = filterStatus === 'All' || user.status === filterStatus;
@@ -591,7 +637,6 @@ function UserManagement() {
     setCurrentPage(1);
   }, [searchTerm, filterStatus]);
 
-  
   // HANDLERS
 
   const handleSelectAll = (checked) => {
@@ -610,58 +655,141 @@ function UserManagement() {
     }
   };
 
-  const handleDeleteUser = (userId) => {
+  const handleDeleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this customer? This action cannot be undone.')) {
-      setUsers(users.filter(u => u.id !== userId));
-      setSelectedUsers(selectedUsers.filter(id => id !== userId));
-      if (selectedUser?.id === userId) {
-        setShowDetailView(false);
-        setSelectedUser(null);
+      try {
+        const res = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+          method: 'DELETE'
+        });
+        const data = await res.json();
+        if (data.success) {
+          setUsers(users.filter(u => u.id !== userId));
+          setSelectedUsers(selectedUsers.filter(id => id !== userId));
+          if (selectedUser?.id === userId) {
+            setShowDetailView(false);
+            setSelectedUser(null);
+          }
+        } else {
+          alert(data.message || 'Failed to delete customer.');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Error connecting to backend to delete customer.');
       }
     }
   };
 
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
     if (selectedUsers.length === 0) return;
     if (window.confirm(`Delete ${selectedUsers.length} selected customers?`)) {
-      setUsers(users.filter(u => !selectedUsers.includes(u.id)));
-      setSelectedUsers([]);
+      try {
+        const deletePromises = selectedUsers.map(id =>
+          fetch(`http://localhost:5000/api/admin/users/${id}`, { method: 'DELETE' }).then(r => r.json())
+        );
+        await Promise.all(deletePromises);
+        setUsers(users.filter(u => !selectedUsers.includes(u.id)));
+        setSelectedUsers([]);
+      } catch (err) {
+        console.error(err);
+        alert('An error occurred during bulk delete. Refreshing user list.');
+        fetchUsers();
+      }
     }
   };
 
-  const handleBulkStatus = (status) => {
+  const handleBulkStatus = async (status) => {
     if (selectedUsers.length === 0) return;
-    const today = new Date().toISOString().split('T')[0];
-    setUsers(users.map(u => 
-      selectedUsers.includes(u.id) ? { 
-        ...u, 
-        status,
-        closedDate: status === 'Deactive' ? today : null
-      } : u
-    ));
-    setSelectedUsers([]);
-  };
-
-  const handleToggleStatus = (userId) => {
-    const today = new Date().toISOString().split('T')[0];
-    setUsers(users.map(u =>
-      u.id === userId
-        ? { 
-            ...u, 
-            status: u.status === 'Active' ? 'Deactive' : 'Active',
-            closedDate: u.status === 'Active' ? today : null
-          }
-        : u
-    ));
-  };
-
-  const handleUpdateUser = (updatedUser) => {
-    setUsers(users.map(u => u.id === updatedUser.id ? updatedUser : u));
-    if (selectedUser?.id === updatedUser.id) {
-      setSelectedUser(updatedUser);
+    const today = new Date().toISOString();
+    try {
+      const updatePromises = selectedUsers.map(id =>
+        fetch(`http://localhost:5000/api/admin/users/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status,
+            closedDate: status === 'Deactive' ? today : null
+          })
+        }).then(r => r.json())
+      );
+      await Promise.all(updatePromises);
+      setUsers(users.map(u => 
+        selectedUsers.includes(u.id) ? { 
+          ...u, 
+          status,
+          closedDate: status === 'Deactive' ? today : null
+        } : u
+      ));
+      setSelectedUsers([]);
+    } catch (err) {
+      console.error(err);
+      alert('Error updating user statuses. Refreshing.');
+      fetchUsers();
     }
-    setShowEditModal(false);
-    setEditingUser(null);
+  };
+
+  const handleToggleStatus = async (userId) => {
+    const userObj = users.find(u => u.id === userId);
+    if (!userObj) return;
+    const newStatus = userObj.status === 'Active' ? 'Deactive' : 'Active';
+    const today = new Date().toISOString();
+    try {
+      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          status: newStatus,
+          closedDate: newStatus === 'Deactive' ? today : null
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUsers(users.map(u =>
+          u.id === userId
+            ? { 
+                ...u, 
+                status: newStatus,
+                closedDate: newStatus === 'Deactive' ? today : null
+              }
+            : u
+        ));
+      } else {
+        alert(data.message || 'Failed to toggle status.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error toggling status.');
+    }
+  };
+
+  const handleUpdateUser = async (updatedUser) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/admin/users/${updatedUser.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: updatedUser.name,
+          email: updatedUser.email,
+          phone: updatedUser.phone,
+          address: updatedUser.address,
+          status: updatedUser.status,
+          closedDate: updatedUser.closedDate
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUsers(users.map(u => u.id === updatedUser.id ? updatedUser : u));
+        if (selectedUser?.id === updatedUser.id) {
+          setSelectedUser(updatedUser);
+        }
+        setShowEditModal(false);
+        setEditingUser(null);
+      } else {
+        alert(data.message || 'Failed to save customer changes.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error updating customer profile.');
+    }
   };
 
   const handleUserClick = (user) => {
@@ -692,6 +820,35 @@ function UserManagement() {
       </span>
     );
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">Loading customers...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 flex items-center justify-center">
+        <div className="bg-white p-8 rounded-xl shadow-md max-w-md w-full text-center">
+          <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-bold text-gray-800 mb-2">Error Loading Data</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <button 
+            onClick={fetchUsers}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
  
   // RENDER

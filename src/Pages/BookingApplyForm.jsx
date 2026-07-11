@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import { getCheckoutData, saveCheckoutData } from "../utils/checkoutStorage";
+import { DEFAULT_CATEGORY_ITEMS } from "../Data/LaundaryData.js";
 import Swal from 'sweetalert2'
 
 const BookingApplyForm = ({ checkoutData, setCheckoutData, setCurrentStep, }) => {
@@ -27,11 +28,11 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData, setCurrentStep, }) =>
 
   const [errors, setErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [dbServices, setDbServices] = useState([]);
   const navigate = useNavigate();
 
-  // Load user data from localStorage on component mount
+  // Load user data from localStorage on component mount and fetch DB services
   useEffect(() => {
-
     const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
 
     if (currentUser) {
@@ -42,6 +43,19 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData, setCurrentStep, }) =>
         phone: currentUser.number,
       }));
     }
+
+    const fetchServices = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/services");
+        const result = await res.json();
+        if (result.success) {
+          setDbServices(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching services in BookingApplyForm:", error);
+      }
+    };
+    fetchServices();
   }, []);
 
   const cardBase =
@@ -81,10 +95,16 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData, setCurrentStep, }) =>
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        [name]: value,
+      };
+      if (name === "serviceType") {
+        updated.clothType = "";
+      }
+      return updated;
+    });
 
     if (errors[name]) {
       setErrors((prev) => ({
@@ -227,18 +247,27 @@ if (swalResult.isConfirmed) {
 }));
   }
 
- const removeItems = (index) => {
-  const checkoutData = getCheckoutData();
+  const removeItems = (index) => {
+    const checkoutData = getCheckoutData();
 
-  const updatedItems = checkoutData.items.filter((_, i) => i !== index);
+    const updatedItems = checkoutData.items.filter((_, i) => i !== index);
 
-  saveCheckoutData({
-    ...checkoutData,
-    items: updatedItems,
-  });
+    const updatedCheckout = {
+      ...checkoutData,
+      items: updatedItems,
+    };
 
-  setCheckoutItems(updatedItems);
-};
+    saveCheckoutData(updatedCheckout);
+    setCheckoutData(updatedCheckout);
+  };
+
+  const selectedServiceObj = dbServices.find(
+    (s) => s.name.toLowerCase() === formData.serviceType.toLowerCase()
+  );
+
+  const dropdownItems = selectedServiceObj && selectedServiceObj.items && selectedServiceObj.items.length > 0
+    ? selectedServiceObj.items
+    : (DEFAULT_CATEGORY_ITEMS[formData.serviceType] || []);
 
   const totalItems = (checkoutData.items || []).reduce((total, item) => total + Number(item.quantity), 0);
 
@@ -412,14 +441,20 @@ if (swalResult.isConfirmed) {
 
                 <div className="">
                   <FieldLabel icon={ClipboardList} label="Item Type" required />
-                  <input
-                    type="text"
+                  <select
                     name="clothType"
                     value={formData.clothType}
                     onChange={handleChange}
-                    placeholder="e.g. Shirts, Jeans, Bedsheets"
                     className={inputStyle}
-                  />
+                    disabled={!formData.serviceType}
+                  >
+                    <option value="">Select Item Type</option>
+                    {dropdownItems.map((item, index) => (
+                      <option key={index} value={item.name}>
+                        {item.name} (₹{item.price})
+                      </option>
+                    ))}
+                  </select>
                   <ErrorText message={errors.clothType} />
                 </div>
 

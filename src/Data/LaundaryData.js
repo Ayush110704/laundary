@@ -1092,3 +1092,48 @@ export const MOCK_SERVICES = [
     totalEarnings: 40800,
   },
 ];
+
+export const DEFAULT_CATEGORY_ITEMS = {
+  "Laundry": [
+    { name: "Tshirt", price: 80 },
+    { name: "Jeans", price: 120 },
+    { name: "Shirt", price: 100 },
+    { name: "Bed Sheet", price: 150 },
+    { name: "Shorts", price: 60 }
+  ],
+  "Dry Cleaning": [
+    { name: "Suit (2-piece)", price: 450 },
+    { name: "Silk Saree", price: 500 },
+    { name: "Woolen Blazer", price: 300 },
+    { name: "Leather Jacket", price: 600 },
+    { name: "Coat", price: 350 }
+  ],
+  "Ironing": [
+    { name: "Shirt", price: 30 },
+    { name: "Jeans", price: 30 },
+    { name: "Saree", price: 80 },
+    { name: "Kurta", price: 40 },
+    { name: "Suit", price: 50 }
+  ],
+  "Carpet Cleaning": [
+    { name: "Small Rug", price: 250 },
+    { name: "Medium Carpet", price: 450 },
+    { name: "Large Carpet", price: 650 },
+    { name: "Persian Rug", price: 900 },
+    { name: "Doormat", price: 100 }
+  ],
+  "Curtain Cleaning": [
+    { name: "Single Panel Curtain", price: 150 },
+    { name: "Double Panel Curtain", price: 280 },
+    { name: "Velvet Curtain", price: 350 },
+    { name: "Blackout Curtain", price: 200 },
+    { name: "Sheer Curtain", price: 120 }
+  ],
+  "Shoe Cleaning": [
+    { name: "Sneakers", price: 150 },
+    { name: "Leather Shoes", price: 200 },
+    { name: "Sports Shoes", price: 180 },
+    { name: "Suede Boots", price: 350 },
+    { name: "Sandals/Heels", price: 150 }
+  ]
+};

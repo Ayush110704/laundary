@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 // REGISTER USER
 export const registerUser = async (req, res) => {
     try {
-        const { name, email, password, phone } = req.body;
+        const { firstName, lastName, email, password, phone, address } = req.body;
 
         let user = await User.findOne({ email });
         if (user) {
@@ -15,11 +15,17 @@ export const registerUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
+        const name = `${firstName} ${lastName}`.trim();
+
         user = new User({
+            firstName,
+            lastName,
             name,
             email,
             password: hashedPassword,
-            phone
+            phone,
+            address: address || '',
+            status: 'Active'
         });
 
         await user.save();
@@ -62,7 +68,12 @@ export const loginUser = async (req, res) => {
             user: {
                 id: user._id,
                 name: user.name,
-                email: user.email
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                phone: user.phone,
+                address: user.address,
+                role: user.role
             }
         });
 
