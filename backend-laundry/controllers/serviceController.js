@@ -222,10 +222,10 @@ export const updateService = async (req, res) => {
         let updatedService;
         if (id.match(/^[0-9a-fA-F]{24}$/)) {
             // MongoDB ObjectId
-            updatedService = await Service.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+            updatedService = await Service.findByIdAndUpdate(id, updateData, { returnDocument: 'after', runValidators: true });
         } else {
             // Custom ID e.g., "SRV001"
-            updatedService = await Service.findOneAndUpdate({ id }, updateData, { new: true, runValidators: true });
+            updatedService = await Service.findOneAndUpdate({ id }, updateData, { returnDocument: 'after', runValidators: true });
         }
 
         if (!updatedService) {
