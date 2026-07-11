@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useState, useEffect } from "react";
+import { DEFAULT_CATEGORY_ITEMS } from "../Data/LaundaryData.js";
 
 const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
 
@@ -13,44 +14,130 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
     status: "Active",
     description: "",
     image: null,
+    items: [],
   };
 
   const [formData, setFormData] = useState(initialForm);
+  const [selectedItemName, setSelectedItemName] = useState("");
+  const [newItemName, setNewItemName] = useState("");
+  const [newItemPrice, setNewItemPrice] = useState("");
 
   useEffect(() => {
-  if (serviceToEdit) {
+    if (serviceToEdit) {
+      const itemsList = serviceToEdit.items && serviceToEdit.items.length > 0
+        ? serviceToEdit.items
+        : (DEFAULT_CATEGORY_ITEMS[serviceToEdit.category] || DEFAULT_CATEGORY_ITEMS["Laundry"]);
+      
+      setFormData({
+        id: serviceToEdit.id || "",
+        name: serviceToEdit.name || "",
+        category: serviceToEdit.category || "Laundry",
+        price: serviceToEdit.price || "",
+        duration: serviceToEdit.duration || "",
+        status: serviceToEdit.status || "Active",
+        description: serviceToEdit.description || "",
+        image: serviceToEdit.image || null,
+        items: itemsList,
+      });
+      setSelectedItemName(itemsList[0]?.name || "");
+    } else {
+      const itemsList = DEFAULT_CATEGORY_ITEMS["Laundry"] || [];
+      setFormData({
+        ...initialForm,
+        items: itemsList,
+      });
+      setSelectedItemName(itemsList[0]?.name || "");
+    }
+  }, [serviceToEdit, isOpen]);
+
+  const handleCategoryChange = (cat) => {
+    const newItems = DEFAULT_CATEGORY_ITEMS[cat] || [];
     setFormData({
-      id: serviceToEdit.id || "",
-      name: serviceToEdit.name || "",
-      category: serviceToEdit.category || "",
-      price: serviceToEdit.price || "",
-      duration: serviceToEdit.duration || "",
-      status: serviceToEdit.status || "Active",
-      description: serviceToEdit.description || "",
-      image: serviceToEdit.image || null,
+      ...formData,
+      category: cat,
+      items: newItems,
     });
-  } else {
-    setFormData(initialForm);
-  }
-}, [serviceToEdit, isOpen]);
+    setSelectedItemName(newItems[0]?.name || "");
+  };
+
+  const handleCreateItem = () => {
+    if (!newItemName.trim() || !newItemPrice) {
+      alert("Please fill in both item name and price.");
+      return;
+    }
+    const newItem = {
+      name: newItemName.trim(),
+      price: Number(newItemPrice),
+    };
+    const updatedItems = [...formData.items, newItem];
+    setFormData({
+      ...formData,
+      items: updatedItems,
+    });
+    setSelectedItemName(newItem.name);
+    setNewItemName("");
+    setNewItemPrice("");
+  };
+
+  const handleDeleteItem = () => {
+    if (!selectedItemName) return;
+    const confirmDelete = window.confirm(`Are you sure you want to delete the item "${selectedItemName}"?`);
+    if (!confirmDelete) return;
+
+    const updatedItems = formData.items.filter((item) => item.name !== selectedItemName);
+    setFormData({
+      ...formData,
+      items: updatedItems,
+    });
+    setSelectedItemName(updatedItems[0]?.name || "");
+  };
+
+  const handlePriceChange = (newPrice) => {
+    if (selectedItemName) {
+      const updatedItems = formData.items.map((item) => {
+        if (item.name === selectedItemName) {
+          return { ...item, price: Number(newPrice) || 0 };
+        }
+        return item;
+      });
+      setFormData({
+        ...formData,
+        price: newPrice,
+        items: updatedItems,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        price: newPrice,
+      });
+    }
+  };
+
+  const getDisplayPrice = () => {
+    if (selectedItemName) {
+      const selectedItem = formData.items.find((item) => item.name === selectedItemName);
+      return selectedItem ? selectedItem.price : formData.price;
+    }
+    return formData.price;
+  };
 
   const handleSubmit = (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (serviceToEdit) {
-    onSave({
-      ...formData,
-      id: serviceToEdit.id,
-    });
-  } else {
-    onSave({
-      ...formData,
-      id: formData.id,
-    });
-  }
+    if (serviceToEdit) {
+      onSave({
+        ...formData,
+        id: serviceToEdit.id,
+      });
+    } else {
+      onSave({
+        ...formData,
+        id: formData.id,
+      });
+    }
 
-  onClose();
-};
+    onClose();
+  };
 
 
   return (
@@ -122,7 +209,7 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
                 />
               </div>
 
-              {/* Category & Price */}
+              {/* Category & Select Item Name */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block mb-2 font-medium text-gray-700">
@@ -130,14 +217,10 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
                   </label>
 
                   <select 
-                  value={formData.category}
-  onChange={(e) =>
-    setFormData({
-      ...formData,
-      category: e.target.value,
-    })
-  }
-                  className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    value={formData.category}
+                    onChange={(e) => handleCategoryChange(e.target.value)}
+                    className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
                     <option value="Laundry">Laundry</option>
                     <option value="Dry Cleaning">Dry Cleaning</option>
                     <option value="Ironing">Ironing</option>
@@ -149,22 +232,50 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
 
                 <div>
                   <label className="block mb-2 font-medium text-gray-700">
-                    Price ($)
+                    Select Item Name
+                  </label>
+
+                  <div className="flex gap-2">
+                    <select 
+                      value={selectedItemName}
+                      onChange={(e) => setSelectedItemName(e.target.value)}
+                      className="flex-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-0"
+                    >
+                      {formData.items?.map((item, idx) => (
+                        <option key={idx} value={item.name}>
+                          {item.name} (₹{item.price})
+                        </option>
+                      ))}
+                    </select>
+
+                    <button
+                      type="button"
+                      onClick={handleDeleteItem}
+                      disabled={!selectedItemName}
+                      className="px-4 py-3 bg-red-100 hover:bg-red-200 text-red-600 font-semibold rounded-xl transition flex items-center justify-center shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Delete selected item"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Price, Duration & Status */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block mb-2 font-medium text-gray-700">
+                    Price (₹)
                   </label>
 
                   <input
                     type="text"
-                    value={formData.price}
-                    onChange={(e) =>
-                      setFormData({ ...formData, price: e.target.value })
-                    }
+                    value={getDisplayPrice()}
+                    onChange={(e) => handlePriceChange(e.target.value)}
                     className="w-full px-4 py-3 border rounded-xl"
                   />
                 </div>
-              </div>
 
-              {/* Duration & Status */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block mb-2 font-medium text-gray-700">
                     Service Duration
@@ -186,46 +297,53 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
                   </label>
 
                   <select 
-                   value={formData.status}
-  onChange={(e) =>
-    setFormData({
-      ...formData,
-      status: e.target.value,
-    })
-  }
-                  className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    value={formData.status}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        status: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
                   </select>
                 </div>
               </div>
 
-              {/* Description */}
-              <div>
-                <label className="block mb-2 font-medium text-gray-700">
-                  Description
-                </label>
-
-                <textarea
-                  type="text"
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  className="w-full px-4 py-3 border rounded-xl"
-                />
-              </div>
-
-              {/* Image Upload */}
-              <div>
-                <label className="block mb-2 font-medium text-gray-700">
-                  Service Image
-                </label>
-
-                <input
-                  type="file"
-                  className="w-full border rounded-xl px-4 py-3 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-100 file:px-4 file:py-2 file:text-blue-900"
-                />
+              {/* Create Item Panel (moved to bottom) */}
+              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-3">
+                <h4 className="text-sm font-semibold text-gray-700">Create Item</h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+                  <div>
+                    <label className="block mb-1.5 text-xs font-medium text-gray-600">Item Name</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Silk Shirt"
+                      value={newItemName}
+                      onChange={(e) => setNewItemName(e.target.value)}
+                      className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1.5 text-xs font-medium text-gray-600">Item Price (₹)</label>
+                    <input 
+                      type="number" 
+                      placeholder="e.g. 150"
+                      value={newItemPrice}
+                      onChange={(e) => setNewItemPrice(e.target.value)}
+                      className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCreateItem}
+                    className="w-full py-2 bg-blue-900 text-white rounded-lg text-sm font-medium hover:bg-blue-800 transition shadow-sm"
+                  >
+                    Create Item
+                  </button>
+                </div>
               </div>
 
               {/* Buttons */}

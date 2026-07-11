@@ -3,7 +3,7 @@ import {
   Search, Plus, Eye,Edit, Trash2, ChevronLeft, ChevronRight,Package, IndianRupee,
    Clock,CheckCircle, XCircle, Shirt, Sofa, BrushCleaning,ArrowLeft,Tag,} from "lucide-react";
 import AddService from '../AddService'
-import {MOCK_SERVICES} from '../../Data/LaundaryData.js'
+import {MOCK_SERVICES, DEFAULT_CATEGORY_ITEMS} from '../../Data/LaundaryData.js'
 import {Link} from 'react-router-dom'
 
 
@@ -56,18 +56,6 @@ function ServiceDetail({ service, onBack }) {
 
             <div className="bg-gray-200 rounded-xl p-4">
               <div className="flex items-center gap-3">
-                <IndianRupee className="text-blue-600" size={20} />
-                <div>
-                  <p className="text-sm text-gray-500">Price</p>
-                  <p className="font-semibold">
-                    ₹{service.price}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-gray-200 rounded-xl p-4">
-              <div className="flex items-center gap-3">
                 <Clock className="text-blue-600" size={20} />
                 <div>
                   <p className="text-sm text-gray-500">Duration</p>
@@ -92,15 +80,6 @@ function ServiceDetail({ service, onBack }) {
 
             <div className="bg-gray-200 rounded-xl p-4">
               <p className="text-sm text-gray-500 mb-1">
-                Description
-              </p>
-              <p className="font-medium">
-                {service.description}
-              </p>
-            </div>
-
-            <div className="bg-gray-200 rounded-xl p-4">
-              <p className="text-sm text-gray-500 mb-1">
                 Status
               </p>
 
@@ -113,6 +92,36 @@ function ServiceDetail({ service, onBack }) {
               >
                 {service.status}
               </span>
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
+              Items List (with price)
+            </h3>
+            <div className="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+              <table className="w-full">
+                <thead className="bg-gray-100 border-b border-gray-200">
+                  <tr>
+                    <th className="px-4 py-2.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Item</th>
+                    <th className="px-4 py-2.5 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Price</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                  {(service.items && service.items.length > 0
+                    ? service.items
+                    : (DEFAULT_CATEGORY_ITEMS[service.category] || DEFAULT_CATEGORY_ITEMS["Laundry"])
+                  ).map((item, index) => (
+                    <tr key={index} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-4 py-2.5 text-sm text-gray-800 flex items-center gap-2">
+                        <Shirt className="w-4 h-4 text-blue-500" />
+                        {item.name}
+                      </td>
+                      <td className="px-4 py-2.5 text-sm text-gray-700 text-right font-medium">₹{item.price}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -517,8 +526,6 @@ const handleEdit = (service) => {
 
     "Category",
 
-    "Price",
-
     "Duration",
 
     "Status",
@@ -678,12 +685,6 @@ const handleEdit = (service) => {
                     <td className="px-5 py-4 ">
 
                       {service.category}
-
-                    </td>
-
-                    <td className="px-5 py-4 ">
-
-                      ₹{service.price}
 
                     </td>
 

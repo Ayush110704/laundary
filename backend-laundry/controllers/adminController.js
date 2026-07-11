@@ -1,4 +1,5 @@
 import Admin from '../models/Admin.js';
+import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -69,6 +70,60 @@ export const loginAdmin = async (req, res) => {
                 role: admin.role
             }
         });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// GET ALL CUSTOMER USERS
+export const getUsers = async (req, res) => {
+    try {
+        const users = await User.find({ role: 'customer' }).sort({ createdAt: -1 });
+        res.status(200).json({ success: true, users });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// UPDATE USER DETAILS
+export const updateUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, email, phone, address, status, closedDate } = req.body;
+
+        const updateData = {};
+        if (name !== undefined) {
+            updateData.name = name;
+            const parts = name.trim().split(/\s+/);
+            updateData.firstName = parts[0] || '';
+            updateData.lastName = parts.slice(1).join(' ') || '';
+        }
+        if (email !== undefined) updateData.email = email;
+        if (phone !== undefined) updateData.phone = phone;
+        if (address !== undefined) updateData.address = address;
+        if (status !== undefined) updateData.status = status;
+        if (closedDate !== undefined) updateData.closedDate = closedDate;
+
+        const updatedUser = await User.findByIdAndUpdate(id, { $set: updateData }, { new: true });
+        if (!updatedUser) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        res.status(200).json({ success: true, user: updatedUser });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// DELETE USER
+export const deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedUser = await User.findByIdAndDelete(id);
+        if (!deletedUser) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+        res.status(200).json({ success: true, message: 'User deleted successfully!' });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

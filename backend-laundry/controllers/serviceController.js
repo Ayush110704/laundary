@@ -16,6 +16,13 @@ const seedDefaultServices = async () => {
             completedOrders: 398,
             cancelledOrders: 22,
             totalEarnings: 47760,
+            items: [
+                { name: "Tshirt", price: 80 },
+                { name: "Jeans", price: 120 },
+                { name: "Shirt", price: 100 },
+                { name: "Bed Sheet", price: 150 },
+                { name: "Shorts", price: 60 }
+            ]
         },
         {
             id: "SRV002",
@@ -30,6 +37,13 @@ const seedDefaultServices = async () => {
             completedOrders: 175,
             cancelledOrders: 10,
             totalEarnings: 43750,
+            items: [
+                { name: "Suit (2-piece)", price: 450 },
+                { name: "Silk Saree", price: 500 },
+                { name: "Woolen Blazer", price: 300 },
+                { name: "Leather Jacket", price: 600 },
+                { name: "Coat", price: 350 }
+            ]
         },
         {
             id: "SRV003",
@@ -44,6 +58,13 @@ const seedDefaultServices = async () => {
             completedOrders: 296,
             cancelledOrders: 14,
             totalEarnings: 23680,
+            items: [
+                { name: "Shirt", price: 30 },
+                { name: "Jeans", price: 30 },
+                { name: "Saree", price: 80 },
+                { name: "Kurta", price: 40 },
+                { name: "Suit", price: 50 }
+            ]
         },
         {
             id: "SRV004",
@@ -58,6 +79,13 @@ const seedDefaultServices = async () => {
             completedOrders: 86,
             cancelledOrders: 6,
             totalEarnings: 55900,
+            items: [
+                { name: "Small Rug", price: 250 },
+                { name: "Medium Carpet", price: 450 },
+                { name: "Large Carpet", price: 650 },
+                { name: "Persian Rug", price: 900 },
+                { name: "Doormat", price: 100 }
+            ]
         },
         {
             id: "SRV005",
@@ -72,6 +100,13 @@ const seedDefaultServices = async () => {
             completedOrders: 70,
             cancelledOrders: 8,
             totalEarnings: 38500,
+            items: [
+                { name: "Single Panel Curtain", price: 150 },
+                { name: "Double Panel Curtain", price: 280 },
+                { name: "Velvet Curtain", price: 350 },
+                { name: "Blackout Curtain", price: 200 },
+                { name: "Sheer Curtain", price: 120 }
+            ]
         },
         {
             id: "SRV006",
@@ -86,6 +121,13 @@ const seedDefaultServices = async () => {
             completedOrders: 136,
             cancelledOrders: 9,
             totalEarnings: 40800,
+            items: [
+                { name: "Sneakers", price: 150 },
+                { name: "Leather Shoes", price: 200 },
+                { name: "Sports Shoes", price: 180 },
+                { name: "Suede Boots", price: 350 },
+                { name: "Sandals/Heels", price: 150 }
+            ]
         }
     ];
 
@@ -95,6 +137,16 @@ const seedDefaultServices = async () => {
             console.log('Seeding default services into MongoDB...');
             await Service.insertMany(defaultServices);
             console.log('Default services seeded successfully!');
+        } else {
+            // Check if any existing service does not have the items field
+            const servicesWithoutItems = await Service.find({ items: { $exists: false } });
+            if (servicesWithoutItems.length > 0) {
+                console.log('Migrating services to add items field...');
+                for (const s of defaultServices) {
+                    await Service.updateOne({ id: s.id }, { $set: { items: s.items } });
+                }
+                console.log('Migration completed successfully!');
+            }
         }
     } catch (error) {
         console.error('Error seeding services:', error);
@@ -133,6 +185,7 @@ export const createService = async (req, res) => {
             duration,
             status: status || 'Active',
             description,
+            items: req.body.items || [],
             createdDate: new Date().toISOString().split('T')[0]
         });
 

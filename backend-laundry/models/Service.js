@@ -12,7 +12,13 @@ const ServiceSchema = new mongoose.Schema({
     totalOrders: { type: Number, default: 0 },
     completedOrders: { type: Number, default: 0 },
     cancelledOrders: { type: Number, default: 0 },
-    totalEarnings: { type: Number, default: 0 }
+    totalEarnings: { type: Number, default: 0 },
+    items: [
+        {
+            name: { type: String, required: true },
+            price: { type: Number, required: true }
+        }
+    ]
 }, { timestamps: true });
 
 const Service = mongoose.model('Service', ServiceSchema);

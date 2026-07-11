@@ -23,31 +23,53 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
-        const users = JSON.parse(localStorage.getItem("Users"));
-        console.log(users)
-        
-        const user = users.find(
-            (item) => item.Email === userdata.Email &&
-                    item.Password === userdata.Password
-        );
-
-        if (user) {
-           
-            localStorage.setItem("currentUser", JSON.stringify(user))
-
-            await Swal.fire({
-                icon: "success",
-                title: "Login Successful",
-                text: `Welcome ${user.FirstName}`,
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: userdata.Email,
+                    password: userdata.Password
+                })
             });
 
-            Navigate("/")
-        } else {
+            const data = await response.json();
+
+            if (data.success) {
+                // Construct the currentUser object in the format expected by the frontend
+                const userObj = {
+                    FirstName: data.user.firstName || data.user.name.split(' ')[0],
+                    LastName: data.user.lastName || data.user.name.split(' ').slice(1).join(' '),
+                    Email: data.user.email,
+                    number: data.user.phone,
+                    Address: data.user.address || '',
+                    token: data.token,
+                    role: data.user.role
+                };
+                localStorage.setItem("currentUser", JSON.stringify(userObj));
+
+                await Swal.fire({
+                    icon: "success",
+                    title: "Login Successful",
+                    text: `Welcome ${userObj.FirstName}`,
+                });
+
+                Navigate("/");
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Login Failed",
+                    text: data.message || "Invalid email or password",
+                });
+            }
+        } catch (error) {
+            console.error(error);
             Swal.fire({
                 icon: "error",
                 title: "Login Failed",
-                text: "Invalid email or password",
+                text: "Could not connect to the authentication server.",
             });
         }
     }

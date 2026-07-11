@@ -26,48 +26,57 @@ const SignUp = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log(text);
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          firstName: text.FirstName,
+          lastName: text.LastName,
+          email: text.Email,
+          password: text.Password,
+          phone: text.number,
+          address: text.Address
+        })
+      });
 
-    const existingData = JSON.parse(localStorage.getItem("Users")) || [];
-    
+      const data = await response.json();
 
-    const userExists = existingData.find(
-    (user) => user.Email === text.Email
-  );
+      if (data.success) {
+        setText({
+          FirstName: "",
+          LastName: "",
+          Email: "",
+          Password: "",
+          Address: "",
+          number: ""
+        });
 
-  if (userExists) {
-    Swal.fire({
-      icon: "error",
-      title: "User already exists",
-      text: "Please use another email",
-    });
+        await Swal.fire({
+          title: "Signup Successful!",
+          text: "Please login to continue",
+          icon: "success",
+          confirmButtonColor: "#10b981",
+        });
 
-    return;
-  }
-
-  existingData.push(text);
-
-
-    setText
-    ({
-      FirstName: "",
-      LastName: "",
-      Email: "",
-      Password: "",
-      Address: "",
-      number: ""
-    })
-
-    localStorage.setItem("Users", JSON.stringify(existingData));
-
-    await Swal.fire({
-      title: "Signup Successful!",
-      text: "Please login to continue",
-      icon: "success",
-      confirmButtonColor: "#10b981",
-    });
-
-    navigate("/login");
+        navigate("/login");
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Signup Failed",
+          text: data.message || "Please check your inputs and try again.",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        icon: "error",
+        title: "Signup Failed",
+        text: "Could not connect to the authentication server.",
+      });
+    }
   }
 
 
