@@ -6,7 +6,7 @@ const seedDefaultServices = async () => {
         {
             id: "SRV001",
             name: "Laundry",
-            category: "Clothes",
+            category: "Laundry",
             price: 120,
             duration: "24 Hours",
             status: "Active",
@@ -27,7 +27,7 @@ const seedDefaultServices = async () => {
         {
             id: "SRV002",
             name: "Dry Cleaning",
-            category: "Premium",
+            category: "Dry Cleaning",
             price: 250,
             duration: "48 Hours",
             status: "Active",
@@ -48,7 +48,7 @@ const seedDefaultServices = async () => {
         {
             id: "SRV003",
             name: "Ironing",
-            category: "Clothes",
+            category: "Ironing",
             price: 80,
             duration: "12 Hours",
             status: "Active",
@@ -69,7 +69,7 @@ const seedDefaultServices = async () => {
         {
             id: "SRV004",
             name: "Carpet Cleaning",
-            category: "Home Care",
+            category: "Carpet Cleaning",
             price: 650,
             duration: "72 Hours",
             status: "Active",
@@ -90,7 +90,7 @@ const seedDefaultServices = async () => {
         {
             id: "SRV005",
             name: "Curtain Cleaning",
-            category: "Home Care",
+            category: "Curtain Cleaning",
             price: 550,
             duration: "48 Hours",
             status: "Inactive",
@@ -111,7 +111,7 @@ const seedDefaultServices = async () => {
         {
             id: "SRV006",
             name: "Shoe Cleaning",
-            category: "Accessories",
+            category: "Shoe Cleaning",
             price: 300,
             duration: "24 Hours",
             status: "Active",
@@ -146,6 +146,18 @@ const seedDefaultServices = async () => {
                     await Service.updateOne({ id: s.id }, { $set: { items: s.items } });
                 }
                 console.log('Migration completed successfully!');
+            }
+            // Migrate legacy categories to match service name
+            const oldCategoryServices = await Service.find({ 
+                id: { $in: ["SRV001", "SRV002", "SRV003", "SRV004", "SRV005", "SRV006"] },
+                category: { $in: ["Clothes", "Premium", "Home Care", "Accessories"] }
+            });
+            if (oldCategoryServices.length > 0) {
+                console.log('Updating legacy service categories to match service names...');
+                for (const s of defaultServices) {
+                    await Service.updateOne({ id: s.id }, { $set: { category: s.category } });
+                }
+                console.log('Category update migration completed successfully!');
             }
         }
     } catch (error) {

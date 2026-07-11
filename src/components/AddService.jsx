@@ -50,15 +50,25 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
     }
   }, [serviceToEdit, isOpen]);
 
-  const handleCategoryChange = (cat) => {
-    const newItems = DEFAULT_CATEGORY_ITEMS[cat] || [];
+  const handleNameChange = (nameVal) => {
+    const matchedCat = Object.keys(DEFAULT_CATEGORY_ITEMS).find(
+      (cat) => cat.toLowerCase() === nameVal.toLowerCase()
+    );
+
+    const newItems = matchedCat ? DEFAULT_CATEGORY_ITEMS[matchedCat] : formData.items;
+
     setFormData({
       ...formData,
-      category: cat,
+      name: nameVal,
+      category: nameVal,
       items: newItems,
     });
-    setSelectedItemName(newItems[0]?.name || "");
+
+    if (matchedCat) {
+      setSelectedItemName(newItems[0]?.name || "");
+    }
   };
+
 
   const handleCreateItem = () => {
     if (!newItemName.trim() || !newItemPrice) {
@@ -123,15 +133,19 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const finalData = {
+      ...formData,
+      category: formData.name || formData.category || "Laundry"
+    };
 
     if (serviceToEdit) {
       onSave({
-        ...formData,
+        ...finalData,
         id: serviceToEdit.id,
       });
     } else {
       onSave({
-        ...formData,
+        ...finalData,
         id: formData.id,
       });
     }
@@ -200,64 +214,41 @@ const AddService = ({ isOpen, onClose, serviceToEdit = null, onSave }) => {
                 <input
                   type="text"
                   value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
+                  onChange={(e) => handleNameChange(e.target.value)}
                   className="w-full px-4 py-3 border rounded-xl"
                   placeholder="e.g. Laundry"
                   required
                 />
               </div>
 
-              {/* Category & Select Item Name */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block mb-2 font-medium text-gray-700">
-                    Category
-                  </label>
+              {/* Select Item Name */}
+              <div>
+                <label className="block mb-2 font-medium text-gray-700">
+                  Select Item Name
+                </label>
 
+                <div className="flex gap-2">
                   <select 
-                    value={formData.category}
-                    onChange={(e) => handleCategoryChange(e.target.value)}
-                    className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={selectedItemName}
+                    onChange={(e) => setSelectedItemName(e.target.value)}
+                    className="flex-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-0"
                   >
-                    <option value="Laundry">Laundry</option>
-                    <option value="Dry Cleaning">Dry Cleaning</option>
-                    <option value="Ironing">Ironing</option>
-                    <option value="Carpet Cleaning">Carpet Cleaning</option>
-                    <option value="Curtain Cleaning">Curtain Cleaning</option>
-                    <option value="Shoe Cleaning">Shoe Cleaning</option>
+                    {formData.items?.map((item, idx) => (
+                      <option key={idx} value={item.name}>
+                        {item.name} (₹{item.price})
+                      </option>
+                    ))}
                   </select>
-                </div>
 
-                <div>
-                  <label className="block mb-2 font-medium text-gray-700">
-                    Select Item Name
-                  </label>
-
-                  <div className="flex gap-2">
-                    <select 
-                      value={selectedItemName}
-                      onChange={(e) => setSelectedItemName(e.target.value)}
-                      className="flex-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-0"
-                    >
-                      {formData.items?.map((item, idx) => (
-                        <option key={idx} value={item.name}>
-                          {item.name} (₹{item.price})
-                        </option>
-                      ))}
-                    </select>
-
-                    <button
-                      type="button"
-                      onClick={handleDeleteItem}
-                      disabled={!selectedItemName}
-                      className="px-4 py-3 bg-red-100 hover:bg-red-200 text-red-600 font-semibold rounded-xl transition flex items-center justify-center shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                      title="Delete selected item"
-                    >
-                      Delete
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={handleDeleteItem}
+                    disabled={!selectedItemName}
+                    className="px-4 py-3 bg-red-100 hover:bg-red-200 text-red-600 font-semibold rounded-xl transition flex items-center justify-center shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Delete selected item"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
 
