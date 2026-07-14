@@ -191,42 +191,35 @@ if (swalResult.isConfirmed) {
 
 
   const handleAddItem = (e) => {
+  e.preventDefault();
+  const newErrors = {};
 
-    const newErrors = {};
-
-  if (!formData.serviceType) {
-    newErrors.serviceType = "Select service type";
-  }
-
-  if (!formData.clothType.trim()) {
-    newErrors.clothType = "Clothes type is required";
-  }
-
-  if (!formData.quantity.toString().trim()) {
-    newErrors.quantity = "Enter clothes quantity";
-  } else if (Number(formData.quantity) <= 0) {
-    newErrors.quantity = "Quantity must be greater than 0";
+  if (!formData.serviceType) newErrors.serviceType = "Select service type";
+  if (!formData.clothType.trim()) newErrors.clothType = "Clothes type is required";
+  if (!formData.quantity.toString().trim() || Number(formData.quantity) <= 0) {
+    newErrors.quantity = "Enter a valid quantity";
   }
 
   if (Object.keys(newErrors).length > 0) {
-    setErrors((prev) => ({
-      ...prev,
-      ...newErrors,
-    }));
+    setErrors((prev) => ({ ...prev, ...newErrors }));
     return;
   }
-    e.preventDefault();
-    // const checkoutData = getCheckoutData();
 
-    const newItems = {
-      serviceType: formData.serviceType,
-      clothType: formData.clothType,
-      quantity: Number(formData.quantity),
-      instructions: formData.instructions,
+  // --- FIX STARTS HERE ---
+  // Find the actual item object to get the price
+  const selectedItem = dropdownItems.find(item => item.name === formData.clothType);
+  const itemPrice = selectedItem ? Number(selectedItem.price) : 0;
+  // --- FIX ENDS HERE ---
 
-    };
+  const newItems = {
+    serviceType: formData.serviceType,
+    clothType: formData.clothType,
+    quantity: Number(formData.quantity),
+    price: itemPrice, 
+    instructions: formData.instructions,
+  };
 
-     const updatedCheckoutData = {
+  const updatedCheckoutData = {
     ...checkoutData,
     items: [...(checkoutData.items || []), newItems],
   };
@@ -234,18 +227,13 @@ if (swalResult.isConfirmed) {
   setCheckoutData(updatedCheckoutData);
   saveCheckoutData(updatedCheckoutData);
 
-  // setCheckoutItems(updatedCheckoutData.items);
-    // setCheckoutItems(updatedCheckoutData.items);
-    console.log(getCheckoutData());
-
- setFormData((prev) => ({
-  ...prev,
-  serviceType: "",
-  clothType: "",
-  quantity: "",
-  instructions: "",
-}));
-  }
+  setFormData((prev) => ({
+    ...prev,
+    clothType: "", // Only reset relevant fields
+    quantity: "",
+    instructions: "",
+  }));
+};
 
   const removeItems = (index) => {
     const checkoutData = getCheckoutData();

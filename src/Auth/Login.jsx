@@ -37,17 +37,21 @@ const Login = () => {
 
             const data = await response.json();
 
-            if (data.success) {
-                // Construct the currentUser object in the format expected by the frontend
-                const userObj = {
-                    FirstName: data.user.firstName || data.user.name.split(' ')[0],
-                    LastName: data.user.lastName || data.user.name.split(' ').slice(1).join(' '),
-                    Email: data.user.email,
-                    number: data.user.phone,
-                    Address: data.user.address || '',
-                    token: data.token,
-                    role: data.user.role
-                };
+                if (data.success) {
+    // UPDATED: Added _id from data.user
+    const userObj = {
+        // Ensure this matches the field name from your server response
+        _id: data.user.id || data.user._id, 
+        FirstName: data.user.firstName,
+        LastName: data.user.lastName,
+        Email: data.user.email,
+        // ... rest of your fields
+        
+        number: data.user.phone,
+        Address: data.user.address || '',
+        token: data.token,
+        role: data.user.role
+    };
                 localStorage.setItem("currentUser", JSON.stringify(userObj));
 
                 await Swal.fire({

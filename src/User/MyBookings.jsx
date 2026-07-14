@@ -1,146 +1,102 @@
-import React, { useState } from 'react';
+ import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { 
   FileText, Truck, Clock, Sparkles, ChevronRight, ArrowLeft, 
   User, Phone, MapPin, Receipt, RotateCw, Headset, 
   Calendar, CreditCard, Download, Tag
 } from 'lucide-react';
-import UserLayout from './UserLayout'; // ADD THIS IMPORT
-
-// Mock Data representing multiple recent orders (No images, URLs, or notes)
-const mockOrdersHistory = [
-  {
-    orderNo: "LND8393-01",
-    status: "DELIVERED",
-    statusColor: "bg-green-50 text-green-700 border-green-200",
-    date: "14 April 2026 at 01:24 pm",
-    pickupDate: "14 Apr 2026",
-    timeSlot: "10:00 AM To 12:00 PM",
-    deliveryDate: "16 Apr 2026",
-    deliveryTimeSlot: "04:00 PM To 06:00 PM",
-    paymentMethod: "COD",
-    paymentStatus: "PAID",
-    transactionId: "TXN-938402948",
-    customer: {
-      name: "John Doe",
-      mobile: "+91 98765 43210"
-    },
-    items: [
-      {
-        category: "WASH & IRON",
-        id: "LND8393-01-W02",
-        name: "Premium Shirts & Trousers",
-        quantity: 5,
-        price: 350,
-        unitPrice: 70,
-        estDelivery: "24-48 Hours"
-      },
-      {
-        category: "DRY CLEANING",
-        id: "LND8393-01-D15",
-        name: "Heavy Winter Jacket / Coat",
-        quantity: 1,
-        price: 60,
-        unitPrice: 60,
-        estDelivery: "48-72 Hours"
-      }
-    ],
-    summary: {
-      subtotal: 410,
-      deliveryCharges: 120,
-      discount: 50,
-      tax: 25,
-      grandTotal: 505
-    },
-    shippingAddress: "123, Sample Address, Andheri East, Mumbai - 400069"
-  },
-  {
-    orderNo: "LND8393-02",
-    status: "PROCESSING",
-    statusColor: "bg-blue-50 text-blue-700 border-blue-200",
-    date: "02 July 2026 at 09:15 am",
-    pickupDate: "02 Jul 2026",
-    timeSlot: "08:00 AM To 10:00 AM",
-    deliveryDate: "04 Jul 2026",
-    deliveryTimeSlot: "02:00 PM To 04:00 PM",
-    paymentMethod: "UPI",
-    paymentStatus: "PAID",
-    transactionId: "TXN-938402999",
-    customer: {
-      name: "John Doe",
-      mobile: "+91 98765 43210"
-    },
-    items: [
-      {
-        category: "WASH & FOLD",
-        id: "LND8393-02-F01",
-        name: "Casual T-Shirts & Shorts",
-        quantity: 10,
-        price: 300,
-        unitPrice: 30,
-        estDelivery: "24 Hours"
-      }
-    ],
-    summary: {
-      subtotal: 300,
-      deliveryCharges: 50,
-      discount: 0,
-      tax: 15,
-      grandTotal: 365
-    },
-    shippingAddress: "123, Sample Address, Andheri East, Mumbai - 400069"
-  },
-  {
-    orderNo: "LND8393-03",
-    status: "PENDING",
-    statusColor: "bg-amber-50 text-amber-700 border-amber-200",
-    date: "03 July 2026 at 10:00 am",
-    pickupDate: "04 Jul 2026",
-    timeSlot: "11:00 AM To 01:00 PM",
-    deliveryDate: "06 Jul 2026",
-    deliveryTimeSlot: "11:00 AM To 01:00 PM",
-    paymentMethod: "COD",
-    paymentStatus: "PENDING",
-    transactionId: "N/A",
-    customer: {
-      name: "John Doe",
-      mobile: "+91 98765 43210"
-    },
-    items: [
-      {
-        category: "DRY CLEANING",
-        id: "LND8393-03-D02",
-        name: "Silk Saree / Designer Suit",
-        quantity: 2,
-        price: 400,
-        unitPrice: 200,
-        estDelivery: "72 Hours"
-      }
-    ],
-    summary: {
-      subtotal: 400,
-      deliveryCharges: 50,
-      discount: 0,
-      tax: 20,
-      grandTotal: 470
-    },
-    shippingAddress: "123, Sample Address, Andheri East, Mumbai - 400069"
-  }
-];
+import UserLayout from './UserLayout';
 
 const MyOrders = () => {
   const [activeTab, setActiveTab] = useState('All');
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [orders, setOrders] = useState([]);
   const [viewingAll, setViewingAll] = useState(false);
+ useEffect(() => {
+    const fetchOrders = async () => {
+      setIsLoading(true);
+      try {
+        const userStr = localStorage.getItem("currentUser");
+        if (!userStr) {
+          setIsLoading(false);
+          return;
+        }
 
+        const currentUser = JSON.parse(userStr);
+        const userId = currentUser._id || currentUser.id || currentUser.user?._id;
+
+        if (!userId) {
+          setIsLoading(false);
+          return;
+        }
+
+        // Use 'res' here
+        const res = await axios.get(`http://localhost:5000/api/orders/user/${userId}`);
+        
+        // Map using 'res.data' instead of 'response.data'
+        const formattedOrders = (res.data || []).map(order => ({
+          orderNo: order._id ? order._id.slice(-8).toUpperCase() : "N/A",
+          status: order.status || "Pending",
+          statusColor: order.status?.toLowerCase() === 'delivered' 
+              ? "bg-green-50 text-green-700 border-green-200" 
+              : order.status?.toLowerCase() === 'processing' 
+              ? "bg-blue-50 text-blue-700 border-blue-200"
+              : "bg-amber-50 text-amber-700 border-amber-200",
+          date: order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : "N/A",
+          customer: { name: order.customerName || "Customer", mobile: order.phone || "N/A" },
+          shippingAddress: order.address || order.shippingAddress || order.deliveryAddress || "No address provided",
+          pickupDate: order.pickupDate || order.scheduledDate || order.pickup_date || 'Not Scheduled',
+          timeSlot: order.pickupTimeSlot || order.timeSlot || order.pickup_time || 'N/A',
+          deliveryDate: order.deliveryDate || order.delivery_date || 'Not Scheduled',
+          deliveryTimeSlot: order.deliveryTimeSlot || order.delivery_time || 'N/A',
+          paymentMethod: order.paymentMethod || "COD",
+          paymentStatus: order.paymentStatus || "PENDING",
+          transactionId: order.transactionId || "N/A",
+          items: (order.items || []).map(i => ({
+            category: i.serviceType || "Service",
+            id: "ITEM-001",
+            name: i.clothType || "Item",
+            quantity: i.quantity || 0,
+            price: i.price || 0,
+            unitPrice: (i.price / (i.quantity || 1)),
+            estDelivery: "24-48 Hours"
+          })),
+          summary: {
+            subtotal: order.totalAmount || 0,
+            deliveryCharges: order.deliveryCharges || 0,
+            discount: order.discount || 0,
+            tax: order.tax || 0,
+            grandTotal: order.totalAmount || 0
+          }
+        }));
+
+        setOrders(formattedOrders);
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  // Use the same handleOrderClick, handleBackToList, and JSX render logic 
+  // from the code you just pasted in your previous message.
+  // The structure above ensures that 'order.summary.grandTotal' 
+  // will now exist and be populated correctly!
+
+  // ... (Paste your full UI JSX here, it will now work perfectly)
   const handleOrderClick = (order) => {
-    setIsLoading(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setTimeout(() => {
-      setSelectedOrder(order);
-      setIsLoading(false);
-    }, 450);
-  };
+  console.log("Selected Order Data:", order); // ADD THIS LINE
+  setIsLoading(true);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => {
+    setSelectedOrder(order);
+    setIsLoading(false);
+  }, 450);
+};
 
   const handleBackToList = () => {
     setIsLoading(true);
@@ -150,7 +106,7 @@ const MyOrders = () => {
     }, 400);
   };
 
-  const filteredOrders = mockOrdersHistory.filter(order => {
+  const filteredOrders = orders.filter(order => {
     if (activeTab === 'All') return true;
     return order.status.toLowerCase() === activeTab.toLowerCase();
   });

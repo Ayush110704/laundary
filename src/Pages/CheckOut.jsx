@@ -26,6 +26,7 @@ const CheckOut = () => {
     { id: 4, title: "Payment" },
   ];
 
+  
   const handleNext = async () => {
   const result = validateStep(currentStep);
 
