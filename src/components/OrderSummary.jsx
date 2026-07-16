@@ -22,7 +22,7 @@ const OrderSummary = ({ Step, checkoutData }) => {
 
 
 
-const handleConfirm = async () => {
+ const handleConfirm = async () => {
     const result = validateCheckout();
     if (!result.success) {
         Swal.fire("Error", result.message, "error");
@@ -31,25 +31,34 @@ const handleConfirm = async () => {
 
     // 2. Prepare the payload to match your MongoDB Schema
     const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const selectedAddress = checkoutData.address || {};
+    const formattedAddress = [
+        selectedAddress.addressLine1 || selectedAddress.address,
+        selectedAddress.watermark,
+        selectedAddress.city,
+        selectedAddress.state,
+        selectedAddress.pincode
+    ].filter(Boolean).join(", ");
     
     const orderData = {
-        userId: currentUser?._id || "guest", // Ensure you have user ID here
+        userId: currentUser?._id || currentUser?.id || currentUser?.user?._id || "guest",
         customerName: `${currentUser?.FirstName || ""} ${currentUser?.LastName || ""}`,
-        email: currentUser?.Email || "",
-        phone: currentUser?.number || "",
+        email: currentUser?.Email || currentUser?.email || "",
+        phone: selectedAddress?.phone || currentUser?.phone || currentUser?.number || "",
         items: checkoutData.items,
         totalAmount: grandTotal,
+        address: formattedAddress || selectedAddress?.address || "",
         paymentMethod: checkoutData.payment?.method || "cod"
     };
 
     try {
         // 3. Send to backend
-        await axios.post("http://localhost:5000/api/orders", orderData);
+        const response = await axios.post("http://localhost:5000/api/orders", orderData);
         
         const swalResult = await Swal.fire({
             icon: "success",
             title: "Booking Successful!",
-            text: "Your booking has been submitted to our database.",
+            text: response.data?.message || "Your booking has been submitted to our database.",
             confirmButtonText: "Continue",
             confirmButtonColor: "#06b6d4",
         });
@@ -59,7 +68,7 @@ const handleConfirm = async () => {
             navigate("/user-orders");
         }
     } catch (error) {
-        Swal.fire("Error", "Could not save order. Please try again.", "error");
+        Swal.fire("Error", error.response?.data?.message || "Could not save order. Please try again.", "error");
         console.error(error);
     }
 };

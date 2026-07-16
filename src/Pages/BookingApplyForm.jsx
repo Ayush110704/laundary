@@ -33,16 +33,38 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData, setCurrentStep, }) =>
 
   // Load user data from localStorage on component mount and fetch DB services
   useEffect(() => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-    if (currentUser) {
-      setFormData((prev) => ({
-        ...prev,
-        fullName: `${currentUser.FirstName} ${currentUser.LastName}`,
-        email: currentUser.Email,
-        phone: currentUser.number,
-      }));
-    }
+    const loadCurrentUserProfile = async () => {
+      const userId = currentUser?.id || currentUser?._id;
+
+      if (!userId) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/auth/profile/${userId}`);
+        const result = await res.json();
+
+        if (res.ok && result?.user) {
+          const { firstName, lastName, email, phone } = result.user;
+          const fullName = [firstName, lastName].filter(Boolean).join(" ");
+
+          if (fullName || email || phone) {
+            setFormData((prev) => ({
+              ...prev,
+              fullName,
+              email: email || "",
+              phone: phone || "",
+            }));
+          }
+        }
+      } catch (error) {
+        console.error("Error loading current user profile in BookingApplyForm:", error);
+      }
+    };
+
+    loadCurrentUserProfile();
 
     const fetchServices = async () => {
       try {

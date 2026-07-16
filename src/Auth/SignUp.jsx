@@ -1,3 +1,4 @@
+ import axios from 'axios';
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Form, Link ,useNavigate} from 'react-router-dom';
@@ -23,61 +24,39 @@ const SignUp = () => {
   }
 
 
+   const handleSubmit = async (e) => {
+  e.preventDefault();
 
-  const handleSubmit = async(e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          firstName: text.FirstName,
-          lastName: text.LastName,
-          email: text.Email,
-          password: text.Password,
-          phone: text.number,
-          address: text.Address
-        })
+  try {
+    // Map your 'text' state fields to match the backend expectations
+    const payload = {
+      firstName: text.FirstName,
+      lastName: text.LastName,
+      email: text.Email,
+      password: text.Password,
+      phone: text.number,
+      address: text.Address
+    };
+
+    const response = await axios.post("http://localhost:5000/api/auth/register", payload);
+
+    if (response.data.success) {
+      await Swal.fire({
+        title: "Signup Successful!",
+        text: "Please login to continue",
+        icon: "success",
+        confirmButtonColor: "#10b981",
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setText({
-          FirstName: "",
-          LastName: "",
-          Email: "",
-          Password: "",
-          Address: "",
-          number: ""
-        });
-
-        await Swal.fire({
-          title: "Signup Successful!",
-          text: "Please login to continue",
-          icon: "success",
-          confirmButtonColor: "#10b981",
-        });
-
-        navigate("/login");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Signup Failed",
-          text: data.message || "Please check your inputs and try again.",
-        });
-      }
-    } catch (error) {
-      console.error(error);
-      Swal.fire({
-        icon: "error",
-        title: "Signup Failed",
-        text: "Could not connect to the authentication server.",
-      });
+      navigate("/login");
     }
+  } catch (err) {
+    Swal.fire({
+      icon: "error",
+      title: "Signup Failed",
+      text: err.response?.data?.message || "Something went wrong",
+    });
   }
+};
 
 
 

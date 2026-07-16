@@ -1,3 +1,4 @@
+ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import "./App.css"; 
 import Contact from "./Pages/Contact";
@@ -16,7 +17,7 @@ import SignUp from './Auth/SignUp';
 import UserProfile from './User/UserProfile';
 import AdminLayout from "./components/Admin/AdminLayout";
 import UserManagement from "./components/Admin/UserManagement";
-import OrderManagement, { MOCK_BOOKINGS, OrderProvider } from "./components/Admin/OrderManagement"; 
+import OrderManagement, { OrderProvider } from "./components/Admin/OrderManagement"; 
 import Payments from "./components/Admin/Payments";
 import Analytics from "./components/Admin/Analytics";
 import ServiceManagement from './components/Admin/ServiceManagement';
@@ -29,6 +30,7 @@ import MyBookings from "./User/MyBookings";
 import UserLayout from "./User/UserLayout";
 import AdminRegister from "./components/Admin/AdminRegistration";
 import AdminLogin from "./Auth/AdminLogin";
+import ResetPassword from './Pages/ResetPassword';
 
 
 
@@ -36,7 +38,6 @@ import AdminLogin from "./Auth/AdminLogin";
 import TermsCondition from "./Pages/TermsCondition";
 import { useLayoutEffect } from "react";
 import ForgotPassword from './Auth/ForgotPassword';
-import InquiryManagement from "./components/Admin/InquiryManagement";
 
 function App() {
   const location = useLocation();
@@ -48,7 +49,7 @@ function App() {
   }, [pathname]);
    
   // Only hide navbar/footer for login and signup pages
-  const hideLayoutRoutes = ["/login", "/signup","/forgot-password","/admin-login","/admin-register"];
+  const hideLayoutRoutes = ["/login", "/signup","/forgot-password","/admin-login","/admin-register" , "/reset-password"];
   
   //  Admin routes 
   const adminRoutes = [
@@ -68,6 +69,7 @@ function App() {
 
   return (
     <> 
+      <GoogleOAuthProvider clientId="830093525670-h7pm20fvt6klvgvk878anlipf6t8m22p.apps.googleusercontent.com">
       {showNavbarAndFooter && <Navbar />}
 
       <Routes>
@@ -88,7 +90,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword/>} />
         <Route path="/admin-register" element={<AdminRegister/>} />
         <Route path="/admin-login" element={<AdminLogin/>} />
-        
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         
         {/* User Routes */}
@@ -103,7 +105,7 @@ function App() {
         <Route
           path="/admin-dashboard" 
           element={
-            <OrderProvider initialData={MOCK_BOOKINGS}>
+            <OrderProvider>
               <AdminLayout />
             </OrderProvider>
           }
@@ -114,12 +116,13 @@ function App() {
           <Route path="services" element={<ServiceManagement />} />
           <Route path="payments" element={<Payments />} /> 
           <Route path="analytics" element={<Analytics />} />
-          <Route path="inquiries" element={<InquiryManagement/>} />
         </Route>
       </Routes>
  
       {showNavbarAndFooter && <Footer />}
+      </GoogleOAuthProvider>
     </>
+    
   );
 }
 

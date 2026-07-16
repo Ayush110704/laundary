@@ -1,16 +1,24 @@
-import React, { useState } from "react";
+ import React, { useState } from "react";
 import { Mail, ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 import { motion } from "framer-motion";
 import {Link} from "react-router-dom";
-
+import axios from "axios";
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
 
-  const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(email);
-    setEmail("");
-  };
+    try {
+        const response = await axios.post("http://localhost:5000/api/auth/forgot-password", { email });
+        if (response.data.success) {
+            alert("Check your email for the reset link!");
+        }
+    } catch (error) {
+        // THIS WILL SHOW THE REAL ERROR
+        console.error("Full error details:", error.response?.data || error.message);
+        alert("Failed to send reset link. Check console for details.");
+    }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200 px-4 py-10">

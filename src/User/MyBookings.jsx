@@ -1,4 +1,4 @@
- import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { 
   FileText, Truck, Clock, Sparkles, ChevronRight, ArrowLeft, 
@@ -11,75 +11,115 @@ const MyOrders = () => {
   const [activeTab, setActiveTab] = useState('All');
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchStatus, setFetchStatus] = useState('idle');
+  const [fetchError, setFetchError] = useState('');
   const [orders, setOrders] = useState([]);
   const [viewingAll, setViewingAll] = useState(false);
- useEffect(() => {
-    const fetchOrders = async () => {
+  const ordersSignatureRef = useRef("");
+
+  const fetchOrders = async (silent = false) => {
+    if (!silent) {
       setIsLoading(true);
-      try {
-        const userStr = localStorage.getItem("currentUser");
-        if (!userStr) {
+      setFetchStatus('loading');
+      setFetchError('');
+    }
+
+    try {
+      const userStr = localStorage.getItem("currentUser");
+      if (!userStr) {
+        if (!silent) {
           setIsLoading(false);
-          return;
+          setFetchStatus('idle');
         }
+        return;
+      }
 
-        const currentUser = JSON.parse(userStr);
-        const userId = currentUser._id || currentUser.id || currentUser.user?._id;
+      const currentUser = JSON.parse(userStr);
+      const userId = currentUser._id || currentUser.id || currentUser.user?._id;
 
-        if (!userId) {
+      if (!userId) {
+        if (!silent) {
           setIsLoading(false);
-          return;
+          setFetchStatus('idle');
         }
+        return;
+      }
 
-        // Use 'res' here
-        const res = await axios.get(`http://localhost:5000/api/orders/user/${userId}`);
-        
-        // Map using 'res.data' instead of 'response.data'
-        const formattedOrders = (res.data || []).map(order => ({
-          orderNo: order._id ? order._id.slice(-8).toUpperCase() : "N/A",
+      const res = await axios.get(`http://localhost:5000/api/orders/user/${userId}`);
+
+      const apiOrders = Array.isArray(res.data) ? res.data : [];
+      const normalizedOrders = apiOrders.map((order, index) => {
+        const sourceItems = Array.isArray(order.items) ? order.items : [];
+
+        return {
+          orderNo: order.orderNo || (order._id ? order._id.slice(-8).toUpperCase() : `ORD-${index + 1}`),
           status: order.status || "Pending",
-          statusColor: order.status?.toLowerCase() === 'delivered' 
-              ? "bg-green-50 text-green-700 border-green-200" 
-              : order.status?.toLowerCase() === 'processing' 
-              ? "bg-blue-50 text-blue-700 border-blue-200"
-              : "bg-amber-50 text-amber-700 border-amber-200",
-          date: order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : "N/A",
-          customer: { name: order.customerName || "Customer", mobile: order.phone || "N/A" },
+          statusColor: order.statusColor || (
+            order.status?.toLowerCase() === 'delivered' 
+                ? "bg-green-50 text-green-700 border-green-200" 
+                : order.status?.toLowerCase() === 'processing' 
+                ? "bg-blue-50 text-blue-700 border-blue-200"
+                : "bg-amber-50 text-amber-700 border-amber-200"
+          ),
+          date: order.date || (order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : "N/A"),
+          customer: {
+            name: order.customer?.name || order.customerName || "Customer",
+            mobile: order.customer?.mobile || order.phone || "N/A"
+          },
           shippingAddress: order.address || order.shippingAddress || order.deliveryAddress || "No address provided",
           pickupDate: order.pickupDate || order.scheduledDate || order.pickup_date || 'Not Scheduled',
-          timeSlot: order.pickupTimeSlot || order.timeSlot || order.pickup_time || 'N/A',
+          timeSlot: order.timeSlot || order.pickupTimeSlot || order.pickup_time || 'N/A',
           deliveryDate: order.deliveryDate || order.delivery_date || 'Not Scheduled',
           deliveryTimeSlot: order.deliveryTimeSlot || order.delivery_time || 'N/A',
           paymentMethod: order.paymentMethod || "COD",
           paymentStatus: order.paymentStatus || "PENDING",
           transactionId: order.transactionId || "N/A",
-          items: (order.items || []).map(i => ({
-            category: i.serviceType || "Service",
-            id: "ITEM-001",
-            name: i.clothType || "Item",
-            quantity: i.quantity || 0,
-            price: i.price || 0,
-            unitPrice: (i.price / (i.quantity || 1)),
-            estDelivery: "24-48 Hours"
+          items: sourceItems.map((i, itemIndex) => ({
+            category: i.category || i.serviceType || "Service",
+            id: i.id || i._id || `ITEM-${itemIndex + 1}`,
+            name: i.name || i.clothType || "Item",
+            quantity: Number(i.quantity || 0),
+            price: Number(i.price || 0),
+            unitPrice: Number(i.unitPrice ?? (Number(i.quantity || 0) ? Number(i.price || 0) / Number(i.quantity || 1) : Number(i.price || 0))),
+            estDelivery: i.estDelivery || "24-48 Hours"
           })),
           summary: {
-            subtotal: order.totalAmount || 0,
-            deliveryCharges: order.deliveryCharges || 0,
-            discount: order.discount || 0,
-            tax: order.tax || 0,
-            grandTotal: order.totalAmount || 0
+            subtotal: order.summary?.subtotal ?? order.totalAmount ?? 0,
+            deliveryCharges: order.summary?.deliveryCharges ?? order.deliveryCharges ?? 0,
+            discount: order.summary?.discount ?? order.discount ?? 0,
+            tax: order.summary?.tax ?? order.tax ?? 0,
+            grandTotal: order.summary?.grandTotal ?? order.totalAmount ?? 0
           }
-        }));
+        };
+      });
 
-        setOrders(formattedOrders);
-      } catch (err) {
-        console.error("Error fetching orders:", err);
-      } finally {
+      const nextSignature = JSON.stringify(normalizedOrders);
+      if (nextSignature !== ordersSignatureRef.current) {
+        ordersSignatureRef.current = nextSignature;
+        setOrders(normalizedOrders);
+        setSelectedOrder((prevSelected) => {
+          if (!prevSelected) return prevSelected;
+          return normalizedOrders.find((order) => order.orderNo === prevSelected.orderNo) || prevSelected;
+        });
+      }
+      setFetchStatus('success');
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+      if (!silent) {
+        setFetchError(err.response?.data?.message || "Unable to fetch bookings right now.");
+        setFetchStatus('error');
+      }
+    } finally {
+      if (!silent) {
         setIsLoading(false);
       }
-    };
+    }
+  };
 
+  useEffect(() => {
     fetchOrders();
+    const interval = setInterval(() => fetchOrders(true), 15000);
+    return () => clearInterval(interval);
   }, []);
 
   // Use the same handleOrderClick, handleBackToList, and JSX render logic 
@@ -323,10 +363,10 @@ const MyOrders = () => {
 
           {/* Grid Dashboard Item Layouts */}
           <div className="space-y-4">
-            {filteredOrders.slice(0, viewingAll ? filteredOrders.length : 3).map((order) => (
-              <div 
-                key={order.orderNo}
-                onClick={() => handleOrderClick(order)}
+            {filteredOrders.slice(0, viewingAll ? filteredOrders.length : 3).map((order, index) => (
+  <div 
+    key={`${order.orderNo}-${index}`} // <--- CHANGE THIS LINE HERE
+    onClick={() => handleOrderClick(order)}
                 className="group bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-blue-200 hover:shadow-md cursor-pointer transition-all duration-200"
               >
                 {/* Context Summary Fields */}
@@ -365,9 +405,15 @@ const MyOrders = () => {
               </div>
             ))}
 
-            {filteredOrders.length === 0 && (
+            {fetchStatus === 'success' && filteredOrders.length === 0 && (
               <div className="bg-white border rounded-2xl p-12 text-center text-gray-400 space-y-2">
                 <p className="font-semibold">No orders found in this category.</p>
+              </div>
+            )}
+
+            {fetchStatus === 'error' && !isLoading && (
+              <div className="bg-white border rounded-2xl p-12 text-center text-red-500 space-y-2">
+                <p className="font-semibold">{fetchError}</p>
               </div>
             )}
           </div>
