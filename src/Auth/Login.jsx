@@ -1,4 +1,4 @@
- import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import React, { useState , useEffect } from "react";
 import { motion } from "framer-motion";
@@ -23,24 +23,56 @@ const Login = () => {
         setUserdata({...userdata, [e.target.name]: e.target.value})
     }
 
-     // Add this at the top if you haven't already
+    const normalizeAndStoreUser = (user) => {
+        if (!user) return;
+        const firstName = user.firstName || user.FirstName || '';
+        const lastName = user.lastName || user.LastName || '';
+        const email = user.email || user.Email || '';
+        const phone = user.phone || user.number || user.mobile || '';
+        const address = user.address || user.Address || '';
+        const joiningDate = user.createdAt || user.joiningDate || new Date().toISOString();
+        
+        const normalized = {
+            ...user,
+            id: user._id || user.id,
+            _id: user._id || user.id,
+            firstName,
+            FirstName: firstName,
+            lastName,
+            LastName: lastName,
+            email,
+            Email: email,
+            phone,
+            number: phone,
+            mobile: phone,
+            address,
+            Address: address,
+            dob: user.dob || '',
+            createdAt: joiningDate,
+            joiningDate: new Date(joiningDate).toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            })
+        };
+        localStorage.setItem("currentUser", JSON.stringify(normalized));
+        return normalized;
+    };
 
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        console.log("Attempting login with:", userdata);
+        
+        try {
+            // Send credentials to your backend API route
+            const response = await axios.post("http://localhost:5000/api/auth/login", {
+                email: userdata.Email,
+                password: userdata.Password
+            });
 
-// Replace your handleLogin function with this:
- const handleLogin = async (e) => {
-    e.preventDefault();
-    console.log("Attempting login with:", userdata);
-    
-    try {
-      // Send credentials to your backend API route
-      const response = await axios.post("http://localhost:5000/api/auth/login", {
-        email: userdata.Email,
-        password: userdata.Password
-      });
-
-      if (response.data.success) {
-        // Save the correct user object returned by the server
-        localStorage.setItem("currentUser", JSON.stringify(response.data.user));
+            if (response.data.success) {
+                // Save the correct user object returned by the server
+                normalizeAndStoreUser(response.data.user);
 
         await Swal.fire({
           icon: "success",
@@ -228,7 +260,7 @@ const Login = () => {
                 });
 
                 if (response.data.success) {
-                    localStorage.setItem("currentUser", JSON.stringify(response.data.user));
+                    normalizeAndStoreUser(response.data.user);
                     await Swal.fire({ icon: "success", title: "Logged in!", timer: 1500 });
                     Navigate("/");
                 } 
@@ -251,7 +283,7 @@ const Login = () => {
                         });
 
                         if (signupResponse.data.success) {
-                            localStorage.setItem("currentUser", JSON.stringify(signupResponse.data.user));
+                            normalizeAndStoreUser(signupResponse.data.user);
                             Swal.fire("Success!", "Account created successfully.", "success");
                             Navigate("/");
                         }

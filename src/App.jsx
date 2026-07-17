@@ -31,6 +31,7 @@ import UserLayout from "./User/UserLayout";
 import AdminRegister from "./components/Admin/AdminRegistration";
 import AdminLogin from "./Auth/AdminLogin";
 import ResetPassword from './Pages/ResetPassword';
+import InquiryManagement from "./components/Admin/InquiryManagement";
 
 
 
@@ -38,6 +39,13 @@ import ResetPassword from './Pages/ResetPassword';
 import TermsCondition from "./Pages/TermsCondition";
 import { useLayoutEffect } from "react";
 import ForgotPassword from './Auth/ForgotPassword';
+
+// Helper component to redirect underscore admin route to hyphen admin route
+const AdminDashboardRedirect = () => {
+  const location = useLocation();
+  const targetPath = location.pathname.replace('/admin_dashboard', '/admin-dashboard');
+  return <Navigate to={targetPath} replace />;
+};
 
 function App() {
   const location = useLocation();
@@ -58,7 +66,8 @@ function App() {
     "/admin-dashboard/orders", 
     "/admin-dashboard/services", 
     "/admin-dashboard/payments", 
-    "/admin-dashboard/analytics"
+    "/admin-dashboard/analytics",
+    "/admin-dashboard/inquiries"
   ];
    
   const hideLayout = hideLayoutRoutes.includes(location.pathname);
@@ -101,6 +110,9 @@ function App() {
         <Route path="/user-tracking" element={<OrderTracking />} />
         <Route path="/user-terms" element={<TermsCondition />} />
 
+        {/* Redirect for underscore typo in admin dashboard */}
+        <Route path="/admin_dashboard/*" element={<AdminDashboardRedirect />} />
+
         {/*  ADMIN ROUTES WITH ADMINLAYOUT  */}
         <Route
           path="/admin-dashboard" 
@@ -116,6 +128,7 @@ function App() {
           <Route path="services" element={<ServiceManagement />} />
           <Route path="payments" element={<Payments />} /> 
           <Route path="analytics" element={<Analytics />} />
+          <Route path="inquiries" element={<InquiryManagement />} />
         </Route>
       </Routes>
  
@@ -127,3 +140,4 @@ function App() {
 }
 
 export default App;
+

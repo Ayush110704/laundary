@@ -1,4 +1,7 @@
- import nodemailer from 'nodemailer';
+
+
+
+import nodemailer from 'nodemailer';
 import { OAuth2Client } from 'google-auth-library';
 import User from '../models/User.js'; // Added .js
 import bcrypt from 'bcryptjs';
@@ -70,9 +73,14 @@ res.status(200).json({
     token,
     user: {
         id: user._id,
-        firstName: user.firstName, // Use firstName
-        lastName: user.lastName,   // Use lastName
-        email: user.email
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone || '',
+        address: user.address || 'Not specified',
+        dob: user.dob || '',
+        createdAt: user.createdAt
     }
 }); 
 

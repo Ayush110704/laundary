@@ -1,4 +1,4 @@
- import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
     firstName: { type: String, required: true },
@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: false }, // Changed to false
     phone: { type: String, required: false },    // Changed to false
     address: { type: String, default: 'Not specified' },
+    dob: { type: String, default: '' },
     role: { type: String, default: 'customer' }
 }, { timestamps: true });
 

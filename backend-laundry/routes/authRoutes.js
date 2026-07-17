@@ -1,4 +1,4 @@
-  import express from 'express';
+import express from 'express';
  import { 
     registerUser, 
     loginUser, 
@@ -8,7 +8,7 @@
     resetPassword, 
     getUserProfile,
     completeGoogleSignup // ADD THIS IMPORT
-} from '../controllers/authController.js';
+} from '../controllers/authcontroller.js';
 const router = express.Router();
 
 // AUTHENTICATION ROUTES

@@ -93,20 +93,20 @@ function RevenueChart({ data }) {
             {data.map((item, index) => {
               const heightPercentage = maxValue > 0 ? (item.value / maxValue) * 100 : 0;
               return (
-                <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                  <div className="relative w-full group">
+                <div key={index} className="flex-1 h-full flex flex-col items-center gap-2">
+                  <div className="relative w-full flex-1 group">
                     <div 
-                      className="w-full bg-blue-500 rounded-t-lg transition-all duration-500 hover:bg-blue-600"
+                      className="w-full bg-blue-500 rounded-t-lg transition-all duration-500 hover:bg-blue-600 absolute bottom-0 left-0"
                       style={{ 
-                        height: `${Math.max(heightPercentage, 5)}%`,
-                        minHeight: '10px'
+                        height: `${Math.max(heightPercentage, 2)}%`,
                       }}
-                    />
-                    {item.value > 0 && (
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                        ₹{item.value}
-                      </div>
-                    )}
+                    >
+                      {item.value > 0 && (
+                        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                          ₹{item.value.toLocaleString()}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <span className="text-xs text-gray-500">{item.day}</span>
                 </div>
@@ -303,18 +303,28 @@ function Analytics() {
  
   const totalOrders = bookings.length;
   const totalRevenue = bookings.reduce((sum, b) => sum + b.totalAmount, 0);
-  const completedOrders = bookings.filter(b => b.status === 'Completed').length;
-  const activeOrders = bookings.filter(b => b.status === 'Active').length;
-  const pendingOrders = bookings.filter(b => b.status === 'Pending').length;
-  const cancelledOrders = bookings.filter(b => b.status === 'Cancelled').length;
-  const refundedOrders = bookings.filter(b => b.paymentStatus === 'Refunded').length;
+  const completedOrders = bookings.filter(b => b.status?.toLowerCase() === 'completed').length;
+  const activeOrders = bookings.filter(b => {
+    const s = b.status?.toLowerCase();
+    return s && s !== 'completed' && s !== 'cancelled';
+  }).length;
+  const pendingOrders = bookings.filter(b => b.status?.toLowerCase() === 'pickup' || b.status?.toLowerCase() === 'pending').length;
+  const cancelledOrders = bookings.filter(b => b.status?.toLowerCase() === 'cancelled').length;
+  const refundedOrders = bookings.filter(b => b.paymentStatus?.toLowerCase() === 'refunded').length;
   
   const avgOrderValue = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
   const completionRate = totalOrders > 0 ? Math.round((completedOrders / totalOrders) * 100) : 0;
   
   // Service distribution
   const serviceData = bookings.reduce((acc, booking) => {
-    acc[booking.service] = (acc[booking.service] || 0) + 1;
+    if (booking.service) {
+      const services = booking.service.split(',').map(s => s.trim()).filter(Boolean);
+      services.forEach(s => {
+        acc[s] = (acc[s] || 0) + 1;
+      });
+    } else {
+      acc['Laundry'] = (acc['Laundry'] || 0) + 1;
+    }
     return acc;
   }, {});
   
@@ -336,7 +346,17 @@ function Analytics() {
 
   // Status distribution
   const statusData = bookings.reduce((acc, booking) => {
-    acc[booking.status] = (acc[booking.status] || 0) + 1;
+    const s = booking.status?.toLowerCase();
+    let displayStatus = 'Active';
+    if (s === 'completed') {
+      displayStatus = 'Completed';
+    } else if (s === 'cancelled') {
+      displayStatus = 'Cancelled';
+    } else if (s === 'pickup' || s === 'pending') {
+      displayStatus = 'Pending';
+    }
+    
+    acc[displayStatus] = (acc[displayStatus] || 0) + 1;
     return acc;
   }, {});
   
@@ -359,7 +379,7 @@ function Analytics() {
                bookingDate.getMonth() === date.getMonth() &&
                bookingDate.getDate() === date.getDate();
       })
-      .reduce((sum, b) => sum + (b.paymentStatus === 'Paid' ? b.totalAmount : 0), 0);
+      .reduce((sum, b) => sum + b.totalAmount, 0);
     
     return { day, value: dailyRevenue };
   });
@@ -377,7 +397,7 @@ function Analytics() {
         const bookingYear = new Date(b.bookingDate).getFullYear();
         return bookingMonth === month.getMonth() && bookingYear === month.getFullYear();
       })
-      .reduce((sum, b) => sum + (b.paymentStatus === 'Paid' ? b.totalAmount : 0), 0);
+      .reduce((sum, b) => sum + b.totalAmount, 0);
     
     return { month: monthName, revenue: monthlyTotal };
   });
@@ -395,7 +415,14 @@ function Analytics() {
 
   // Popular services
   const servicePopularity = bookings.reduce((acc, booking) => {
-    acc[booking.service] = (acc[booking.service] || 0) + 1;
+    if (booking.service) {
+      const services = booking.service.split(',').map(s => s.trim()).filter(Boolean);
+      services.forEach(s => {
+        acc[s] = (acc[s] || 0) + 1;
+      });
+    } else {
+      acc['Laundry'] = (acc['Laundry'] || 0) + 1;
+    }
     return acc;
   }, {});
   
