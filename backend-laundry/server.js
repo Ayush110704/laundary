@@ -35,6 +35,15 @@ app.use('/api/plans', planRoutes);
 app.use('/api/terms', termRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/contacts', contactRoutes);
+app.use('/api/orders', orderRoutes);
+
+
+app.use('/api/orders', orderRoutes);
+
+// Route to create a new order
+ 
+
+ 
 
 app.use('/api/orders', orderRoutes);
 
