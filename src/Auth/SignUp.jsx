@@ -7,6 +7,7 @@ import { User, Mail, Phone, Lock, Eye, EyeOff, MapPin, Shield, Star, } from "luc
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isAgreed, setIsAgreed] = useState(false); // Add this line
   const [text, setText] = useState({
     FirstName: "",
     LastName: "",
@@ -287,27 +288,32 @@ const SignUp = () => {
 
             {/* Terms */}
 
-            <div className="flex gap-3 mt-6">
-              <input type="checkbox" />
+             <div className="flex gap-3 mt-6">
+  <input 
+    type="checkbox" 
+    checked={isAgreed} 
+    onChange={(e) => setIsAgreed(e.target.checked)} 
+  />
 
-              <p className="text-xs text-gray-500">I agree to the
-                <span className="text-blue-600 font-semibold mx-1">Terms of Service </span>and
-
-                <span className="text-blue-600 font-semibold ml-1">
-                  Privacy Policy
-                </span>
-              </p>
-            </div>
+  <p className="text-xs text-gray-500">I agree to the
+    <span className="text-blue-600 font-semibold mx-1">Terms of Service </span>and
+    <span className="text-blue-600 font-semibold ml-1">Privacy Policy</span>
+  </p>
+</div>
 
             {/* Button */}
 
-            <motion.button
-            type="submit"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full h-14 rounded-xl bg-blue-900 text-white text-lg font-semibold mt-8"
-              
-            > Sign Up</motion.button>
+             <motion.button
+  type="submit"
+  whileHover={isAgreed ? { scale: 1.02 } : {}}
+  whileTap={isAgreed ? { scale: 0.98 } : {}}
+  disabled={!isAgreed}
+  className={`w-full h-14 rounded-xl text-lg font-semibold mt-8 ${
+    isAgreed ? "bg-blue-900 text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"
+  }`}
+> 
+  Sign Up 
+</motion.button>
           </form>
 
 

@@ -217,58 +217,55 @@ const Login = () => {
                             </div>
 
                             {/* Social Login Buttons */}
-                            <div className="grid sm:grid-cols-2 gap-5">
-                                 <GoogleLogin
-    onSuccess={async (credentialResponse) => {
-        try {
-            const response = await axios.post("http://localhost:5000/api/auth/google", {
-                token: credentialResponse.credential
-            });
-
-            // Case 1: User exists, login successful
-            if (response.data.success) {
-                localStorage.setItem("currentUser", JSON.stringify(response.data.user));
-                await Swal.fire({ icon: "success", title: "Logged in!", timer: 1500 });
-                Navigate("/");
-            } 
-            // Case 2: New user, need phone number
-            else if (response.data.requiresPhone) {
-                const { value: phone } = await Swal.fire({
-                    title: 'Complete Registration',
-                    input: 'text',
-                    inputLabel: 'Enter your phone number',
-                    inputPlaceholder: 'e.g., 9876543210',
-                    showCancelButton: true,
-                    inputValidator: (value) => !value && 'Phone number is required!'
+                            {/* Social Login Buttons */}
+<div className="flex justify-center">
+    <GoogleLogin
+        onSuccess={async (credentialResponse) => {
+            // ... (keep your existing logic exactly as it was)
+            try {
+                const response = await axios.post("http://localhost:5000/api/auth/google", {
+                    token: credentialResponse.credential
                 });
 
-                if (phone) {
-                    const signupResponse = await axios.post("http://localhost:5000/api/auth/complete-google-signup", {
-                        firstName: response.data.firstName,
-                        lastName: response.data.lastName,
-                        email: response.data.email,
-                        phone: phone
+                if (response.data.success) {
+                    localStorage.setItem("currentUser", JSON.stringify(response.data.user));
+                    await Swal.fire({ icon: "success", title: "Logged in!", timer: 1500 });
+                    Navigate("/");
+                } 
+                else if (response.data.requiresPhone) {
+                    const { value: phone } = await Swal.fire({
+                        title: 'Complete Registration',
+                        input: 'text',
+                        inputLabel: 'Enter your phone number',
+                        inputPlaceholder: 'e.g., 9876543210',
+                        showCancelButton: true,
+                        inputValidator: (value) => !value && 'Phone number is required!'
                     });
 
-                    if (signupResponse.data.success) {
-                        localStorage.setItem("currentUser", JSON.stringify(signupResponse.data.user));
-                        Swal.fire("Success!", "Account created successfully.", "success");
-                        Navigate("/");
+                    if (phone) {
+                        const signupResponse = await axios.post("http://localhost:5000/api/auth/complete-google-signup", {
+                            firstName: response.data.firstName,
+                            lastName: response.data.lastName,
+                            email: response.data.email,
+                            phone: phone
+                        });
+
+                        if (signupResponse.data.success) {
+                            localStorage.setItem("currentUser", JSON.stringify(signupResponse.data.user));
+                            Swal.fire("Success!", "Account created successfully.", "success");
+                            Navigate("/");
+                        }
                     }
                 }
+            } catch (error) {
+                Swal.fire({ icon: "error", title: "Login Failed", text: "Authentication failed." });
             }
-        } catch (error) {
-            Swal.fire({ icon: "error", title: "Login Failed", text: "Authentication failed." });
-        }
-    }}
-    onError={() => console.log('Login Failed')}
-    width="100%"
-    shape="pill"
-/>
-                                <button className="border rounded-2xl h-12 md:h-14 font-semibold text-lg hover:bg-slate-100">
-                                    iOS
-                                </button>
-                            </div>
+        }}
+        onError={() => console.log('Login Failed')}
+        shape="pill"
+    />
+</div>
+ 
 
                             {/* Signup Link */}
                             <p className="text-center mt-8 md:mt-10 text-gray-500">
