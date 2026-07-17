@@ -44,15 +44,7 @@ function ServiceDetail({ service, onBack }) {
           </h2>
 
           <div className="space-y-4">
-            <div className="bg-gray-200 rounded-xl p-4">
-              <div className="flex items-center gap-3">
-                <Tag className="text-blue-600" size={20} />
-                <div>
-                  <p className="text-sm text-gray-500">Category</p>
-                  <p className="font-semibold">{service.category}</p>
-                </div>
-              </div>
-            </div>
+
 
             <div className="bg-gray-200 rounded-xl p-4">
               <div className="flex items-center gap-3">
@@ -110,7 +102,7 @@ function ServiceDetail({ service, onBack }) {
                 <tbody className="divide-y divide-gray-200 bg-white">
                   {(service.items && service.items.length > 0
                     ? service.items
-                    : (DEFAULT_CATEGORY_ITEMS[service.category] || DEFAULT_CATEGORY_ITEMS["Laundry"])
+                    : (DEFAULT_CATEGORY_ITEMS[service.name] || DEFAULT_CATEGORY_ITEMS[service.category] || DEFAULT_CATEGORY_ITEMS["Laundry"])
                   ).map((item, index) => (
                     <tr key={index} className="hover:bg-gray-50 transition-colors">
                       <td className="px-4 py-2.5 text-sm text-gray-800 flex items-center gap-2">
@@ -524,8 +516,6 @@ const handleEdit = (service) => {
 
     "Service",
 
-    "Category",
-
     "Duration",
 
     "Status",
@@ -682,11 +672,7 @@ const handleEdit = (service) => {
 
                     </td>
 
-                    <td className="px-5 py-4 ">
 
-                      {service.category}
-
-                    </td>
 
                     <td className="px-5 py-4 ">
 
