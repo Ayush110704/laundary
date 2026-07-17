@@ -61,8 +61,8 @@ const useOrders = () => {
   return context;
 };
 
-const OrderProvider = ({ children, initialData }) => {
-  const [bookings, setBookings] = useState(initialData || []);
+const OrderProvider = ({ children }) => {
+  const [bookings, setBookings] = useState([]);
 
   const updateBookings = (newBookings) => {
     setBookings(newBookings);
@@ -108,6 +108,60 @@ const getFutureDate = (daysFromNow) => {
   const date = new Date();
   date.setDate(date.getDate() + daysFromNow);
   return date.toISOString();
+};
+
+const mapAdminOrderStatus = (status) => {
+  const normalized = String(status || '').trim().toLowerCase();
+
+  const statusMap = {
+    pending: 'pickup',
+    pickup: 'pickup',
+    processing: 'processing',
+    cleaning: 'cleaning',
+    'out for delivery': 'out_for_delivery',
+    out_for_delivery: 'out_for_delivery',
+    completed: 'completed',
+    cancelled: 'cancelled'
+  };
+
+  return statusMap[normalized] || 'pickup';
+};
+
+const mapOrderToBooking = (order, index) => {
+  const itemsList = (order.items || []).map((item, itemIndex) => ({
+    name: item.clothType || item.name || `Item ${itemIndex + 1}`,
+    quantity: Number(item.quantity || 0),
+    price: Number(item.price || 0)
+  }));
+
+  const totalItems = itemsList.reduce((sum, item) => sum + Number(item.quantity || 0), 0);
+  const serviceNames = [...new Set((order.items || []).map((item) => item.serviceType).filter(Boolean))];
+  const normalizedPaymentMethod = String(order.paymentMethod || 'COD');
+  const paymentStatus = order.paymentStatus || (normalizedPaymentMethod.toLowerCase() === 'cod' ? 'Pending' : 'Paid');
+
+  return {
+    id: order.orderId || order._id || `ORD-${index + 1}`,
+    mongoId: order._id,
+    customerName: order.customerName || 'Customer',
+    customerEmail: order.email || 'N/A',
+    customerPhone: order.phone || 'N/A',
+    customerAddress: order.address || 'No address provided',
+    service: serviceNames.join(', ') || 'Laundry',
+    items: totalItems,
+    itemsList,
+    totalAmount: Number(order.totalAmount || 0),
+    status: mapAdminOrderStatus(order.status),
+    bookingDate: order.createdAt || new Date().toISOString(),
+    pickupDate: order.pickupDate || order.createdAt || new Date().toISOString(),
+    deliveryDate: order.deliveryDate || null,
+    notes: order.notes || '',
+    paymentStatus,
+    paymentMethod: normalizedPaymentMethod.toUpperCase() === 'COD' ? 'COD' : normalizedPaymentMethod,
+    refundStatus: order.refundStatus || null,
+    refundDate: order.refundDate || null,
+    refundAmount: order.refundAmount || null,
+    statusUpdateHistory: order.statusUpdateHistory || []
+  };
 };
 
 
@@ -1278,7 +1332,7 @@ function BookingDetailView({ booking, onBack, onRefund, onStatusUpdate }) {
 // MAIN COMPONENT
 
 function OrderManagement() {
-  const { bookings, updateBooking } = useOrders();
+  const { bookings, setBookings, updateBooking } = useOrders();
   
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -1288,6 +1342,8 @@ function OrderManagement() {
   const [showDetailView, setShowDetailView] = useState(false);
   const [showRefundModal, setShowRefundModal] = useState(false);
   const [refundBooking, setRefundBooking] = useState(null);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(true);
+  const [ordersError, setOrdersError] = useState('');
   const itemsPerPage = 5;
 
   const statusLabels = {
@@ -1332,10 +1388,74 @@ function OrderManagement() {
     setCurrentPage(1);
   }, [searchTerm, filterStatus, filterService]);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchOrders = async () => {
+      setIsLoadingOrders(true);
+      setOrdersError('');
+
+      try {
+        const response = await fetch('http://localhost:5000/api/orders/all');
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || 'Failed to load orders');
+        }
+
+        const rawOrders = Array.isArray(data)
+          ? data
+          : Array.isArray(data.orders)
+          ? data.orders
+          : [];
+
+        const normalizedOrders = rawOrders.map((order, index) => mapOrderToBooking(order, index));
+
+        if (isMounted) {
+          setBookings(normalizedOrders);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setOrdersError(error.message || 'Unable to load orders');
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingOrders(false);
+        }
+      }
+    };
+
+    fetchOrders();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [setBookings]);
+
   const handleBookingClick = (booking) => {
     setSelectedBooking(booking);
     setShowDetailView(true);
   };
+
+  if (isLoadingOrders) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+        <div className="max-w-7xl mx-auto text-gray-600 font-medium">
+          Loading orders...
+        </div>
+      </div>
+    );
+  }
+
+  if (ordersError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+        <div className="max-w-7xl mx-auto text-red-600 font-medium">
+          {ordersError}
+        </div>
+      </div>
+    );
+  }
 
   const handleBackToList = () => {
     setShowDetailView(false);
@@ -1347,7 +1467,7 @@ function OrderManagement() {
     setShowRefundModal(true);
   };
 
-  const handleRefundConfirm = (refundData) => {
+  const handleRefundConfirm = async (refundData) => {
     if (!refundBooking) return;
     
     updateBooking(refundBooking.id, {
@@ -1358,6 +1478,31 @@ function OrderManagement() {
       refundAmount: refundData.amount,
       notes: refundBooking.notes ? `${refundBooking.notes} | Refund: ${refundData.reason}` : `Refund: ${refundData.reason}`
     });
+
+    if (!refundBooking.mongoId) {
+      alert('Mongo order id missing. Status was not saved to the backend.');
+    } else {
+      try {
+        const response = await fetch(`http://localhost:5000/api/orders/${refundBooking.mongoId}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          status: 'cancelled',
+          note: refundData.reason
+        })
+      });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || 'Failed to update order status');
+        }
+      } catch (error) {
+        alert(error.message || 'Failed to update order status');
+      }
+    }
 
     if (selectedBooking?.id === refundBooking.id) {
       setSelectedBooking({
@@ -1376,7 +1521,7 @@ function OrderManagement() {
     alert(`Refund of ₹${refundData.amount} processed successfully! Order ${refundBooking.id} has been cancelled.`);
   };
 
-  const handleStatusUpdate = (bookingId, statusData) => {
+  const handleStatusUpdate = async (bookingId, statusData) => {
     const booking = bookings.find(b => b.id === bookingId);
     if (!booking) return;
 
@@ -1411,6 +1556,32 @@ function OrderManagement() {
         notes: statusData.note ? `${selectedBooking.notes || ''} | ${statusData.note}` : selectedBooking.notes,
         pickupDate: statusData.pickupDate || selectedBooking.pickupDate
       });
+    }
+
+    if (!booking.mongoId) {
+      alert('Mongo order id missing. Status was not saved to the backend.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/orders/${booking.mongoId}/status`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          status: statusData.status,
+          note: statusData.note || ''
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Failed to update order status');
+      }
+    } catch (error) {
+      alert(error.message || 'Failed to update order status');
     }
   };
 

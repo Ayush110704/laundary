@@ -29,21 +29,23 @@ const [selectedDeliverySlot, setSelectedDeliverySlot] = useState(checkoutData.sc
     newDate.setDate(startDate.getDate() + direction * 7);
     setStartDate(newDate);
   };
-
-useEffect(() => {
-  setCheckoutData((prev)=>{
-      const update = {...prev,schedule:{
-        date:selected.toLocaleDateString(),
-        slot:selectedPickupSlot,
-        deliverySlot: selectedDeliverySlot,
-      }};
-      saveCheckoutData(update);
-      return update;
-  })
-}, [selected, selectedPickupSlot,selectedDeliverySlot,setCheckoutData]);
-
-
-
+ useEffect(() => {
+  setCheckoutData((prev) => {
+    const update = {
+      ...prev,
+      schedule: {
+        ...prev.schedule,
+        date: selected.toLocaleDateString(),
+        slot: selectedPickupSlot,
+        // Ensure these match the keys we set in models/Order.js
+        deliveryDate: selectedDeliverySlot?.date || "", 
+        deliveryTimeSlot: selectedDeliverySlot?.time || "",
+      }
+    };
+    saveCheckoutData(update);
+    return update;
+  });
+}, [selected, selectedPickupSlot, selectedDeliverySlot, setCheckoutData]);
  const slots = [
   {
     id: 1,

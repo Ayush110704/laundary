@@ -23,7 +23,7 @@ const validateStep = (step) => {
       }
       return { success: true };
 
-    case 3:
+     case 3:
       if (!data.schedule?.date) {
         return {
           success: false,
@@ -38,18 +38,14 @@ const validateStep = (step) => {
         };
       }
 
-
-      if (!data.schedule?.deliverySlot) {
+      // Update this check to match the new structure
+      if (!data.schedule?.deliveryDate || !data.schedule?.deliveryTimeSlot) {
         return {
           success: false,
           message: "Please select Delivery Date & Time.",
         };
       }
 
-      return { success: true };
-
-   
-    default:
       return { success: true };
   }
 };

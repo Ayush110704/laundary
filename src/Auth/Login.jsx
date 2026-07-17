@@ -1,3 +1,5 @@
+ import { GoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 import React, { useState , useEffect } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, Shield, Headphones, Zap, ShoppingBasket } from "lucide-react";
@@ -21,58 +23,44 @@ const Login = () => {
         setUserdata({...userdata, [e.target.name]: e.target.value})
     }
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch('http://localhost:5000/api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: userdata.Email,
-                    password: userdata.Password
-                })
-            });
+     // Add this at the top if you haven't already
 
-            const data = await response.json();
 
-            if (data.success) {
-                // Construct the currentUser object in the format expected by the frontend
-                const userObj = {
-                    FirstName: data.user.firstName || data.user.name.split(' ')[0],
-                    LastName: data.user.lastName || data.user.name.split(' ').slice(1).join(' '),
-                    Email: data.user.email,
-                    number: data.user.phone,
-                    Address: data.user.address || '',
-                    token: data.token,
-                    role: data.user.role
-                };
-                localStorage.setItem("currentUser", JSON.stringify(userObj));
+// Replace your handleLogin function with this:
+ const handleLogin = async (e) => {
+    e.preventDefault();
+    console.log("Attempting login with:", userdata);
+    
+    try {
+      // Send credentials to your backend API route
+      const response = await axios.post("http://localhost:5000/api/auth/login", {
+        email: userdata.Email,
+        password: userdata.Password
+      });
 
-                await Swal.fire({
-                    icon: "success",
-                    title: "Login Successful",
-                    text: `Welcome ${userObj.FirstName}`,
-                });
+      if (response.data.success) {
+        // Save the correct user object returned by the server
+        localStorage.setItem("currentUser", JSON.stringify(response.data.user));
 
-                Navigate("/");
-            } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Login Failed",
-                    text: data.message || "Invalid email or password",
-                });
-            }
-        } catch (error) {
-            console.error(error);
-            Swal.fire({
-                icon: "error",
-                title: "Login Failed",
-                text: "Could not connect to the authentication server.",
-            });
-        }
+        await Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: `Welcome back!`,
+          timer: 1500
+        });
+
+        // Redirect to homepage
+        Navigate("/");
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Login Failed",
+        text: error.response?.data?.message || "Invalid email or password",
+      });
     }
+  };
 
     return (
         <div className="w-full min-h-screen bg-slate-100 py-7 overflow-x-hidden">
@@ -230,9 +218,53 @@ const Login = () => {
 
                             {/* Social Login Buttons */}
                             <div className="grid sm:grid-cols-2 gap-5">
-                                <button className="border rounded-2xl h-12 md:h-14 font-semibold text-lg hover:bg-slate-100">
-                                    Google
-                                </button>
+                                 <GoogleLogin
+    onSuccess={async (credentialResponse) => {
+        try {
+            const response = await axios.post("http://localhost:5000/api/auth/google", {
+                token: credentialResponse.credential
+            });
+
+            // Case 1: User exists, login successful
+            if (response.data.success) {
+                localStorage.setItem("currentUser", JSON.stringify(response.data.user));
+                await Swal.fire({ icon: "success", title: "Logged in!", timer: 1500 });
+                Navigate("/");
+            } 
+            // Case 2: New user, need phone number
+            else if (response.data.requiresPhone) {
+                const { value: phone } = await Swal.fire({
+                    title: 'Complete Registration',
+                    input: 'text',
+                    inputLabel: 'Enter your phone number',
+                    inputPlaceholder: 'e.g., 9876543210',
+                    showCancelButton: true,
+                    inputValidator: (value) => !value && 'Phone number is required!'
+                });
+
+                if (phone) {
+                    const signupResponse = await axios.post("http://localhost:5000/api/auth/complete-google-signup", {
+                        firstName: response.data.firstName,
+                        lastName: response.data.lastName,
+                        email: response.data.email,
+                        phone: phone
+                    });
+
+                    if (signupResponse.data.success) {
+                        localStorage.setItem("currentUser", JSON.stringify(signupResponse.data.user));
+                        Swal.fire("Success!", "Account created successfully.", "success");
+                        Navigate("/");
+                    }
+                }
+            }
+        } catch (error) {
+            Swal.fire({ icon: "error", title: "Login Failed", text: "Authentication failed." });
+        }
+    }}
+    onError={() => console.log('Login Failed')}
+    width="100%"
+    shape="pill"
+/>
                                 <button className="border rounded-2xl h-12 md:h-14 font-semibold text-lg hover:bg-slate-100">
                                     iOS
                                 </button>
@@ -253,4 +285,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Login;  

@@ -33,16 +33,38 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData, setCurrentStep, }) =>
 
   // Load user data from localStorage on component mount and fetch DB services
   useEffect(() => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser")) || {};
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
-    if (currentUser) {
-      setFormData((prev) => ({
-        ...prev,
-        fullName: `${currentUser.FirstName} ${currentUser.LastName}`,
-        email: currentUser.Email,
-        phone: currentUser.number,
-      }));
-    }
+    const loadCurrentUserProfile = async () => {
+      const userId = currentUser?.id || currentUser?._id;
+
+      if (!userId) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/auth/profile/${userId}`);
+        const result = await res.json();
+
+        if (res.ok && result?.user) {
+          const { firstName, lastName, email, phone } = result.user;
+          const fullName = [firstName, lastName].filter(Boolean).join(" ");
+
+          if (fullName || email || phone) {
+            setFormData((prev) => ({
+              ...prev,
+              fullName,
+              email: email || "",
+              phone: phone || "",
+            }));
+          }
+        }
+      } catch (error) {
+        console.error("Error loading current user profile in BookingApplyForm:", error);
+      }
+    };
+
+    loadCurrentUserProfile();
 
     const fetchServices = async () => {
       try {
@@ -191,42 +213,35 @@ if (swalResult.isConfirmed) {
 
 
   const handleAddItem = (e) => {
+  e.preventDefault();
+  const newErrors = {};
 
-    const newErrors = {};
-
-  if (!formData.serviceType) {
-    newErrors.serviceType = "Select service type";
-  }
-
-  if (!formData.clothType.trim()) {
-    newErrors.clothType = "Clothes type is required";
-  }
-
-  if (!formData.quantity.toString().trim()) {
-    newErrors.quantity = "Enter clothes quantity";
-  } else if (Number(formData.quantity) <= 0) {
-    newErrors.quantity = "Quantity must be greater than 0";
+  if (!formData.serviceType) newErrors.serviceType = "Select service type";
+  if (!formData.clothType.trim()) newErrors.clothType = "Clothes type is required";
+  if (!formData.quantity.toString().trim() || Number(formData.quantity) <= 0) {
+    newErrors.quantity = "Enter a valid quantity";
   }
 
   if (Object.keys(newErrors).length > 0) {
-    setErrors((prev) => ({
-      ...prev,
-      ...newErrors,
-    }));
+    setErrors((prev) => ({ ...prev, ...newErrors }));
     return;
   }
-    e.preventDefault();
-    // const checkoutData = getCheckoutData();
 
-    const newItems = {
-      serviceType: formData.serviceType,
-      clothType: formData.clothType,
-      quantity: Number(formData.quantity),
-      instructions: formData.instructions,
+  // --- FIX STARTS HERE ---
+  // Find the actual item object to get the price
+  const selectedItem = dropdownItems.find(item => item.name === formData.clothType);
+  const itemPrice = selectedItem ? Number(selectedItem.price) : 0;
+  // --- FIX ENDS HERE ---
 
-    };
+  const newItems = {
+    serviceType: formData.serviceType,
+    clothType: formData.clothType,
+    quantity: Number(formData.quantity),
+    price: itemPrice, 
+    instructions: formData.instructions,
+  };
 
-     const updatedCheckoutData = {
+  const updatedCheckoutData = {
     ...checkoutData,
     items: [...(checkoutData.items || []), newItems],
   };
@@ -234,18 +249,13 @@ if (swalResult.isConfirmed) {
   setCheckoutData(updatedCheckoutData);
   saveCheckoutData(updatedCheckoutData);
 
-  // setCheckoutItems(updatedCheckoutData.items);
-    // setCheckoutItems(updatedCheckoutData.items);
-    console.log(getCheckoutData());
-
- setFormData((prev) => ({
-  ...prev,
-  serviceType: "",
-  clothType: "",
-  quantity: "",
-  instructions: "",
-}));
-  }
+  setFormData((prev) => ({
+    ...prev,
+    clothType: "", // Only reset relevant fields
+    quantity: "",
+    instructions: "",
+  }));
+};
 
   const removeItems = (index) => {
     const checkoutData = getCheckoutData();

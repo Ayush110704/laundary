@@ -1,146 +1,167 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { 
   FileText, Truck, Clock, Sparkles, ChevronRight, ArrowLeft, 
   User, Phone, MapPin, Receipt, RotateCw, Headset, 
   Calendar, CreditCard, Download, Tag
 } from 'lucide-react';
-import UserLayout from './UserLayout'; // ADD THIS IMPORT
-
-// Mock Data representing multiple recent orders (No images, URLs, or notes)
-const mockOrdersHistory = [
-  {
-    orderNo: "LND8393-01",
-    status: "DELIVERED",
-    statusColor: "bg-green-50 text-green-700 border-green-200",
-    date: "14 April 2026 at 01:24 pm",
-    pickupDate: "14 Apr 2026",
-    timeSlot: "10:00 AM To 12:00 PM",
-    deliveryDate: "16 Apr 2026",
-    deliveryTimeSlot: "04:00 PM To 06:00 PM",
-    paymentMethod: "COD",
-    paymentStatus: "PAID",
-    transactionId: "TXN-938402948",
-    customer: {
-      name: "John Doe",
-      mobile: "+91 98765 43210"
-    },
-    items: [
-      {
-        category: "WASH & IRON",
-        id: "LND8393-01-W02",
-        name: "Premium Shirts & Trousers",
-        quantity: 5,
-        price: 350,
-        unitPrice: 70,
-        estDelivery: "24-48 Hours"
-      },
-      {
-        category: "DRY CLEANING",
-        id: "LND8393-01-D15",
-        name: "Heavy Winter Jacket / Coat",
-        quantity: 1,
-        price: 60,
-        unitPrice: 60,
-        estDelivery: "48-72 Hours"
-      }
-    ],
-    summary: {
-      subtotal: 410,
-      deliveryCharges: 120,
-      discount: 50,
-      tax: 25,
-      grandTotal: 505
-    },
-    shippingAddress: "123, Sample Address, Andheri East, Mumbai - 400069"
-  },
-  {
-    orderNo: "LND8393-02",
-    status: "PROCESSING",
-    statusColor: "bg-blue-50 text-blue-700 border-blue-200",
-    date: "02 July 2026 at 09:15 am",
-    pickupDate: "02 Jul 2026",
-    timeSlot: "08:00 AM To 10:00 AM",
-    deliveryDate: "04 Jul 2026",
-    deliveryTimeSlot: "02:00 PM To 04:00 PM",
-    paymentMethod: "UPI",
-    paymentStatus: "PAID",
-    transactionId: "TXN-938402999",
-    customer: {
-      name: "John Doe",
-      mobile: "+91 98765 43210"
-    },
-    items: [
-      {
-        category: "WASH & FOLD",
-        id: "LND8393-02-F01",
-        name: "Casual T-Shirts & Shorts",
-        quantity: 10,
-        price: 300,
-        unitPrice: 30,
-        estDelivery: "24 Hours"
-      }
-    ],
-    summary: {
-      subtotal: 300,
-      deliveryCharges: 50,
-      discount: 0,
-      tax: 15,
-      grandTotal: 365
-    },
-    shippingAddress: "123, Sample Address, Andheri East, Mumbai - 400069"
-  },
-  {
-    orderNo: "LND8393-03",
-    status: "PENDING",
-    statusColor: "bg-amber-50 text-amber-700 border-amber-200",
-    date: "03 July 2026 at 10:00 am",
-    pickupDate: "04 Jul 2026",
-    timeSlot: "11:00 AM To 01:00 PM",
-    deliveryDate: "06 Jul 2026",
-    deliveryTimeSlot: "11:00 AM To 01:00 PM",
-    paymentMethod: "COD",
-    paymentStatus: "PENDING",
-    transactionId: "N/A",
-    customer: {
-      name: "John Doe",
-      mobile: "+91 98765 43210"
-    },
-    items: [
-      {
-        category: "DRY CLEANING",
-        id: "LND8393-03-D02",
-        name: "Silk Saree / Designer Suit",
-        quantity: 2,
-        price: 400,
-        unitPrice: 200,
-        estDelivery: "72 Hours"
-      }
-    ],
-    summary: {
-      subtotal: 400,
-      deliveryCharges: 50,
-      discount: 0,
-      tax: 20,
-      grandTotal: 470
-    },
-    shippingAddress: "123, Sample Address, Andheri East, Mumbai - 400069"
-  }
-];
+import UserLayout from './UserLayout';
 
 const MyOrders = () => {
   const [activeTab, setActiveTab] = useState('All');
   const [selectedOrder, setSelectedOrder] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchStatus, setFetchStatus] = useState('idle');
+  const [fetchError, setFetchError] = useState('');
+  const [orders, setOrders] = useState([]);
   const [viewingAll, setViewingAll] = useState(false);
+  const ordersSignatureRef = useRef("");
+  const navigate = useNavigate();
 
-  const handleOrderClick = (order) => {
-    setIsLoading(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setTimeout(() => {
-      setSelectedOrder(order);
-      setIsLoading(false);
-    }, 450);
+
+  const handleReorder = (order) => {
+    // 1. Map the stored order items back into the format your checkout expects
+    const reorderItems = order.items.map(item => ({
+        clothType: item.name,
+        serviceType: item.category,
+        quantity: item.quantity,
+        price: item.price
+    }));
+
+    // 2. Prepare the checkout data
+    const newCheckoutData = {
+        items: reorderItems,
+        address: order.shippingAddress 
+    };
+
+    // 3. Save to localStorage so your Checkout page picks it up
+    localStorage.setItem("checkoutData", JSON.stringify(newCheckoutData));
+
+    // 4. Navigate to checkout
+    navigate("/checkout");
+};
+
+  const fetchOrders = async (silent = false) => {
+    if (!silent) {
+      setIsLoading(true);
+      setFetchStatus('loading');
+      setFetchError('');
+    }
+
+    try {
+      const userStr = localStorage.getItem("currentUser");
+      if (!userStr) {
+        if (!silent) {
+          setIsLoading(false);
+          setFetchStatus('idle');
+        }
+        return;
+      }
+
+      const currentUser = JSON.parse(userStr);
+      const userId = currentUser._id || currentUser.id || currentUser.user?._id;
+
+      if (!userId) {
+        if (!silent) {
+          setIsLoading(false);
+          setFetchStatus('idle');
+        }
+        return;
+      }
+
+      const res = await axios.get(`http://localhost:5000/api/orders/user/${userId}`);
+
+      const apiOrders = Array.isArray(res.data) ? res.data : [];
+      const normalizedOrders = apiOrders.map((order, index) => {
+        const sourceItems = Array.isArray(order.items) ? order.items : [];
+
+        return {
+          orderNo: order.orderNo || (order._id ? order._id.slice(-8).toUpperCase() : `ORD-${index + 1}`),
+          status: order.status || "Pending",
+          statusColor: order.statusColor || (
+            order.status?.toLowerCase() === 'delivered' 
+                ? "bg-green-50 text-green-700 border-green-200" 
+                : order.status?.toLowerCase() === 'processing' 
+                ? "bg-blue-50 text-blue-700 border-blue-200"
+                : "bg-amber-50 text-amber-700 border-amber-200"
+          ),
+          date: order.date || (order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : "N/A"),
+          customer: {
+            name: order.customer?.name || order.customerName || "Customer",
+            mobile: order.customer?.mobile || order.phone || "N/A"
+          },
+          shippingAddress: order.address || order.shippingAddress || order.deliveryAddress || "No address provided",
+          pickupDate: order.pickupDate || order.scheduledDate || order.pickup_date || 'Not Scheduled',
+          timeSlot: order.timeSlot || order.pickupTimeSlot || order.pickup_time || 'N/A',
+          deliveryDate: order.deliveryDate || order.delivery_date || 'Not Scheduled',
+          deliveryTimeSlot: order.deliveryTimeSlot || order.delivery_time || 'N/A',
+          paymentMethod: order.paymentMethod || "COD",
+          paymentStatus: order.paymentStatus || "PENDING",
+          transactionId: order.transactionId || "N/A",
+          items: sourceItems.map((i, itemIndex) => ({
+            category: i.category || i.serviceType || "Service",
+            id: i.id || i._id || `ITEM-${itemIndex + 1}`,
+            name: i.name || i.clothType || "Item",
+            quantity: Number(i.quantity || 0),
+            price: Number(i.price || 0),
+            unitPrice: Number(i.unitPrice ?? (Number(i.quantity || 0) ? Number(i.price || 0) / Number(i.quantity || 1) : Number(i.price || 0))),
+            estDelivery: i.estDelivery || "24-48 Hours"
+          })),
+          summary: {
+            subtotal: order.summary?.subtotal ?? order.totalAmount ?? 0,
+            deliveryCharges: order.summary?.deliveryCharges ?? order.deliveryCharges ?? 0,
+            discount: order.summary?.discount ?? order.discount ?? 0,
+            tax: order.summary?.tax ?? order.tax ?? 0,
+            grandTotal: order.summary?.grandTotal ?? order.totalAmount ?? 0
+          }
+        };
+      });
+
+      const nextSignature = JSON.stringify(normalizedOrders);
+      if (nextSignature !== ordersSignatureRef.current) {
+        ordersSignatureRef.current = nextSignature;
+        setOrders(normalizedOrders);
+        setSelectedOrder((prevSelected) => {
+          if (!prevSelected) return prevSelected;
+          return normalizedOrders.find((order) => order.orderNo === prevSelected.orderNo) || prevSelected;
+        });
+      }
+      setFetchStatus('success');
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+      if (!silent) {
+        setFetchError(err.response?.data?.message || "Unable to fetch bookings right now.");
+        setFetchStatus('error');
+      }
+    } finally {
+      if (!silent) {
+        setIsLoading(false);
+      }
+    }
   };
+
+  useEffect(() => {
+    fetchOrders();
+    const interval = setInterval(() => fetchOrders(true), 15000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Use the same handleOrderClick, handleBackToList, and JSX render logic 
+  // from the code you just pasted in your previous message.
+  // The structure above ensures that 'order.summary.grandTotal' 
+  // will now exist and be populated correctly!
+
+  // ... (Paste your full UI JSX here, it will now work perfectly)
+  const handleOrderClick = (order) => {
+  console.log("Selected Order Data:", order); // ADD THIS LINE
+  setIsLoading(true);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => {
+    setSelectedOrder(order);
+    setIsLoading(false);
+  }, 450);
+};
 
   const handleBackToList = () => {
     setIsLoading(true);
@@ -150,7 +171,7 @@ const MyOrders = () => {
     }, 400);
   };
 
-  const filteredOrders = mockOrdersHistory.filter(order => {
+  const filteredOrders = orders.filter(order => {
     if (activeTab === 'All') return true;
     return order.status.toLowerCase() === activeTab.toLowerCase();
   });
@@ -205,9 +226,13 @@ const MyOrders = () => {
                 <button className="flex-1 md:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 bg-blue-50 text-blue-600 text-xs font-bold rounded-xl hover:bg-blue-100 transition">
                   <Download size={14} /> Invoice
                 </button>
-                <button className="flex-1 md:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl hover:bg-blue-700 shadow-sm shadow-blue-200 transition">
-                  <RotateCw size={14} /> Reorder
-                </button>
+                 <button 
+  // Update this line:
+  onClick={() => handleReorder(order)} 
+  className="flex-1 md:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl hover:bg-blue-700 shadow-sm shadow-blue-200 transition"
+>
+  <RotateCw size={14} /> Reorder
+</button>
                 <button className="w-full md:w-auto flex items-center justify-center gap-1.5 px-4 py-2 bg-gray-50 text-gray-600 text-xs font-bold rounded-xl border border-gray-200 hover:bg-gray-100 transition">
                   <Headset size={14} /> Support
                 </button>
@@ -311,7 +336,7 @@ const MyOrders = () => {
                   </div>
                   <div className="flex justify-between text-gray-500">
                     <span>Rider Logistics Fees</span>
-                    <span className="font-semibold text-gray-800">₹{order.summary.deliveryCharges}</span>
+                    <span className="font-semibold text-gray-800">₹49</span>
                   </div>
                   {order.summary.discount > 0 && (
                     <div className="flex justify-between text-emerald-600 bg-emerald-50 p-1.5 rounded border border-emerald-100">
@@ -319,10 +344,7 @@ const MyOrders = () => {
                       <span className="font-bold">- ₹{order.summary.discount}</span>
                     </div>
                   )}
-                  <div className="flex justify-between text-gray-500">
-                    <span>GST/Service Tax</span>
-                    <span className="font-semibold text-gray-800">₹{order.summary.tax}</span>
-                  </div>
+                   
                   <div className="flex justify-between items-center text-sm font-black text-gray-900 border-t pt-3 mt-2">
                     <span>Grand Total</span>
                     <span className="text-blue-600 text-lg">₹{order.summary.grandTotal}</span>
@@ -367,10 +389,10 @@ const MyOrders = () => {
 
           {/* Grid Dashboard Item Layouts */}
           <div className="space-y-4">
-            {filteredOrders.slice(0, viewingAll ? filteredOrders.length : 3).map((order) => (
-              <div 
-                key={order.orderNo}
-                onClick={() => handleOrderClick(order)}
+            {filteredOrders.slice(0, viewingAll ? filteredOrders.length : 3).map((order, index) => (
+  <div 
+    key={`${order.orderNo}-${index}`} // <--- CHANGE THIS LINE HERE
+    onClick={() => handleOrderClick(order)}
                 className="group bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-blue-200 hover:shadow-md cursor-pointer transition-all duration-200"
               >
                 {/* Context Summary Fields */}
@@ -409,9 +431,15 @@ const MyOrders = () => {
               </div>
             ))}
 
-            {filteredOrders.length === 0 && (
+            {fetchStatus === 'success' && filteredOrders.length === 0 && (
               <div className="bg-white border rounded-2xl p-12 text-center text-gray-400 space-y-2">
                 <p className="font-semibold">No orders found in this category.</p>
+              </div>
+            )}
+
+            {fetchStatus === 'error' && !isLoading && (
+              <div className="bg-white border rounded-2xl p-12 text-center text-red-500 space-y-2">
+                <p className="font-semibold">{fetchError}</p>
               </div>
             )}
           </div>

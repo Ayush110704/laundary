@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import UserLayout from '../User/UserLayout';  
 
@@ -15,37 +15,66 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 
-const progressSteps = [
+const baseProgressSteps = [
   {
     title: "Pickup",
     icon: <FaShoppingCart />,
-    status: "completed",
   },
   {
     title: "Processing",
     icon: <FaBoxOpen />,
-    status: "completed",
   },
   {
     title: "Cleaning",
     icon: <FaSoap />,
-    status: "completed",
   },
   {
     title: "Out for Delivery",
     icon: <FaTruck />,
-    status: "current",
   },
   {
     title: "Completed",
     icon: <FaCheckCircle />,
-    status: "pending",
   },
 ];
 
-const validOrder = {
-  orderId: "ATH987654",
-  mobile: "9876543210",
+const statusOrder = [
+  "pickup",
+  "processing",
+  "cleaning",
+  "out_for_delivery",
+  "completed",
+];
+
+const normalizeStatus = (status = "") =>
+  String(status).trim().toLowerCase().replace(/\s+/g, "_");
+
+const getProgressSteps = (status) => {
+  const normalized = normalizeStatus(status);
+
+  if (normalized === "cancelled") {
+    return baseProgressSteps.map((step) => ({
+      ...step,
+      status: "pending",
+    }));
+  }
+
+  const currentIndex = Math.max(
+    0,
+    statusOrder.indexOf(normalized) >= 0
+      ? statusOrder.indexOf(normalized)
+      : 0
+  );
+
+  return baseProgressSteps.map((step, index) => ({
+    ...step,
+    status:
+      index < currentIndex
+        ? "completed"
+        : index === currentIndex
+        ? "current"
+        : "pending",
+  }));
 };
 
 const Tracking1 = () => {
@@ -54,8 +83,87 @@ const Tracking1 = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showTracking, setShowTracking] = useState(false);
+  const [trackingOrder, setTrackingOrder] = useState(null);
+  const [trackingQuery, setTrackingQuery] = useState(null);
+  const pollingRef = useRef(null);
 
-  const handleSubmit = () => {
+  const progressSteps = getProgressSteps(trackingOrder?.status);
+
+  const getStatusLabel = (status) => {
+    const labels = {
+      pickup: "Pickup",
+      processing: "Processing",
+      cleaning: "Cleaning",
+      out_for_delivery: "Out For Delivery",
+      completed: "Completed",
+      cancelled: "Cancelled",
+    };
+
+    return labels[normalizeStatus(status)] || "Processing";
+  };
+
+  const getStatusDescription = (status) => {
+    const descriptions = {
+      pickup: "Your order has been received and is waiting to be collected.",
+      processing: "Your laundry is currently being processed at our facility.",
+      cleaning: "Your items are under active cleaning and care.",
+      out_for_delivery: "Your order is on the way to your location.",
+      completed: "Your order has been delivered successfully.",
+      cancelled: "This order has been cancelled.",
+    };
+
+    return descriptions[normalizeStatus(status)] || "Your order status has been updated.";
+  };
+
+  const getEtaLabel = (status) => {
+    const etaMap = {
+      pickup: "Pickup Pending",
+      processing: "24-48 Hours",
+      cleaning: "24-48 Hours",
+      out_for_delivery: "12 Minutes",
+      completed: "Delivered",
+      cancelled: "Not Available",
+    };
+
+    return etaMap[normalizeStatus(status)] || "24-48 Hours";
+  };
+
+  const getDeliveryTimeLabel = (order) => {
+    if (!order) return "Not Scheduled";
+    if (normalizeStatus(order.status) === "completed") return "Completed";
+    if (normalizeStatus(order.status) === "cancelled") return "Cancelled";
+    if (order.deliveryDate) return new Date(order.deliveryDate).toLocaleString();
+    return "In Progress";
+  };
+
+  const fetchTrackedOrder = async (query, { silent = false } = {}) => {
+    if (!query?.orderId || !query?.phone) {
+      throw new Error("Order ID and Mobile Number are required");
+    }
+
+    if (!silent) {
+      setLoading(true);
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/orders/track?orderId=${encodeURIComponent(query.orderId)}&phone=${encodeURIComponent(query.phone)}`
+      );
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Invalid Order ID or Mobile Number");
+      }
+
+      return data.order;
+    } finally {
+      if (!silent) {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleSubmit = async () => {
     let newErrors = {};
 
     if (!mobile) {
@@ -68,26 +176,62 @@ const Tracking1 = () => {
       newErrors.orderId = "Order ID is required";
     }
 
-    if (
-      mobile &&
-      orderId &&
-      (mobile !== validOrder.mobile ||
-        orderId !== validOrder.orderId)
-    ) {
-      newErrors.orderId = "Invalid Order ID or Mobile Number";
-    }
-
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      setLoading(true);
+      setTrackingQuery(null);
+      setTrackingOrder(null);
+      setShowTracking(false);
 
-      setTimeout(() => {
-        setLoading(false);
+      try {
+        const order = await fetchTrackedOrder({ orderId: orderId.trim(), phone: mobile.trim() });
+        setTrackingOrder(order);
+        setTrackingQuery({ orderId: orderId.trim(), phone: mobile.trim() });
         setShowTracking(true);
-      }, 1200);
+        setErrors({});
+      } catch (error) {
+        setTrackingOrder(null);
+        setShowTracking(false);
+        setErrors({
+          orderId: error.message || "Invalid Order ID or Mobile Number",
+        });
+      }
     }
   };
+
+  useEffect(() => {
+    if (!trackingQuery) return undefined;
+
+    let cancelled = false;
+
+    const poll = async () => {
+      try {
+        const order = await fetchTrackedOrder(trackingQuery, { silent: true });
+        if (!cancelled) {
+          setTrackingOrder(order);
+          setShowTracking(true);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setErrors((prev) => ({
+            ...prev,
+            orderId: error.message || "Invalid Order ID or Mobile Number",
+          }));
+        }
+      }
+    };
+
+    poll();
+    pollingRef.current = setInterval(poll, 10000);
+
+    return () => {
+      cancelled = true;
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
+  }, [trackingQuery]);
 
   return (
     <UserLayout> {/* WRAPPED WITH UserLayout */}
@@ -365,20 +509,19 @@ const Tracking1 = () => {
 
                       <span className="bg-white/20 text-white px-5 py-2 rounded-full font-medium">
 
-                        ORDER #ATH987654
+                        ORDER #{trackingOrder?.orderId || orderId || "N/A"}
 
                       </span>
 
                       <h1 className="text-5xl font-bold text-white mt-8">
 
-                        Out For Delivery
+                        {getStatusLabel(trackingOrder?.status)}
 
                       </h1>
 
                       <p className="text-blue-100 mt-5 text-lg leading-8">
 
-                        Your laundry has been cleaned, packed and is now
-                        on the way to your location.
+                        {getStatusDescription(trackingOrder?.status)}
 
                       </p>
 
@@ -396,7 +539,7 @@ const Tracking1 = () => {
 
                           <h2 className="text-white text-2xl font-bold mt-2">
 
-                            12 Minutes
+                            {getEtaLabel(trackingOrder?.status)}
 
                           </h2>
 
@@ -414,7 +557,7 @@ const Tracking1 = () => {
 
                           <h2 className="text-white text-2xl font-bold mt-2">
 
-                            Today • 4:30 PM
+                            {getDeliveryTimeLabel(trackingOrder)}
 
                           </h2>
 
@@ -428,7 +571,13 @@ const Tracking1 = () => {
 
                           <span>Order Progress</span>
 
-                          <span>85%</span>
+                          <span>
+                            {Math.round(
+                              ((progressSteps.findIndex((step) => step.status === "current") + 1) /
+                                progressSteps.length) *
+                                100
+                            )}%
+                          </span>
 
                         </div>
 
@@ -436,7 +585,7 @@ const Tracking1 = () => {
 
                           <motion.div
                             initial={{ width: 0 }}
-                            animate={{ width: "85%" }}
+                            animate={{ width: `${Math.round(((progressSteps.findIndex((step) => step.status === "current") + 1) / progressSteps.length) * 100)}%` }}
                             transition={{ duration: 1.5 }}
                             className="h-full bg-green-400 rounded-full"
                           />
@@ -462,13 +611,13 @@ const Tracking1 = () => {
 
                         <h2 className="text-2xl font-bold mt-5">
 
-                          Rahul Verma
+                          {trackingOrder?.customerName || "Customer"}
 
                         </h2>
 
                         <p className="text-gray-500">
 
-                          Delivery Partner
+                          {trackingOrder?.phone || "Order Contact"}
 
                         </p>
 
@@ -484,7 +633,7 @@ const Tracking1 = () => {
 
                             <span className="font-semibold">
 
-                              UP16 AB4321
+                              {trackingOrder?.address || "No address provided"}
 
                             </span>
 
@@ -500,7 +649,7 @@ const Tracking1 = () => {
 
                             <span className="font-semibold">
 
-                              ⭐ 4.9
+                              {trackingOrder?.paymentMethod || "COD"}
 
                             </span>
 
