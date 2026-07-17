@@ -1,4 +1,4 @@
- import axios from 'axios';
+  import axios from 'axios';
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Form, Link ,useNavigate} from 'react-router-dom';
@@ -19,14 +19,42 @@ const SignUp = () => {
 
   const navigate = useNavigate(); 
 
-  const handleChange = (e) => {
+   const handleChange = (e) => {
+  const { name, value } = e.target;
 
-    setText({ ...text, [e.target.name]: e.target.value });
+  let updatedValue = value;
+
+  // Allow only 10 digits
+  if (name === "number") {
+    updatedValue = value.replace(/\D/g, "").slice(0, 10);
   }
+
+ 
+
+  setText({
+    ...text,
+    [name]: updatedValue,
+  });
+};
 
 
    const handleSubmit = async (e) => {
   e.preventDefault();
+  if (text.number.length !== 10) {
+  return Swal.fire({
+    icon: "error",
+    title: "Invalid Mobile Number",
+    text: "Mobile number must be exactly 10 digits.",
+  });
+}
+
+if (text.Password.length < 8) {
+  return Swal.fire({
+    icon: "error",
+    title: "Weak Password",
+    text: "Password must contain at least 8 characters.",
+  });
+}
 
   try {
     // Map your 'text' state fields to match the backend expectations
@@ -154,15 +182,15 @@ const SignUp = () => {
                 <div className="mt-2 border rounded-xl h-12 flex items-center px-4">
                   <User className="text-gray-400 w-5" />
 
-                  <input
-                    type="text"
-                    name="FirstName"
-                    placeholder="First Name"
-                    className="w-full px-3 outline-none"
-                    value={text.FirstName}
-                    onChange={handleChange}
-                    required
-                  />
+                 <input
+      type="text"
+      name="FirstName"
+      placeholder="First Name"
+      className="w-full px-3 outline-none"
+      value={text.FirstName}
+      onChange={handleChange}
+      required
+    />
                 </div>
               </div>
 
@@ -246,14 +274,15 @@ const SignUp = () => {
                 <Lock className="text-gray-400 w-5" />
 
                 <input
-
-                  type={showPassword ? "text" : "password"}
-                  placeholder="password"
-                  className="w-full px-3 outline-none"
-                  name="Password"
-                  value={text.Password}
-                  onChange={handleChange}
-                />
+  type={showPassword ? "text" : "password"}
+  placeholder="Password"
+  className="w-full px-3 outline-none"
+  name="Password"
+  value={text.Password}
+  onChange={handleChange}
+  minLength={8}
+  required
+/>
 
                 <button onClick={() => setShowPassword(!showPassword)} type='button' >
                   {showPassword ? <Eye /> : <EyeOff />}
