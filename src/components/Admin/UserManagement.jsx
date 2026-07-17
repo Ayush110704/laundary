@@ -312,22 +312,17 @@ function UserDetailView({ user, onBack, onEdit }) {
             <div className="mt-6">
               <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Account Status</h3>
               <div className="grid grid-cols-2 gap-3">
-                <div className="p-3 bg-gray-50 rounded-lg">
-                  <p className="text-xs text-gray-500">Status</p>
-                  <p className={`text-sm font-semibold ${user.status === 'Active' ? 'text-green-600' : 'text-red-600'}`}>
-                    {user.status}
-                  </p>
-                </div>
+                
                 <div className="p-3 bg-gray-50 rounded-lg">
                   <p className="text-xs text-gray-500">Joined Date</p>
                   <p className="text-sm font-medium text-gray-800">{new Date(user.joined).toLocaleDateString()}</p>
                 </div>
-                {user.closedDate && (
+                {/* {user.closedDate && (
                   <div className="p-3 bg-gray-50 rounded-lg col-span-2">
                     <p className="text-xs text-gray-500">Account Closed On</p>
                     <p className="text-sm font-medium text-gray-800">{new Date(user.closedDate).toLocaleDateString()}</p>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>
@@ -376,16 +371,7 @@ function UserDetailView({ user, onBack, onEdit }) {
               </div>
             </div>
 
-            {/* Last Login */}
-            <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-gray-500" />
-                <p className="text-xs text-gray-500">Last Login</p>
-              </div>
-              <p className="text-sm font-medium text-gray-800">
-                {user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Never logged in'}
-              </p>
-            </div>
+            
           </div>
         </div>
       </div>
@@ -906,14 +892,14 @@ function UserManagement() {
             <p className="text-sm text-gray-500">Total Customers</p>
             <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-green-500 hover:shadow-md transition">
+          {/* <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-green-500 hover:shadow-md transition">
             <p className="text-sm text-gray-500">Active</p>
             <p className="text-2xl font-bold text-green-600">{stats.active}</p>
           </div>
           <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-red-500 hover:shadow-md transition">
             <p className="text-sm text-gray-500">Deactive</p>
             <p className="text-2xl font-bold text-red-600">{stats.deactive}</p>
-          </div>
+          </div> */}
           <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-purple-500 hover:shadow-md transition">
             <p className="text-sm text-gray-500">Total Bookings</p>
             <p className="text-2xl font-bold text-purple-600">{stats.totalBookings}</p>
@@ -936,7 +922,7 @@ function UserManagement() {
             </div>
 
             {/* Filters */}
-            <select
+            {/* <select
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
@@ -944,10 +930,10 @@ function UserManagement() {
               <option value="All">All Status</option>
               <option value="Active">Active</option>
               <option value="Deactive">Deactive</option>
-            </select>
+            </select> */}
 
             {/* Bulk Actions */}
-            {selectedUsers.length > 0 && (
+            {/* {selectedUsers.length > 0 && (
               <div className="flex gap-2 items-center flex-wrap">
                 <span className="text-sm text-gray-600 font-medium">{selectedUsers.length} selected</span>
                 <button
@@ -972,7 +958,7 @@ function UserManagement() {
                   Delete
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         </div>
 
@@ -992,10 +978,10 @@ function UserManagement() {
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Contact</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  {/* <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th> */}
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bookings</th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Joined</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Closed Date</th>
+                  {/* <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Closed Date</th> */}
                   <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                 </tr>
               </thead>
@@ -1049,9 +1035,9 @@ function UserManagement() {
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    {/* <td className="px-4 py-3">
                       {getStatusBadge(user.status)}
-                    </td>
+                    </td> */}
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1 text-sm font-medium text-gray-700">
                         <ShoppingBag className="w-4 h-4 text-blue-500" />
@@ -1064,7 +1050,7 @@ function UserManagement() {
                         {new Date(user.joined).toLocaleDateString()}
                       </div>
                     </td>
-                    <td className="px-4 py-3 hidden lg:table-cell">
+                    {/* <td className="px-4 py-3 hidden lg:table-cell">
                       {user.status === 'Deactive' && user.closedDate ? (
                         <div className="flex items-center gap-1 text-sm text-red-600 whitespace-nowrap">
                           <CalendarX className="w-4 h-4 flex-shrink-0" />
@@ -1073,10 +1059,10 @@ function UserManagement() {
                       ) : (
                         <span className="text-sm text-gray-400">—</span>
                       )}
-                    </td>
+                    </td> */}
                     <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-end gap-1">
-                        <button
+                        {/* <button
                           onClick={() => handleToggleStatus(user.id)}
                           className={`p-1.5 rounded hover:bg-gray-100 transition-colors
                             ${user.status === 'Active' ? 'text-red-500 hover:text-red-700' : 'text-green-500 hover:text-green-700'}`}
@@ -1084,7 +1070,7 @@ function UserManagement() {
                           type="button"
                         >
                           {user.status === 'Active' ? <UserX className="w-4 h-4" /> : <UserCheck className="w-4 h-4" />}
-                        </button>
+                        </button> */}
                         <button
                           onClick={() => handleUserClick(user)}
                           className="p-1.5 rounded hover:bg-gray-100 text-blue-500 hover:text-blue-700 transition-colors"

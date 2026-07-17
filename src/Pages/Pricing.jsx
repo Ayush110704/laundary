@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Shirt, Sparkles, CheckCircle2, ArrowRight } from "lucide-react";
+import { Shirt, Sparkles, CheckCircle2, ArrowRight, IndianRupee } from "lucide-react";
 import { MdOutlineIron } from "react-icons/md";
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
@@ -15,10 +15,10 @@ const Pricing = () => {
   const pricing = [
     {
       id: 1,
-      title: "Wash & Fold",
+      title: "Laundry",
       description: "Perfect for everyday laundry.",
-      price: "$1.95",
-      unit: "/ lb",
+      price: "20",
+      unit: "/item",
       icon: Shirt,
       features: [
         {
@@ -40,8 +40,8 @@ const Pricing = () => {
       id: 2,
       title: "Dry Cleaning",
       description: "Specialized care for delicate items.",
-      price: "$6.50",
-      unit: "/ item",
+      price: "30",
+      unit: "/item",
       icon: Sparkles,
       popular: true,
       features: [
@@ -65,8 +65,8 @@ const Pricing = () => {
       id: 3,
       title: "Iron & Press",
       description: "Crisp, professional results.",
-      price: "$3.25",
-      unit: "/ item",
+      price: "15",
+      unit: "/item",
       icon: MdOutlineIron,
       features: [
         {
@@ -160,9 +160,9 @@ const Pricing = () => {
                       {item.description}
                     </p>
 
-                    <h1 className="mt-4 text-4xl font-bold text-blue-900 transition-colors duration-500 group-hover:text-white">
-                      {item.price}
-                      <span className="text-sm font-normal text-blue-700 group-hover:text-blue-100 transition-colors duration-500">
+                    <h1 className="mt-4 text-4xl font-bold text-blue-900 transition-colors duration-500 group-hover:text-white flex">
+                      <span className="flex items-center"><IndianRupee size={30} className='mt-1'/>{item.price}</span>
+                      <span className="text-sm font-normal text-blue-700 group-hover:text-blue-100 transition-colors duration-500 mt-5">
                         {item.unit}
                       </span>
                     </h1>
@@ -185,6 +185,7 @@ const Pricing = () => {
 
                     <div className="mt-7 mb-3">
                       <button
+                      onClick={()=>navigate("/checkout")}
                         className="w-full rounded-xl border border-blue-900 py-3 font-semibold text-blue-900 transition-all duration-500 group-hover:bg-white group-hover:text-blue-900"
                       >
                         {hoveredId === item.id ? "Book Now" : "Select Service"}

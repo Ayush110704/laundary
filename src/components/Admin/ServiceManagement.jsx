@@ -38,7 +38,7 @@ function ServiceDetail({ service, onBack }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
         {/* LEFT SIDE */}
-        <div>
+        <div className="">
           <h2 className="text-gray-600 font-semibold uppercase tracking-wide mb-4">
             Service Information
           </h2>
@@ -86,8 +86,9 @@ function ServiceDetail({ service, onBack }) {
               </span>
             </div>
           </div>
+          </div>
 
-          <div className="mt-6">
+          <div className="mt-6 ">
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
               Items List (with price)
             </h3>
@@ -116,10 +117,10 @@ function ServiceDetail({ service, onBack }) {
               </table>
             </div>
           </div>
-        </div>
+       
 
         {/* RIGHT SIDE */}
-        <div>
+        {/* <div>
           <h2 className="text-gray-600 font-semibold uppercase tracking-wide mb-4">
             Service Analytics
           </h2>
@@ -191,7 +192,7 @@ function ServiceDetail({ service, onBack }) {
           </div>
 
           {/* Additional Insights */}
-          <div className="mt-4 bg-yellow-100 rounded-xl p-4">
+          {/* <div className="mt-4 bg-yellow-100 rounded-xl p-4">
             <p className="text-sm text-gray-500">
               Success Rate
             </p>
@@ -219,7 +220,7 @@ function ServiceDetail({ service, onBack }) {
               )}
             </h3>
           </div>
-        </div>
+        </div> */} 
       </div>
     </div>
   );

@@ -215,7 +215,7 @@ const AddressForm = ({
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                  <i className="fa-solid fa-water text-blue-400 mr-1"></i> Watermark (Optional)
+                  <i className="fa-solid fa-water text-blue-400 mr-1"></i> Landmark (Optional)
                 </label>
                 <input
                   type="text"

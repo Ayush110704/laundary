@@ -1022,10 +1022,10 @@ function BookingDetailView({ booking, onBack, onRefund, onStatusUpdate }) {
               Process Refund
             </button>
           )}
-          <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm flex items-center gap-2">
+          {/* <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm flex items-center gap-2">
             <Download className="w-4 h-4" />
             Invoice
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -1362,7 +1362,7 @@ function OrderManagement() {
     cleaning: bookings.filter(b => b.status === 'cleaning').length,
     out_for_delivery: bookings.filter(b => b.status === 'out_for_delivery').length,
     completed: bookings.filter(b => b.status === 'completed').length,
-    cancelled: bookings.filter(b => b.status === 'cancelled').length,
+  
     totalRevenue: bookings.reduce((sum, b) => sum + b.totalAmount, 0),
   };
 
@@ -1661,7 +1661,7 @@ function OrderManagement() {
         
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-gray-500 hover:shadow-md transition">
             <p className="text-sm text-gray-500">Total</p>
             <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
@@ -1686,10 +1686,7 @@ function OrderManagement() {
             <p className="text-sm text-gray-500">Completed</p>
             <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-red-500 hover:shadow-md transition">
-            <p className="text-sm text-gray-500">Cancelled</p>
-            <p className="text-2xl font-bold text-red-600">{stats.cancelled}</p>
-          </div>
+         
         </div>
 
         <div className="bg-white rounded-lg shadow-sm p-4 mb-6">

@@ -400,13 +400,13 @@ const Profile = () => {
             </div>
 
             {/* Profile Status */}
-            <div className="bg-white rounded-xl p-2 md:p-4 border border-gray-200 text-center flex flex-col justify-center">
+            {/* <div className="bg-white rounded-xl p-2 md:p-4 border border-gray-200 text-center flex flex-col justify-center">
               <p className="text-[10px] md:text-xs text-gray-500">Profile Status</p>
               <p className="text-[11px] md:text-sm font-semibold text-green-600 mt-0.5 md:mt-1">
                 <i className="fas fa-check-circle mr-0.5 md:mr-1 text-[10px] md:text-sm"></i> 
                 <span className="text-[11px] md:text-sm">Active</span>
               </p>
-            </div>
+            </div> */}
 
             {/* Profile Complete */}
             <div className="bg-white rounded-xl p-2 md:p-4 border border-gray-200 flex flex-col items-center justify-center"> 

@@ -5,7 +5,7 @@ import dryclean from '../assets/dryclean.webp';
 import Iron from '../assets/Iron.jpg';
 import HomeCurtain from '../assets/HomeCurtain.jpg'
 import HomeShoe from "../assets/HomeShoe.jpg"
-import HomeCarpet  from '../assets/HomeCarpet.jpg'
+import HomeCarpet  from '../assets/HomeCarpet.png'
 // Import feature icons
 import supportIcon from '../assets/customersupport.webp';
 import deliveryIcon from '../assets/fastdelivery.webp';

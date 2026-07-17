@@ -212,7 +212,7 @@ const UserLayout = ({ children }) => {
                             </span>
                             {item.name}
                           </div>
-                          {item.id === "orders" && newOrdersCount > 0 && (
+                          {/* {item.id === "orders" && newOrdersCount > 0 && (
                             <span className={`w-5 h-5 font-bold text-[10px] rounded-full flex items-center justify-center transition-colors shadow-sm ${
                               isSelected 
                                 ? "bg-white text-indigo-600" 
@@ -220,7 +220,7 @@ const UserLayout = ({ children }) => {
                             }`}>
                               {newOrdersCount}
                             </span>
-                          )}
+                          )} */}
                         </button>
                       );
                     })}
@@ -292,7 +292,7 @@ const UserLayout = ({ children }) => {
                       <span>{item.name}</span>
                     </div>
 
-                    {item.id === "orders" && newOrdersCount > 0 && (
+                    {/* {item.id === "orders" && newOrdersCount > 0 && (
                       <span className={`z-10 w-5 h-5 font-bold text-[10px] rounded-full flex items-center justify-center transition-colors shadow-sm ${
                         isSelected 
                           ? "bg-white text-indigo-600" 
@@ -300,7 +300,7 @@ const UserLayout = ({ children }) => {
                       }`}>
                         {newOrdersCount}
                       </span>
-                    )}
+                    )} */}
                   </button>
                 );
               })}
@@ -403,11 +403,11 @@ const UserLayout = ({ children }) => {
                   )}
                   
                   {/* Badge for orders */}
-                  {item.id === "orders" && newOrdersCount > 0 && (
+                  {/* {item.id === "orders" && newOrdersCount > 0 && (
                     <span className="absolute -top-1 -right-2 w-4 h-4 bg-rose-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm animate-pulse">
                       {newOrdersCount}
                     </span>
-                  )}
+                  )} */}
                 </div>
                 
                 {/* Label */}

@@ -5,7 +5,7 @@ import ServiceImageMobile from '../assets/Services/ServiceImageMobile.png'
 import Ironing from '../assets/Services/Ironing.jpg'
 import Warehouse from '../assets/Services/Warehouse.png'
 import { motion } from 'framer-motion'
-import { CircleCheck, Star, Minus, MoveRight, Clock3, Leaf, Truck, ShieldCheck, Play, Ampersand } from 'lucide-react';
+import { CircleCheck, Star, Minus, MoveRight, Clock3, Leaf, Truck, ShieldCheck, Play, Ampersand,IndianRupee } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import FloatingCard from '../Ui/FloatingCard.jsx';
 import Stat from '../Ui/Stat.jsx';
@@ -28,20 +28,20 @@ const Services = () => {
 
   const price = [
     {
-      id: 1, title: "Everyday Wear", price: "$6.50", includes: [
-        { id: 1, type: "Shirts & Blouses" },
-        { id: 2, type: "Trousers & Skirts" },
+      id: 1, title: "Laundry", price: "20", includes: [
+        { id: 1, type: "Wash,Fold and Ironed" },
+        { id: 2, type: "Trousers, Shirts ,Skirts ,etc" },
         { id: 3, type: "Standard Stain Removal" }]
     },
     {
-      id: 2, title: "Suits & Outerwear", price: "$18.00", includes: [
+      id: 2, title: "Dry Cleaning", price: "30", includes: [
         { id: 1, type: "2 Piece Suits" },
         { id: 2, type: "Heavy Winter Coats" },
         { id: 3, type: "Silk & Velvet Handling" }
       ]
     },
     {
-      id: 3, title: "Beeding & Linens", price: "$24.00", includes: [
+      id: 3, title: "Curtains and Carpets", price: "50", includes: [
         { id: 1, type: "Comforters & Duvets" },
         { id: 2, type: "Curtains & Drapery" },
         { id: 3, type: "Deep Sanitize Cycle" }]
@@ -551,6 +551,7 @@ const Services = () => {
                   </motion.div>
                 </Link>
               </footer>
+               <div className=" hidden md:flex h-1 w-0 bg-linear-to-r from-blue-600 to-cyan-500 transition-all duration-500 group-hover:w-full"></div>
             </motion.div>
           ))}
         </motion.div>
@@ -654,14 +655,14 @@ const Services = () => {
                 key={item.id}
                 onMouseEnter={() => setHoveredId(item.id)}
                 onMouseLeave={() => setHoveredId(null)}
-                className="group w-full min-h-[350px] border border-gray-300 rounded-2xl p-6 bg-blue-50 text-start transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-blue-900 hover:bg-gray-50"
+                className="group w-full min-h-[350px] border border-gray-300 rounded-2xl p-6 bg-blue-50 text-start transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:border-white hover:bg-blue-900 hover:text-white"
               >
                 <h2 className="font-semibold text-lg">
                   {item.title}
                 </h2>
-                <h1 className="mt-4 text-3xl md:text-4xl font-bold text-blue-900">
-                  {item.price}
-                  <span className="text-sm font-normal text-gray-600">
+                <h1 className="mt-4 text-3xl md:text-4xl font-bold text-blue-900 flex group-hover:text-white">
+                 <span className="flex  items-center"><IndianRupee size={30} className='mt-1'/>{item.price}</span> 
+                  <span className="text-sm font-normal text-gray-600 mt-4 group-hover:text-white">
                     /item
                   </span>
                 </h1>
@@ -669,15 +670,17 @@ const Services = () => {
                   {item.includes.map((include) => (
                     <li
                       key={include.id}
-                      className="flex items-center gap-2 text-gray-700 font-semibold text-sm md:text-base"
+                      className="flex items-center gap-2 text-gray-700 font-semibold text-sm md:text-base group-hover:text-white"
                     >
-                      <CircleCheck className="h-5 w-5 text-blue-950 shrink-0" />
+                      <CircleCheck className="h-5 w-5 text-blue-950 shrink-0 group-hover:text-white " />
                       {include.type}
                     </li>
                   ))}
                 </ul>
                 <div className="mt-10 flex justify-center">
-                  <button className="w-full md:w-56 py-3 rounded-xl border border-blue-950 text-blue-950 font-semibold text-base md:text-lg transition-all duration-500 group-hover:bg-blue-900 group-hover:text-white">
+                  <button 
+                  onClick={()=>navigate("/checkout")}
+                  className="w-full md:w-56 py-3 rounded-xl border border-blue-950 text-blue-950 font-semibold text-base md:text-lg transition-all duration-500 group-hover:bg-white group-hover:border-white group-hover:text-blue-950 hover:scale-105">
                     {hoveredId === item.id ? "Book Now" : "Select Tier"}
                   </button>
                 </div>

@@ -310,7 +310,7 @@ function Analytics() {
   }).length;
   const pendingOrders = bookings.filter(b => b.status?.toLowerCase() === 'pickup' || b.status?.toLowerCase() === 'pending').length;
   const cancelledOrders = bookings.filter(b => b.status?.toLowerCase() === 'cancelled').length;
-  const refundedOrders = bookings.filter(b => b.paymentStatus?.toLowerCase() === 'refunded').length;
+ 
   
   const avgOrderValue = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
   const completionRate = totalOrders > 0 ? Math.round((completedOrders / totalOrders) * 100) : 0;
@@ -471,7 +471,7 @@ function Analytics() {
         </div>
 
         {/* STATS CARDS */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-6">
           <StatCard
             title="Total Revenue"
             value={`₹${totalRevenue.toLocaleString()}`}
@@ -511,13 +511,7 @@ function Analytics() {
             trend={avgOrderValue > 0 ? "up" : "down"}
             trendValue={avgOrderValue > 0 ? "3.7%" : "0%"}
           />
-          <StatCard
-            title="Refunded"
-            value={refundedOrders}
-            icon={AlertTriangle}
-            color="bg-gradient-to-br from-red-500 to-red-600"
-            subtitle={`${cancelledOrders} cancelled`}
-          />
+         
         </div>
 
         {/* MAIN CHARTS ROW */}
@@ -609,7 +603,7 @@ function Analytics() {
           </div>
 
           {/* Popular Services */}
-          <div className="bg-white rounded-xl shadow-sm p-6">
+          {/* <div className="bg-white rounded-xl shadow-sm p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <Layers className="w-5 h-5 text-purple-500" />
               Popular Services
@@ -631,47 +625,10 @@ function Analytics() {
                 <p className="text-center text-gray-500 py-8">No services yet</p>
               )}
             </div>
-          </div>
+          </div> */}
         </div>
 
-        {/* QUICK INSIGHTS */}
-        <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
-            <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-600" />
-              <span className="text-xs font-medium text-green-700">Conversion Rate</span>
-            </div>
-            <p className="text-xl font-bold text-green-700 mt-1">{completionRate}%</p>
-            <p className="text-xs text-green-600">{completedOrders} completed out of {totalOrders}</p>
-          </div>
-          
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
-            <div className="flex items-center gap-2">
-              <Percent className="w-4 h-4 text-blue-600" />
-              <span className="text-xs font-medium text-blue-700">Growth Rate</span>
-            </div>
-            <p className="text-xl font-bold text-blue-700 mt-1">+{totalOrders > 0 ? '15.3' : '0'}%</p>
-            <p className="text-xs text-blue-600">Compared to last month</p>
-          </div>
-          
-          <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 border border-purple-200">
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-purple-600" />
-              <span className="text-xs font-medium text-purple-700">Avg Response</span>
-            </div>
-            <p className="text-xl font-bold text-purple-700 mt-1">{totalOrders > 0 ? '2.4' : '0'} hrs</p>
-            <p className="text-xs text-purple-600">Average response time</p>
-          </div>
-          
-          <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
-            <div className="flex items-center gap-2">
-              <Award className="w-4 h-4 text-orange-600" />
-              <span className="text-xs font-medium text-orange-700">Satisfaction</span>
-            </div>
-            <p className="text-xl font-bold text-orange-700 mt-1">{totalOrders > 0 ? '4.8' : '0'}/5.0</p>
-            <p className="text-xs text-orange-600">Based on customer feedback</p>
-          </div>
-        </div>
+        
       </div>
     </div>
   );

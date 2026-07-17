@@ -124,7 +124,7 @@ const Navbar = () => {
                   <>
                     <NavLink to={item.path}
                       className={({ isActive }) =>
-                        `flex items-center gap-1 transition-colors duration-300 ${isActive || location.pathname.startsWith("/services")
+                        `relative flex items-center gap-1 transition-colors duration-300 ${isActive || location.pathname.startsWith("/services")
                           ? "text-blue-600"
                           : "text-gray-950 hover:text-blue-600"
                         }`
@@ -134,12 +134,12 @@ const Navbar = () => {
                       {item.label}
                       <ChevronDown
                         size={20}
-                        className="mt-1 transition-transform duration-300 group-hover:rotate-180"
+                        className=" mt-1 transition-transform duration-300 group-hover:rotate-180"
                       />
                       {location.pathname.startsWith("/services") && (
                         <motion.div
                           layoutId="active-navbar"
-                          className="absolute left-1/3 -translate-x-1/6  -bottom-1 h-[2px] w-[30px] rounded-full bg-blue-600"
+                          className="absolute left-1/3 -translate-x-1/6  top-full mt-7 h-[2px] w-[30px] rounded-full bg-blue-600"
                           transition={{
                             type: "spring",
                             stiffness: 450,

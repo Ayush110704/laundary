@@ -92,16 +92,7 @@ function PaymentDetailView({ payment, onBack }) {
             <p className="text-sm text-gray-500">#{payment.id}</p>
           </div>
         </div>
-        <div className="flex gap-2">
-          <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm flex items-center gap-2">
-            <Download className="w-4 h-4" />
-            Receipt
-          </button>
-          <button className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition text-sm flex items-center gap-2">
-            <Send className="w-4 h-4" />
-            Email Receipt
-          </button>
-        </div>
+        
       </div>
 
       {/* Payment Details Grid */}
@@ -295,7 +286,7 @@ function Payments() {
     total: payments.length,
     completed: payments.filter(p => p.paymentStatus === 'Completed').length,
     pending: payments.filter(p => p.paymentStatus === 'Pending').length,
-    refunded: payments.filter(p => p.paymentStatus === 'Refunded').length,
+    // refunded: payments.filter(p => p.paymentStatus === 'Refunded').length,
     totalRevenue: payments.filter(p => p.paymentStatus === 'Completed').reduce((sum, p) => sum + p.amount, 0),
   };
 
@@ -343,7 +334,7 @@ function Payments() {
     const config = {
       'Completed': { color: 'bg-green-100 text-green-800', icon: CheckCircle },
       'Pending': { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-      'Refunded': { color: 'bg-red-100 text-red-800', icon: AlertTriangle },
+      // 'Refunded': { color: 'bg-red-100 text-red-800', icon: AlertTriangle },
       'Failed': { color: 'bg-red-100 text-red-800', icon: XCircle }
     };
     const { color, icon: Icon } = config[status] || config.Pending;
@@ -410,7 +401,7 @@ function Payments() {
         </div>
 
         {/* STATS CARDS */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-4 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-blue-500 hover:shadow-md transition">
             <p className="text-sm text-gray-500">Total</p>
             <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
@@ -423,10 +414,7 @@ function Payments() {
             <p className="text-sm text-gray-500">Pending</p>
             <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
           </div>
-          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-red-500 hover:shadow-md transition">
-            <p className="text-sm text-gray-500">Refunded</p>
-            <p className="text-2xl font-bold text-red-600">{stats.refunded}</p>
-          </div>
+          
           <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-purple-500 hover:shadow-md transition">
             <p className="text-sm text-gray-500">Revenue</p>
             <p className="text-2xl font-bold text-purple-600">₹{stats.totalRevenue}</p>
