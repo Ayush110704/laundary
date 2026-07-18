@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Form, Link ,useNavigate} from 'react-router-dom';
 import  Swal  from 'sweetalert2'
 import { User, Mail, Phone, Lock, Eye, EyeOff, MapPin, Shield, Star, } from "lucide-react";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);

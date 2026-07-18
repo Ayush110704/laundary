@@ -9,6 +9,7 @@ import logo from '../assets/Athenura.png'
 import {Link, useNavigate} from 'react-router-dom'
 import Image from '../assets/LoginImage.jpeg'
 import Swal from 'sweetalert2'
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);

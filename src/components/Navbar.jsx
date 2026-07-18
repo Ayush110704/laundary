@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown, ChevronUp, User, LogOut } from "lucide-react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/Athenura.png";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const Navbar = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -43,8 +44,8 @@ const Navbar = () => {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/services");
-        const result = await res.json();
+        const res = await axios.post(`${API_URL}/api/auth/services`);
+        const result = await res.data;
         if (result.success) {
           setServicesList(result.data);
         }
