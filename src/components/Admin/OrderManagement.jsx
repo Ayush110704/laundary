@@ -157,9 +157,6 @@ const mapOrderToBooking = (order, index) => {
     notes: order.notes || '',
     paymentStatus,
     paymentMethod: normalizedPaymentMethod.toUpperCase() === 'COD' ? 'COD' : normalizedPaymentMethod,
-    refundStatus: order.refundStatus || null,
-    refundDate: order.refundDate || null,
-    refundAmount: order.refundAmount || null,
     statusUpdateHistory: order.statusUpdateHistory || []
   };
 };
@@ -190,9 +187,6 @@ const MOCK_BOOKINGS = [
     notes: 'Handle with care - silk items',
     paymentStatus: 'Paid',
     paymentMethod: 'Online',
-    refundStatus: null,
-    refundDate: null,
-    refundAmount: null,
     statusUpdateHistory: []
   },
   {
@@ -216,9 +210,6 @@ const MOCK_BOOKINGS = [
     notes: 'Use gentle detergent',
     paymentStatus: 'Paid',
     paymentMethod: 'COD',
-    refundStatus: null,
-    refundDate: null,
-    refundAmount: null,
     statusUpdateHistory: []
   },
   {
@@ -240,9 +231,6 @@ const MOCK_BOOKINGS = [
     notes: 'Extra starch on shirts',
     paymentStatus: 'Pending',
     paymentMethod: 'COD',
-    refundStatus: null,
-    refundDate: null,
-    refundAmount: null,
     statusUpdateHistory: []
   },
   {
@@ -265,9 +253,6 @@ const MOCK_BOOKINGS = [
     notes: 'Red wine stain on white shirt',
     paymentStatus: 'Paid',
     paymentMethod: 'Online',
-    refundStatus: null,
-    refundDate: null,
-    refundAmount: null,
     statusUpdateHistory: []
   },
   {
@@ -292,9 +277,6 @@ const MOCK_BOOKINGS = [
     notes: 'Wedding dress - very delicate',
     paymentStatus: 'Paid',
     paymentMethod: 'Online',
-    refundStatus: null,
-    refundDate: null,
-    refundAmount: null,
     statusUpdateHistory: []
   },
   {
@@ -318,9 +300,6 @@ const MOCK_BOOKINGS = [
     notes: 'Separate whites and colors',
     paymentStatus: 'Paid',
     paymentMethod: 'Online',
-    refundStatus: null,
-    refundDate: null,
-    refundAmount: null,
     statusUpdateHistory: []
   },
   {
@@ -343,9 +322,6 @@ const MOCK_BOOKINGS = [
     notes: 'Need same day delivery',
     paymentStatus: 'Paid',
     paymentMethod: 'COD',
-    refundStatus: null,
-    refundDate: null,
-    refundAmount: null,
     statusUpdateHistory: []
   },
   {
@@ -367,9 +343,6 @@ const MOCK_BOOKINGS = [
     notes: 'Oil stain on jacket',
     paymentStatus: 'Paid',
     paymentMethod: 'Online',
-    refundStatus: 'Completed',
-    refundDate: getDate(6),
-    refundAmount: 300,
     statusUpdateHistory: []
   },
   {
@@ -393,9 +366,6 @@ const MOCK_BOOKINGS = [
     notes: 'Saree - handle carefully',
     paymentStatus: 'Paid',
     paymentMethod: 'Online',
-    refundStatus: null,
-    refundDate: null,
-    refundAmount: null,
     statusUpdateHistory: []
   },
   {
@@ -418,136 +388,9 @@ const MOCK_BOOKINGS = [
     notes: 'First time customer',
     paymentStatus: 'Pending',
     paymentMethod: 'COD',
-    refundStatus: null,
-    refundDate: null,
-    refundAmount: null,
     statusUpdateHistory: []
   }
 ];
-
-
-// REFUND MODAL COMPONENT
-
-function RefundModal({ booking, onClose, onConfirm }) {
-  const [refundAmount, setRefundAmount] = useState(booking.totalAmount);
-  const [refundReason, setRefundReason] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!refundAmount || refundAmount <= 0) {
-      alert('Please enter a valid refund amount');
-      return;
-    }
-    if (!refundReason.trim()) {
-      alert('Please enter a reason for the refund');
-      return;
-    }
-    setLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      onConfirm({
-        amount: refundAmount,
-        reason: refundReason,
-        date: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error('Refund failed:', error);
-      alert('Failed to process refund. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 animate-fadeIn">
-      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center p-6 border-b border-gray-200">
-          <h2 className="text-xl font-bold flex items-center gap-2 text-gray-800">
-            <RotateCcw className="w-5 h-5 text-blue-600" />
-            Process Refund
-          </h2>
-          <button 
-            onClick={onClose} 
-            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
-            type="button"
-          >
-            <X className="w-5 h-5 text-gray-500" />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <p className="text-sm text-gray-600">Booking ID: <span className="font-medium">{booking.id}</span></p>
-            <p className="text-sm text-gray-600">Customer: <span className="font-medium">{booking.customerName}</span></p>
-            <p className="text-sm text-gray-600">Original Amount: <span className="font-medium text-green-600">₹{booking.totalAmount}</span></p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Refund Amount <span className="text-red-500">*</span>
-            </label>
-            <div className="relative">
-              <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <input
-                type="number"
-                value={refundAmount}
-                onChange={(e) => setRefundAmount(Number(e.target.value))}
-                max={booking.totalAmount}
-                min={0}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                required
-              />
-            </div>
-            <p className="text-xs text-gray-400 mt-1">Maximum refund amount: ₹{booking.totalAmount}</p>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Reason for Refund <span className="text-red-500">*</span>
-            </label>
-            <textarea
-              value={refundReason}
-              onChange={(e) => setRefundReason(e.target.value)}
-              rows={3}
-              placeholder="Enter reason for refund (e.g., Order cancelled, Customer request, etc.)"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-              required
-            />
-          </div>
-
-          <div className="flex gap-3 pt-4 border-t border-gray-200">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700"
-              disabled={loading}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-              disabled={loading}
-            >
-              {loading ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <RotateCcw className="w-4 h-4" />
-                  Process Refund
-                </>
-              )}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
 
 
 // STATUS NOTE MODAL COMPONENT WITH TIME PICKER
@@ -688,7 +531,30 @@ function StatusNoteModal({ status, onClose, onConfirm, booking }) {
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {status === 'pickup' && (
             <div className="grid grid-cols-2 gap-3">
-            
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Pickup Date <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={pickupDate}
+                  onChange={(e) => setPickupDate(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Pickup Time <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="time"
+                  value={pickupTime}
+                  onChange={(e) => setPickupTime(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                  required
+                />
+              </div>
             </div>
           )}
 
@@ -743,7 +609,7 @@ function StatusNoteModal({ status, onClose, onConfirm, booking }) {
 
 // BOOKING DETAIL VIEW COMPONENT
 
-function BookingDetailView({ booking, onBack, onRefund, onStatusUpdate }) {
+function BookingDetailView({ booking, onBack, onStatusUpdate }) {
   const [selectedStatus, setSelectedStatus] = useState(booking.status);
   const [showStatusNote, setShowStatusNote] = useState(false);
   const [pendingStatus, setPendingStatus] = useState(null);
@@ -808,8 +674,7 @@ function BookingDetailView({ booking, onBack, onRefund, onStatusUpdate }) {
 
   const paymentStatusConfig = {
     'Paid': { color: 'bg-green-100 text-green-800', icon: CheckCircle },
-    'Pending': { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-    'Refunded': { color: 'bg-red-100 text-red-800', icon: AlertTriangle }
+    'Pending': { color: 'bg-yellow-100 text-yellow-800', icon: Clock }
   };
 
   const getPaymentMethodIcon = (method) => {
@@ -878,26 +743,6 @@ function BookingDetailView({ booking, onBack, onRefund, onStatusUpdate }) {
   };
 
   const deliveryInfo = getDeliveryDisplay();
-
-  const canRefund = (booking.status === 'processing' || booking.status === 'cleaning' || booking.status === 'out_for_delivery' || booking.status === 'completed') && 
-                    booking.paymentStatus === 'Paid' && 
-                    booking.refundStatus !== 'Completed';
-
-  const getRefundStatusBadge = (status) => {
-    if (!status) return null;
-    const config = {
-      'Pending': { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-      'Completed': { color: 'bg-green-100 text-green-800', icon: CheckCircle },
-      'Failed': { color: 'bg-red-100 text-red-800', icon: XCircle }
-    };
-    const { color, icon: Icon } = config[status] || config.Pending;
-    return (
-      <span className={`px-2 py-1 inline-flex items-center gap-1 text-xs leading-5 font-semibold rounded-full ${color}`}>
-        <Icon className="w-3 h-3" />
-        {status}
-      </span>
-    );
-  };
 
   const getStatusBadge = (status) => {
     const config = {
@@ -1013,19 +858,10 @@ function BookingDetailView({ booking, onBack, onRefund, onStatusUpdate }) {
           </div>
         </div>
         <div className="flex gap-2">
-          {canRefund && (
-            <button 
-              onClick={() => onRefund(booking)}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm flex items-center gap-2"
-            >
-              <RotateCcw className="w-4 h-4" />
-              Process Refund
-            </button>
-          )}
-          {/* <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm flex items-center gap-2">
+          <button className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm flex items-center gap-2">
             <Download className="w-4 h-4" />
             Invoice
-          </button> */}
+          </button>
         </div>
       </div>
 
@@ -1146,15 +982,39 @@ function BookingDetailView({ booking, onBack, onRefund, onStatusUpdate }) {
                   </div>
                   <span className="text-sm font-medium text-gray-800">{booking.paymentMethod}</span>
                 </div>
+                
+                {/* Payment Status with Dropdown - Only Pending and Paid */}
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <div className="flex items-center gap-2">
                     <PaymentIcon className="w-4 h-4" />
                     <span className="text-sm text-gray-600">Payment Status</span>
                   </div>
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${paymentStatusConfig[booking.paymentStatus]?.color || 'bg-gray-100 text-gray-800'}`}>
-                    {booking.paymentStatus}
-                  </span>
+                  <select
+                    value={booking.paymentStatus}
+                    onChange={(e) => {
+                      const newStatus = e.target.value;
+                      onStatusUpdate(booking.id, {
+                        status: booking.status,
+                        paymentStatus: newStatus,
+                        note: `Payment status updated to ${newStatus}`
+                      });
+                    }}
+                    className="px-3 py-1 rounded-lg text-xs font-semibold border-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                    style={{
+                      backgroundColor: booking.paymentStatus === 'Paid' ? '#dcfce7' : '#fef3c7',
+                      color: booking.paymentStatus === 'Paid' ? '#166534' : '#92400e',
+                      borderColor: booking.paymentStatus === 'Paid' ? '#86efac' : '#fcd34d'
+                    }}
+                  >
+                    <option value="Pending" style={{ backgroundColor: '#fef3c7', color: '#92400e' }}>
+                      Pending
+                    </option>
+                    <option value="Paid" style={{ backgroundColor: '#dcfce7', color: '#166534' }}>
+                      Paid
+                    </option>
+                  </select>
                 </div>
+                
                 <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-600">Amount Paid</span>
@@ -1163,30 +1023,6 @@ function BookingDetailView({ booking, onBack, onRefund, onStatusUpdate }) {
                 </div>
               </div>
             </div>
-
-            {booking.refundStatus && (
-              <div className="mt-4">
-                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Refund Details</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <span className="text-sm text-gray-600">Refund Status</span>
-                    {getRefundStatusBadge(booking.refundStatus)}
-                  </div>
-                  {booking.refundAmount && (
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <span className="text-sm text-gray-600">Refund Amount</span>
-                      <span className="text-sm font-bold text-red-600">₹{booking.refundAmount}</span>
-                    </div>
-                  )}
-                  {booking.refundDate && (
-                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <span className="text-sm text-gray-600">Refund Date</span>
-                      <span className="text-sm font-medium text-gray-800">{new Date(booking.refundDate).toLocaleString()}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
 
             <div className="mt-4 space-y-2">
               <div className="flex items-center gap-2 text-sm">
@@ -1340,8 +1176,6 @@ function OrderManagement() {
   const [filterService, setFilterService] = useState('All');
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showDetailView, setShowDetailView] = useState(false);
-  const [showRefundModal, setShowRefundModal] = useState(false);
-  const [refundBooking, setRefundBooking] = useState(null);
   const [isLoadingOrders, setIsLoadingOrders] = useState(true);
   const [ordersError, setOrdersError] = useState('');
   const itemsPerPage = 5;
@@ -1362,7 +1196,7 @@ function OrderManagement() {
     cleaning: bookings.filter(b => b.status === 'cleaning').length,
     out_for_delivery: bookings.filter(b => b.status === 'out_for_delivery').length,
     completed: bookings.filter(b => b.status === 'completed').length,
-  
+    cancelled: bookings.filter(b => b.status === 'cancelled').length,
     totalRevenue: bookings.reduce((sum, b) => sum + b.totalAmount, 0),
   };
 
@@ -1462,65 +1296,6 @@ function OrderManagement() {
     setSelectedBooking(null);
   };
 
-  const handleRefundClick = (booking) => {
-    setRefundBooking(booking);
-    setShowRefundModal(true);
-  };
-
-  const handleRefundConfirm = async (refundData) => {
-    if (!refundBooking) return;
-    
-    updateBooking(refundBooking.id, {
-      status: 'cancelled',
-      paymentStatus: 'Refunded',
-      refundStatus: 'Completed',
-      refundDate: refundData.date,
-      refundAmount: refundData.amount,
-      notes: refundBooking.notes ? `${refundBooking.notes} | Refund: ${refundData.reason}` : `Refund: ${refundData.reason}`
-    });
-
-    if (!refundBooking.mongoId) {
-      alert('Mongo order id missing. Status was not saved to the backend.');
-    } else {
-      try {
-        const response = await fetch(`http://localhost:5000/api/orders/${refundBooking.mongoId}/status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          status: 'cancelled',
-          note: refundData.reason
-        })
-      });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-          throw new Error(result.message || 'Failed to update order status');
-        }
-      } catch (error) {
-        alert(error.message || 'Failed to update order status');
-      }
-    }
-
-    if (selectedBooking?.id === refundBooking.id) {
-      setSelectedBooking({
-        ...selectedBooking,
-        status: 'cancelled',
-        paymentStatus: 'Refunded',
-        refundStatus: 'Completed',
-        refundDate: refundData.date,
-        refundAmount: refundData.amount,
-        notes: selectedBooking.notes ? `${selectedBooking.notes} | Refund: ${refundData.reason}` : `Refund: ${refundData.reason}`
-      });
-    }
-
-    setShowRefundModal(false);
-    setRefundBooking(null);
-    alert(`Refund of ₹${refundData.amount} processed successfully! Order ${refundBooking.id} has been cancelled.`);
-  };
-
   const handleStatusUpdate = async (bookingId, statusData) => {
     const booking = bookings.find(b => b.id === bookingId);
     if (!booking) return;
@@ -1529,7 +1304,7 @@ function OrderManagement() {
     const newHistory = [...history, {
       status: statusData.status,
       date: new Date().toISOString(),
-      note: statusData.note,
+      note: statusData.note || '',
       fromStatus: statusData.fromStatus || booking.status,
       pickupDate: statusData.pickupDate || null,
       pickupTime: statusData.pickupTime || null
@@ -1540,6 +1315,11 @@ function OrderManagement() {
       statusUpdateHistory: newHistory,
       notes: statusData.note ? `${booking.notes || ''} | ${statusData.note}` : booking.notes
     };
+
+    // If paymentStatus is provided, update it
+    if (statusData.paymentStatus) {
+      updateData.paymentStatus = statusData.paymentStatus;
+    }
 
     // If status is pickup and we have pickup date, update it
     if (statusData.status === 'pickup' && statusData.pickupDate) {
@@ -1554,7 +1334,8 @@ function OrderManagement() {
         status: statusData.status,
         statusUpdateHistory: newHistory,
         notes: statusData.note ? `${selectedBooking.notes || ''} | ${statusData.note}` : selectedBooking.notes,
-        pickupDate: statusData.pickupDate || selectedBooking.pickupDate
+        pickupDate: statusData.pickupDate || selectedBooking.pickupDate,
+        paymentStatus: statusData.paymentStatus || selectedBooking.paymentStatus
       });
     }
 
@@ -1564,15 +1345,23 @@ function OrderManagement() {
     }
 
     try {
+      // Prepare the payload for the API
+      const payload = {
+        status: statusData.status,
+        note: statusData.note || ''
+      };
+      
+      // Add paymentStatus to payload if it's being updated
+      if (statusData.paymentStatus) {
+        payload.paymentStatus = statusData.paymentStatus;
+      }
+
       const response = await fetch(`http://localhost:5000/api/orders/${booking.mongoId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          status: statusData.status,
-          note: statusData.note || ''
-        })
+        body: JSON.stringify(payload)
       });
 
       const result = await response.json();
@@ -1606,8 +1395,7 @@ function OrderManagement() {
   const getPaymentStatusBadge = (status) => {
     const config = {
       'Paid': { color: 'bg-green-100 text-green-800', icon: CheckCircle },
-      'Pending': { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
-      'Refunded': { color: 'bg-red-100 text-red-800', icon: AlertTriangle }
+      'Pending': { color: 'bg-yellow-100 text-yellow-800', icon: Clock }
     };
     const { color, icon: Icon } = config[status] || config.Pending;
     return (
@@ -1625,20 +1413,9 @@ function OrderManagement() {
           <BookingDetailView 
             booking={selectedBooking} 
             onBack={handleBackToList}
-            onRefund={handleRefundClick}
             onStatusUpdate={handleStatusUpdate}
           />
         </div>
-        {showRefundModal && refundBooking && (
-          <RefundModal
-            booking={refundBooking}
-            onClose={() => {
-              setShowRefundModal(false);
-              setRefundBooking(null);
-            }}
-            onConfirm={handleRefundConfirm}
-          />
-        )}
       </div>
     );
   }
@@ -1657,11 +1434,9 @@ function OrderManagement() {
             </h1>
             <p className="text-gray-600 mt-1">Manage all bookings and orders</p>
           </div>
-          
-        
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-gray-500 hover:shadow-md transition">
             <p className="text-sm text-gray-500">Total</p>
             <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
@@ -1686,7 +1461,10 @@ function OrderManagement() {
             <p className="text-sm text-gray-500">Completed</p>
             <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
           </div>
-         
+          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-red-500 hover:shadow-md transition">
+            <p className="text-sm text-gray-500">Cancelled</p>
+            <p className="text-2xl font-bold text-red-600">{stats.cancelled}</p>
+          </div>
         </div>
 
         <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
@@ -1845,17 +1623,6 @@ function OrderManagement() {
           )}
         </div>
       </div>
-
-      {showRefundModal && refundBooking && (
-        <RefundModal
-          booking={refundBooking}
-          onClose={() => {
-            setShowRefundModal(false);
-            setRefundBooking(null);
-          }}
-          onConfirm={handleRefundConfirm}
-        />
-      )}
     </div>
   );
 }
