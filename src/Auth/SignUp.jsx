@@ -67,7 +67,7 @@ if (text.Password.length < 8) {
       address: text.Address
     };
 
-    const response = await axios.post("http://localhost:5000/api/auth/register", payload);
+    const response = await axios.post(`${API_URL}/api/auth/register`, payload);
 
     if (response.data.success) {
       await Swal.fire({

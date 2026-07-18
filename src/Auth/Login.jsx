@@ -65,7 +65,7 @@ const Login = () => {
         
         try {
             // Send credentials to your backend API route
-            const response = await axios.post("http://localhost:5000/api/auth/login", {
+            const response = await axios.post(`${API_URL}/api/auth/login`, {
                 email: userdata.Email,
                 password: userdata.Password
             });
