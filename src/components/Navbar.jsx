@@ -45,7 +45,7 @@ const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const res = await axios.post(`${API_URL}/api/auth/services`);
+        const res = await axios.get(`${API_URL}/api/services`);
         const result = await res.data;
         if (result.success) {
           setServicesList(result.data);
