@@ -12,6 +12,7 @@ import Swal from 'sweetalert2'
 
 const Login = () => {
     const API_URL = import.meta.env.VITE_API_URL;
+    console.log("API_URL =", API_URL);
     const [showPassword, setShowPassword] = useState(false);
     const [userdata, setUserdata] = useState({
         Email: "",
