@@ -25,7 +25,7 @@ const iconMap = {
 };
 
 const TermsCondition = () => {
-
+const API_URL = import.meta.env.VITE_API_URL;
   const [open, setOpen] = useState(1);
   const [terms, setTerms] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,7 +34,7 @@ const TermsCondition = () => {
     const fetchTerms = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch('http://localhost:5000/api/terms');
+        const res = await fetch(`${API_URL}/api/terms`);
         const json = await res.json();
         if (json.success && json.data) {
           setTerms(json.data);

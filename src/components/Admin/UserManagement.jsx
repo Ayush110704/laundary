@@ -383,6 +383,7 @@ function UserDetailView({ user, onBack, onEdit }) {
 // EDIT MODAL COMPONENT
 
 function EditUserModal({ user, onClose, onSave }) {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [formData, setFormData] = useState(user);
   const [loading, setLoading] = useState(false);
 
@@ -550,7 +551,7 @@ function UserManagement() {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch('http://localhost:5000/api/admin/users');
+      const res = await fetch(`${API_URL}/api/admin/users`);
       const data = await res.json();
       if (data.success) {
         const mappedUsers = data.users.map(u => ({
@@ -644,7 +645,7 @@ function UserManagement() {
   const handleDeleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this customer? This action cannot be undone.')) {
       try {
-        const res = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+       const res = await fetch(`${API_URL}/api/admin/users/${userId}`, {
           method: 'DELETE'
         });
         const data = await res.json();
@@ -670,7 +671,7 @@ function UserManagement() {
     if (window.confirm(`Delete ${selectedUsers.length} selected customers?`)) {
       try {
         const deletePromises = selectedUsers.map(id =>
-          fetch(`http://localhost:5000/api/admin/users/${id}`, { method: 'DELETE' }).then(r => r.json())
+          fetch(`${API_URL}/api/admin/users/${id}`,  { method: 'DELETE' }).then(r => r.json())
         );
         await Promise.all(deletePromises);
         setUsers(users.filter(u => !selectedUsers.includes(u.id)));
@@ -688,7 +689,7 @@ function UserManagement() {
     const today = new Date().toISOString();
     try {
       const updatePromises = selectedUsers.map(id =>
-        fetch(`http://localhost:5000/api/admin/users/${id}`, {
+       fetch(`${API_URL}/api/admin/users/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -719,7 +720,7 @@ function UserManagement() {
     const newStatus = userObj.status === 'Active' ? 'Deactive' : 'Active';
     const today = new Date().toISOString();
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
+      const res = await fetch(`${API_URL}/api/admin/users/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -749,7 +750,7 @@ function UserManagement() {
 
   const handleUpdateUser = async (updatedUser) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/users/${updatedUser.id}`, {
+     const res = await fetch(`${API_URL}/api/admin/users/${updatedUser.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -15,6 +15,7 @@ import { DEFAULT_CATEGORY_ITEMS } from "../Data/LaundaryData.js";
 import Swal from 'sweetalert2'
 
 const BookingApplyForm = ({ checkoutData, setCheckoutData, setCurrentStep, }) => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -43,7 +44,7 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData, setCurrentStep, }) =>
       }
 
       try {
-        const res = await fetch(`http://localhost:5000/api/auth/profile/${userId}`);
+        const res = await fetch(`${API_URL}/api/auth/profile/${userId}`);
         const result = await res.json();
 
         if (res.ok && result?.user) {
@@ -68,7 +69,7 @@ const BookingApplyForm = ({ checkoutData, setCheckoutData, setCurrentStep, }) =>
 
     const fetchServices = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/services");
+        const res = await fetch(`${API_URL}/api/services`);
         const result = await res.json();
         if (result.success) {
           setDbServices(result.data);

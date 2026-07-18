@@ -9,7 +9,7 @@ const ForgotPassword = () => {
    const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await axios.post("http://localhost:5000/api/auth/forgot-password", { email });
+        const response = await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
         if (response.data.success) {
             alert("Check your email for the reset link!");
         }

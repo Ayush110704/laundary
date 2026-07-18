@@ -32,7 +32,7 @@ const InquiryManagement = () => {
   const fetchInquiries = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:5000/api/contacts");
+      const res = await fetch(`${API_URL}/api/contacts`);
       const result = await res.json();
       console.log("Fetched inquiries from backend:", result);
       if (result.success) {
@@ -157,7 +157,7 @@ const InquiryManagement = () => {
   const handleStatusChange = async (inquiryId, newStatus) => {
     console.log("handleStatusChange called for ID:", inquiryId, "with Status:", newStatus);
     try {
-      const res = await fetch(`http://localhost:5000/api/contacts/${inquiryId}`, {
+      const res = await fetch(`${API_URL}/api/contacts/${inquiryId}`,  {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -182,8 +182,8 @@ const InquiryManagement = () => {
     if (window.confirm('Are you sure you want to delete this inquiry?')) {
       try {
         const res = await fetch(`http://localhost:5000/api/contacts/${inquiryId}`, {
-          method: "DELETE",
-        });
+    method: "DELETE",
+})
         const result = await res.json();
         if (result.success) {
           // Refetch from database to keep frontend and backend in perfect sync

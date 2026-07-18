@@ -5,7 +5,7 @@ import {getCheckoutData,saveCheckoutData,} from "../utils/checkoutStorage";
 import AddressForm from './AddressForm';
 
 const CheckoutAddress = ({ checkoutData, setCheckoutData }) => {
-
+const API_URL = import.meta.env.VITE_API_URL;
 
 
     const [selectedAddress, setSelectedAddress] = useState( checkoutData.address?._id || checkoutData.address?.id || '');
@@ -19,7 +19,8 @@ const CheckoutAddress = ({ checkoutData, setCheckoutData }) => {
       if (!email) return;
       
       try {
-        const res = await fetch(`http://localhost:5000/api/addresses?email=${encodeURIComponent(email)}`);
+        const res = await fetch(
+  `${API_URL}/api/addresses?email=${encodeURIComponent(email)}`);
         const json = await res.json();
         if (json.success && json.data) {
           setAddresses(json.data);
@@ -66,7 +67,7 @@ const handleSaveAddress = async (newAddress) => {
   if (!email) return;
 
   try {
-    const res = await fetch('http://localhost:5000/api/addresses', {
+    const res = await fetch(`${API_URL}/api/addresses`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...newAddress, email })

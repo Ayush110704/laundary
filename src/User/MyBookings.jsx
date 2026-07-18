@@ -9,6 +9,7 @@ import {
 import UserLayout from './UserLayout';
 
 const MyOrders = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [activeTab, setActiveTab] = useState('All');
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -90,7 +91,7 @@ const MyOrders = () => {
         return;
       }
 
-      const res = await axios.get(`http://localhost:5000/api/orders/user/${userId}`);
+      const res = await axios.get(`${API_URL}/api/orders/user/${userId}`);
 
       const apiOrders = Array.isArray(res.data) ? res.data : [];
       const normalizedOrders = apiOrders.map((order, index) => {

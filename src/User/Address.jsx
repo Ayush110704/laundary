@@ -6,6 +6,7 @@ import AddressForm from '../components/AddressForm';
 import UserLayout from './UserLayout';
 
 const Address = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [addresses, setAddresses] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +32,7 @@ const Address = () => {
     
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/addresses?email=${encodeURIComponent(email)}`);
+      const res = await fetch(`${API_URL}/api/addresses?email=${encodeURIComponent(email)}`);
       const json = await res.json();
       if (json.success && json.data) {
         setAddresses(json.data);
@@ -58,7 +59,7 @@ const Address = () => {
 
     setIsLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/addresses', {
+      const res = await fetch(`${API_URL}/api/addresses`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, email })
@@ -94,7 +95,7 @@ const Address = () => {
 
     setIsLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/addresses/${addressId}`, {
+     const res = await fetch(`${API_URL}/api/addresses/${addressId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -144,7 +145,7 @@ const Address = () => {
       if (result.isConfirmed) {
         setIsLoading(true);
         try {
-          const res = await fetch(`http://localhost:5000/api/addresses/${addressId}`, {
+          const res = await fetch(`${API_URL}/api/addresses/${addressId}`, {
             method: 'DELETE'
           });
           const json = await res.json();
@@ -191,7 +192,7 @@ const Address = () => {
       if (result.isConfirmed) {
         setIsLoading(true);
         try {
-          const res = await fetch(`http://localhost:5000/api/addresses/${addressId}`, {
+          const res = await fetch(`${API_URL}/api/addresses/${addressId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ isDefault: true })

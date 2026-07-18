@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 
 const ResetPassword = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const { token } = useParams(); // Gets the token from the URL
   const [newPassword, setNewPassword] = useState("");
   const navigate = useNavigate();
@@ -13,10 +14,10 @@ const ResetPassword = () => {
   const handleReset = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/reset-password", {
-        token,
-        newPassword
-      });
+     const response = await axios.post(`${API_URL}/api/auth/reset-password`, {
+  token,
+  newPassword
+});
 
       if (response.data.success) {
         Swal.fire("Success", "Your password has been reset!", "success");

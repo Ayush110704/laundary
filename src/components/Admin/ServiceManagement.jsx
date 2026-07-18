@@ -230,12 +230,12 @@ function ServiceDetail({ service, onBack }) {
 
 
 const ServiceManagement = () => {
-
+const API_URL = import.meta.env.VITE_API_URL;
   const [services, setServices] = useState([]);
 
   const fetchServices = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/services");
+     const res = await fetch(`${API_URL}/api/services`);
       const result = await res.json();
       if (result.success) {
         setServices(result.data);
@@ -253,9 +253,9 @@ const ServiceManagement = () => {
     try {
       const method = editingService ? 'PUT' : 'POST';
       const targetId = editingService ? (editingService._id || editingService.id) : '';
-      const url = editingService 
-        ? `http://localhost:5000/api/services/${targetId}`
-        : 'http://localhost:5000/api/services';
+      const url = editingService
+  ? `${API_URL}/api/services/${targetId}`
+  : `${API_URL}/api/services`;
       
       const res = await fetch(url, {
         method: method,
@@ -378,7 +378,7 @@ const ServiceManagement = () => {
     if (!confirmDelete) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/services/${id}`, {
+      const res = await fetch(`${API_URL}/api/services/${id}`, {
         method: "DELETE"
       });
       const result = await res.json();

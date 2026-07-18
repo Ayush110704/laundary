@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +6,7 @@ import axios from 'axios';
 import UserLayout from './UserLayout';
 
 const Profile = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const [userData, setUserData] = useState({});
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
@@ -105,7 +103,7 @@ const Profile = () => {
     try {
       const userId = currentUser.id || currentUser._id;
       if (userId) {
-        const response = await axios.get(`http://localhost:5000/api/auth/profile/${userId}`);
+        const response = await axios.get(`${API_URL}/api/auth/profile/${userId}`);
         if (response.data.success && response.data.user) {
           user = response.data.user;
         }
@@ -160,7 +158,7 @@ const Profile = () => {
     
     try {
       if (userId) {
-        const response = await axios.put("http://localhost:5000/api/auth/update-profile", {
+        const response = await axios.put(`${API_URL}/api/auth/update-profile`, {
           userId,
           firstName,
           lastName,

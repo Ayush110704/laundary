@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { useNavigate } from "react-router-dom";
 
 const OrderSummary = ({ Step, checkoutData }) => {
+    const API_URL = import.meta.env.VITE_API_URL;
     const navigate = useNavigate();
     const items = checkoutData.items || [];
     const deliveryFee = 49;
@@ -58,7 +59,7 @@ const OrderSummary = ({ Step, checkoutData }) => {
 
     try {
         // 3. Send to backend
-        const response = await axios.post("http://localhost:5000/api/orders", orderData);
+        const response = await axios.post(`${API_URL}/api/orders`, orderData);
         
         const swalResult = await Swal.fire({
             icon: "success",

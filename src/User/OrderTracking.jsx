@@ -78,6 +78,7 @@ const getProgressSteps = (status) => {
 };
 
 const Tracking1 = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [mobile, setMobile] = useState("");
   const [orderId, setOrderId] = useState("");
   const [errors, setErrors] = useState({});
@@ -147,8 +148,8 @@ const Tracking1 = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/orders/track?orderId=${encodeURIComponent(query.orderId)}&phone=${encodeURIComponent(query.phone)}`
-      );
+  `${API_URL}/api/orders/track?orderId=${encodeURIComponent(query.orderId)}&phone=${encodeURIComponent(query.phone)}`
+);
       const data = await response.json();
 
       if (!response.ok) {

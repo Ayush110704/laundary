@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 
 function Contact() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -26,7 +27,7 @@ function Contact() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/contacts", {
+      const res = await fetch(`${API_URL}/api/contacts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

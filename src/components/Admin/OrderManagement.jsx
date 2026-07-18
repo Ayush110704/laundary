@@ -1230,7 +1230,7 @@ function OrderManagement() {
       setOrdersError('');
 
       try {
-        const response = await fetch('http://localhost:5000/api/orders/all');
+        const response = await fetch(`${API_URL}/api/orders/all`);
         const data = await response.json();
 
         if (!response.ok) {
@@ -1356,7 +1356,7 @@ function OrderManagement() {
         payload.paymentStatus = statusData.paymentStatus;
       }
 
-      const response = await fetch(`http://localhost:5000/api/orders/${booking.mongoId}/status`, {
+      const response = await fetch(`${API_URL}/api/orders/${booking.mongoId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'
