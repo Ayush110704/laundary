@@ -77,7 +77,7 @@ const generateOrderId = () => {
 export const updateOrderStatus = async (req, res) => {
     try {
         const { id } = req.params;
-        const { status, note } = req.body;
+        const { status, note, paymentStatus } = req.body;
 
         if (!status) {
             return res.status(400).json({
@@ -106,6 +106,9 @@ export const updateOrderStatus = async (req, res) => {
             }
         ];
         order.status = status;
+        if (paymentStatus) {
+            order.paymentStatus = paymentStatus;
+        }
 
         await order.save();
 
@@ -194,6 +197,7 @@ export const getUserOrders = async (req, res) => {
             deliveryTimeSlot: order.deliveryTimeSlot,
             customer: { name: order.customerName, mobile: order.phone },
             address: order.address,
+            paymentStatus: order.paymentStatus || 'Pending',
             items: order.items.map(item => ({
                 name: item.clothType,
                 category: item.serviceType,
