@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ChevronDown, ChevronUp, User, LogOut } from "lucide-react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/Athenura.png";
-const API_URL = import.meta.env.VITE_API_URL;
+import axios from "axios";
 
 const Navbar = () => {
   const [mobileMenu, setMobileMenu] = useState(false);
@@ -12,7 +12,8 @@ const Navbar = () => {
   const [showServices, setShowServices] = useState(false);
   const [profile, setProfile] = useState(false);
   const [userData, setUserData] = useState();
-  const [servicesList, setServicesList] = useState([]);
+  const [servicesList, setServicesList] = useState([]); 
+const API_URL = import.meta.env.VITE_API_URL;
 
   const navigate = useNavigate();
 
