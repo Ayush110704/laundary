@@ -9,9 +9,9 @@ import logo from '../assets/Athenura.png'
 import {Link, useNavigate} from 'react-router-dom'
 import Image from '../assets/LoginImage.jpeg'
 import Swal from 'sweetalert2'
-const API_URL = import.meta.env.VITE_API_URL;
 
 const Login = () => {
+    const API_URL = import.meta.env.VITE_API_URL;
     const [showPassword, setShowPassword] = useState(false);
     const [userdata, setUserdata] = useState({
         Email: "",
@@ -64,8 +64,10 @@ const Login = () => {
         e.preventDefault();
         console.log("Attempting login with:", userdata);
         
+
         try {
             // Send credentials to your backend API route
+            
             const response = await axios.post(`${API_URL}/api/auth/login`, {
                 email: userdata.Email,
                 password: userdata.Password
@@ -256,7 +258,7 @@ const Login = () => {
         onSuccess={async (credentialResponse) => {
             // ... (keep your existing logic exactly as it was)
             try {
-                const response = await axios.post("http://localhost:5000/api/auth/google", {
+                const response = await axios.post(`${API_URL}/api/auth/google`, {
                     token: credentialResponse.credential
                 });
 
@@ -276,7 +278,7 @@ const Login = () => {
                     });
 
                     if (phone) {
-                        const signupResponse = await axios.post("http://localhost:5000/api/auth/complete-google-signup", {
+                        const signupResponse = await axios.post(`${API_URL}/api/auth/complete-google-signup`, {
                             firstName: response.data.firstName,
                             lastName: response.data.lastName,
                             email: response.data.email,
