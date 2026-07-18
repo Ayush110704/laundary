@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   FileText, Truck, Clock, Sparkles, ChevronRight, ArrowLeft, 
   User, Phone, MapPin, Receipt, RotateCw, Headset, 
-  Calendar, CreditCard, Download, Tag
+  Calendar, CreditCard, Download, Tag, Copy, Check
 } from 'lucide-react';
 import UserLayout from './UserLayout';
 
@@ -16,7 +16,9 @@ const MyOrders = () => {
   const [fetchError, setFetchError] = useState('');
   const [orders, setOrders] = useState([]);
   const [viewingAll, setViewingAll] = useState(false);
+  const [copiedOrderNo, setCopiedOrderNo] = useState('');
   const ordersSignatureRef = useRef("");
+  const copyTimerRef = useRef(null);
   const navigate = useNavigate();
 
 
@@ -41,6 +43,24 @@ const MyOrders = () => {
     // 4. Navigate to checkout
     navigate("/checkout");
 };
+
+  const handleCopyOrderNo = async (orderNo) => {
+    try {
+      await navigator.clipboard.writeText(orderNo);
+      setCopiedOrderNo(orderNo);
+
+      if (copyTimerRef.current) {
+        clearTimeout(copyTimerRef.current);
+      }
+
+      copyTimerRef.current = setTimeout(() => {
+        setCopiedOrderNo('');
+        copyTimerRef.current = null;
+      }, 1500);
+    } catch (error) {
+      console.error("Failed to copy order ID:", error);
+    }
+  };
 
   const fetchOrders = async (silent = false) => {
     if (!silent) {
@@ -143,11 +163,16 @@ const MyOrders = () => {
 
   useEffect(() => {
     fetchOrders();
-    const interval = setInterval(() => fetchOrders(true), 15000);
+    const interval = setInterval(() => fetchOrders(true), 4000);
     return () => clearInterval(interval);
   }, []);
 
+  // Use the same handleOrderClick, handleBackToList, and JSX render logic 
+  // from the code you just pasted in your previous message.
+  // The structure above ensures that 'order.summary.grandTotal' 
+  // will now exist and be populated correctly!
 
+  // ... (Paste your full UI JSX here, it will now work perfectly)
   const handleOrderClick = (order) => {
   console.log("Selected Order Data:", order); // ADD THIS LINE
   setIsLoading(true);
@@ -210,7 +235,18 @@ const MyOrders = () => {
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-3">
-                  <h2 className="text-xl md:text-2xl font-black text-gray-900 tracking-tight">{order.orderNo}</h2>
+                  <div className="flex items-center gap-1.5">
+                    <h2 className="text-xl md:text-2xl font-black text-gray-900 tracking-tight">{order.orderNo}</h2>
+                    <button
+                      type="button"
+                      onClick={() => handleCopyOrderNo(order.orderNo)}
+                      className="inline-flex items-center justify-center rounded-full p-1 text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition"
+                      aria-label="Copy order ID"
+                      title={copiedOrderNo === order.orderNo ? 'Copied!' : 'Copy order ID'}
+                    >
+                      {copiedOrderNo === order.orderNo ? <Check size={14} /> : <Copy size={14} />}
+                    </button>
+                  </div>
                   <span className={`px-3 py-1 rounded-full text-xs font-bold border ${order.statusColor}`}>
                     ● {order.status}
                   </span>
@@ -218,9 +254,9 @@ const MyOrders = () => {
                 <p className="text-xs text-gray-400">Placed on <span className="text-gray-600 font-medium">{order.date}</span></p>
               </div>
               <div className="flex flex-wrap gap-2 w-full md:w-auto">
-                {/* <button className="flex-1 md:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 bg-blue-50 text-blue-600 text-xs font-bold rounded-xl hover:bg-blue-100 transition">
+                <button className="flex-1 md:flex-initial flex items-center justify-center gap-1.5 px-4 py-2 bg-blue-50 text-blue-600 text-xs font-bold rounded-xl hover:bg-blue-100 transition">
                   <Download size={14} /> Invoice
-                </button> */}
+                </button>
                  <button 
   // Update this line:
   onClick={() => handleReorder(order)} 
@@ -228,9 +264,7 @@ const MyOrders = () => {
 >
   <RotateCw size={14} /> Reorder
 </button>
-                <button
-                onClick={()=>navigate("/contact")}
-                className="w-full md:w-auto flex items-center justify-center gap-1.5 px-4 py-2 bg-gray-50 text-gray-600 text-xs font-bold rounded-xl border border-gray-200 hover:bg-gray-100 transition">
+                <button className="w-full md:w-auto flex items-center justify-center gap-1.5 px-4 py-2 bg-gray-50 text-gray-600 text-xs font-bold rounded-xl border border-gray-200 hover:bg-gray-100 transition">
                   <Headset size={14} /> Support
                 </button>
               </div>
@@ -290,7 +324,7 @@ const MyOrders = () => {
                   <div className="flex justify-between items-center pt-2 border-t">
                     <span className="text-gray-500">Gateway Status:</span>
                     <span className={`px-2 py-0.5 rounded text-[10px] font-black ${
-                      order.paymentStatus === 'PAID' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
+                      order.paymentStatus?.toLowerCase() === 'paid' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'
                     }`}>{order.paymentStatus}</span>
                   </div>
                 </div>
@@ -328,7 +362,7 @@ const MyOrders = () => {
                 </h3>
                 <div className="space-y-3 text-xs">
                   <div className="flex justify-between text-gray-500">
-                    <span>Total Service Cost</span>
+                    <span>Washing & Cleaning Cost</span>
                     <span className="font-semibold text-gray-800">₹{order.summary.subtotal}</span>
                   </div>
                   <div className="flex justify-between text-gray-500">

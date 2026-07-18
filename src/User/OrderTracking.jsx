@@ -299,7 +299,7 @@ const Tracking1 = () => {
                     repeat: Infinity,
                     duration: 3,
                   }}
-                  className="hidden md:flex justify-center "
+                  className="flex justify-center"
                 >
 
                   <div className="relative">
@@ -399,7 +399,7 @@ const Tracking1 = () => {
                           e.target.value.replace(/\D/g,"")
                         )
                       }
-                      placeholder="9876543210"
+                      placeholder=""
                       className="w-full h-16 px-5 rounded-2xl border border-gray-300 outline-none focus:border-[#2563eb] focus:ring-4 focus:ring-blue-100 transition"
                     />
 
@@ -433,7 +433,7 @@ const Tracking1 = () => {
                           e.target.value.toUpperCase()
                         )
                       }
-                      placeholder="ATH987654"
+                      placeholder=""
                       className="w-full h-16 px-5 rounded-2xl border border-gray-300 outline-none focus:border-[#2563eb] focus:ring-4 focus:ring-blue-100 transition"
                     />
 
@@ -497,13 +497,13 @@ const Tracking1 = () => {
                 className="max-w-7xl mx-auto px-5 py-12"
               >
 
-                <div className="relative overflow-hidden rounded-[30px] bg-gradient-to-r from-[#0f3d7a] via-[#1d4ed8] to-[#2563eb] shadow-2xl text-center">
+                <div className="relative overflow-hidden rounded-[30px] bg-gradient-to-r from-[#0f3d7a] via-[#1d4ed8] to-[#2563eb] shadow-2xl">
 
                   <div className="absolute -top-24 -right-24 w-80 h-80 bg-white/10 rounded-full blur-3xl"></div>
 
                   <div className="absolute -bottom-24 -left-20 w-72 h-72 bg-cyan-300/20 rounded-full blur-3xl"></div>
 
-                  <div className="relative grid lg:grid-cols-1 gap-10 p-10">
+                  <div className="relative grid lg:grid-cols-2 gap-10 p-10">
 
                     <div>
 
@@ -596,7 +596,7 @@ const Tracking1 = () => {
 
                     </div>
 
-                    {/* <motion.div
+                    <motion.div
                       whileHover={{ y: -5 }}
                       className="bg-white rounded-[28px] p-8 shadow-xl"
                     >
@@ -679,7 +679,7 @@ const Tracking1 = () => {
 
                       </div>
 
-                    </motion.div> */}
+                    </motion.div>
 
                   </div>
 
