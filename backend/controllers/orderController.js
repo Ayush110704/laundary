@@ -197,6 +197,7 @@ export const getUserOrders = async (req, res) => {
             deliveryTimeSlot: order.deliveryTimeSlot,
             customer: { name: order.customerName, mobile: order.phone },
             address: order.address,
+            paymentMethod: order.paymentMethod,
             paymentStatus: order.paymentStatus || 'Pending',
             items: order.items.map(item => ({
                 name: item.clothType,
