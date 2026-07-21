@@ -92,7 +92,7 @@ useEffect(() => {
     
   </div>
 
-  {/* <AnimatePresence>
+  <AnimatePresence>
     {openSection === "card" && (
       <motion.div
         initial={{ height: 0, opacity: 0 }}
@@ -141,7 +141,7 @@ useEffect(() => {
         </div>
       </motion.div>
     )}
-  </AnimatePresence> */}
+  </AnimatePresence>
 
 </div>
 
@@ -176,7 +176,7 @@ useEffect(() => {
 </button>
  
 
-  {/* <AnimatePresence>
+  <AnimatePresence>
     {openSection === "upi" && (
       <motion.div
         initial={{ height: 0, opacity: 0 }}
@@ -197,7 +197,7 @@ useEffect(() => {
         </div>
       </motion.div>
     )}
-  </AnimatePresence> */}
+  </AnimatePresence>
 </div>
 
           {/* COD */}
